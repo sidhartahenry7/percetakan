@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Daftar Promo</title>
+    <meta charset="utf-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
+        rel="stylesheet"
+    />
+
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid black;
+            text-align: center;
+            padding: 8px;
+            color: black;
+        }
+
+        body {
+            background-color: #f7f8f8;
+        }
+
+        #sidebar {
+            background-color: #0b2357;
+        }
+
+        .form-control {
+            border: 1px solid black;
+        }
+
+        .spek {
+            text-align: left;
+        }
+
+        label {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper d-flex align-items-stretch">
+        @include('partials.navbar')
+
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5">
+            <div class="iq-card">
+                <div class="iq-card-header d-flex justify-content-between">
+                    <div class="iq-header-title">
+                        <h4 class="card-title">Daftar Promo</h4>
+                    </div>
+                </div>
+                <hr style="height: 10px;">
+                <div class="iq-card-body">
+                    @if(session()->has('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+                    <!--Tabel-->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-borderless">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID Promo</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Tanggal Berakhir</th>
+                                    <th>Potongan (%)</th>
+                                    @if(auth()->user()->user_role == "Admin")
+                                    <th>Action</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($list_promo as $promo)
+                                <tr>
+                                    <td>{{ $promo->id_promo }}</td>
+                                    <td>{{ $promo->tanggal_mulai }}</td>
+                                    <td>{{ $promo->tanggal_berakhir }}</td>
+                                    <td>{{ $promo->potongan }}</td>
+                                    @if(auth()->user()->user_role == "Admin")
+                                    <td>
+                                        <form action="{{ url('/promo/'.$promo->id) }}" method="POST" class="d-inline">
+                                            @method('delete')
+                                            @csrf
+                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    @endif
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
