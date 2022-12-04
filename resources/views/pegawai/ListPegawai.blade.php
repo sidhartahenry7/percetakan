@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Daftar Pegawai</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -58,17 +39,24 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Daftar Pegawai</h4>
                     </div>
+                    @if(auth()->user()->user_role == "Admin")
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ url('pegawai') }}'" style="margin-right: 10px;">
+                        <span class="material-icons align-middle">
+                            add
+                        </span>
+                    </button>
+                    @endif
                 </div>
             </div>
             <hr style="height: 10px;">
             <div class="iq-card-body">
                 <!--Tabel-->
-                <div class="table-responsive">
+                <div class="table-responsive container">
                     <table class="table table-striped table-borderless">
                         <thead class="thead-dark">
                             <tr>
-                                <th>ID</th>
-                                <th>Nama</th>
+                                <th>ID Pegawai</th>
+                                <th>Nama Lengkap</th>
                                 <th>Alamat</th>
                                 <th>Nomor Telepon</th>
                                 <th>Email</th>
@@ -87,20 +75,24 @@
                         <tbody>
                         @foreach ($list_pegawai as $pegawai)
                             <tr>
-                                <td>{{ $pegawai->id_pegawai }}</td>
-                                <td>{{ $pegawai->nama_lengkap }}</td>
-                                <td>{{ $pegawai->alamat }}</td>
-                                <td>{{ $pegawai->nomor_handphone }}</td>
-                                <td>{{ $pegawai->email }}</td>
-                                <td>{{ $pegawai->rekening_bank }}</td>
-                                <td>{{ $pegawai->nomor_rekening }}</td>
-                                <td>{{ $pegawai->gaji_pokok }}</td>
-                                <td>{{ $pegawai->tanggal_masuk }}</td>
-                                <td>{{ $pegawai->tanggal_keluar }}</td>
-                                <td>{{ $pegawai->user_role }}</td>
-                                <td>{{ $pegawai->cabang->nama_cabang }}</td>
+                                <td style="min-width: 100px">{{ $pegawai->id_pegawai }}</td>
+                                <td style="min-width: 150px">{{ $pegawai->nama_lengkap }}</td>
+                                <td style="min-width: 150px">{{ $pegawai->alamat }}</td>
+                                <td style="min-width: 130px">{{ $pegawai->nomor_handphone }}</td>
+                                <td style="min-width: 150px">{{ $pegawai->email }}</td>
+                                <td style="min-width: 120px">{{ $pegawai->rekening_bank }}</td>
+                                <td style="min-width: 140px">{{ $pegawai->nomor_rekening }}</td>
+                                <td style="min-width: 120px">Rp {{ number_format($pegawai->gaji_pokok) }}</td>
+                                <td style="min-width: 150px">{{ date('d F Y', strtotime($pegawai->tanggal_masuk)) }}</td>
+                                @isset($pegawai->tanggal_keluar)
+                                <td style="min-width: 150px">{{ date('d F Y', strtotime($pegawai->tanggal_keluar)) }}</td>
+                                @else
+                                <td style="min-width: 150px">{{ $pegawai->tanggal_keluar }}</td>
+                                @endisset
+                                <td style="min-width: 140px">{{ $pegawai->user_role }}</td>
+                                <td style="min-width: 140px">{{ $pegawai->cabang->nama_cabang }}</td>
                                 @if(auth()->user()->user_role == "Admin")
-                                <td>
+                                <td style="min-width: 120px">
                                     <form action="{{ url('/pegawai/'.$pegawai->id) }}" method="POST" class="d-inline">
                                         @method('put')
                                         @csrf

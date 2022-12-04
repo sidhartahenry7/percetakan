@@ -7,7 +7,9 @@ use App\Models\antrian;
 use App\Models\detail_transaksi;
 use App\Http\Requests\StoretransaksiRequest;
 use App\Http\Requests\UpdatetransaksiRequest;
+use App\Models\transaksi_pegawai;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class TransaksiController extends Controller
 {
@@ -36,7 +38,8 @@ class TransaksiController extends Controller
                     "Sedang dikerjakan",
                     "Selesai",
                     "Batal"
-                ]
+                ],
+                "title" => "Transaksi"
             ]);
         }
         else {
@@ -49,7 +52,8 @@ class TransaksiController extends Controller
                     "Sedang dikerjakan",
                     "Selesai",
                     "Batal"
-                ]
+                ],
+                "title" => "Transaksi"
             ]);
 
         }
@@ -59,32 +63,22 @@ class TransaksiController extends Controller
     {   
         return view('transaksi.HistoryTransaksi', [
             "history_transaksi" => transaksi::where('status_pengerjaan', 'Selesai')->orWhere('status_pengerjaan', 'Batal')->orderBy('id', 'DESC')->get(),
+            "title" => "History Transaksi"
         ]);
     }
     
     public function printNota($id)
     {   
-        $transaksi = transaksi::join('antrians', 'transaksis.antrian_id', '=', 'antrians.id')
-                              ->join('pelanggans', 'antrians.pelanggan_id', '=', 'pelanggans.id')
-                              ->join('cabangs', 'antrians.cabang_id', '=', 'cabangs.id')
-                              ->where('transaksis.id', $id)
-                              ->select('transaksis.*', 'antrians.id_antrian', 'antrians.tanggal_antrian', 'cabangs.alamat', 'pelanggans.nama_pelanggan', 'pelanggans.nomor_handphone')
-                              ->first();
+        $transaksi = transaksi::where('id', $id)->first();
 
-        $detail_transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')
-                                            ->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')
-                                            ->join('produks', 'detail_produks.produk_id', '=', 'produks.id')
-                                            ->join('tintas', 'detail_produks.tinta_id', '=', 'tintas.id')
-                                            ->where('transaksis.id', $id)
-                                            ->select('detail_transaksis.*', 'detail_produks.nama_produk', 'detail_produks.finishing', 'produks.ukuran', 'produks.jenis_kertas', 'tintas.jenis_tinta')
-                                            ->get();
+        $detail_transaksi = detail_transaksi::where('transaksi_id', $id)->get();
 
-        // return view('purchaseorder/bahanbaku.notaBahanBaku', compact('po_bahan_baku', 'detail_po'));
-        
-        return view('transaksi.NotaTransaksi', [
-            "transaksi" => $transaksi,
-            "detail_transaksi" => $detail_transaksi
-        ]);
+        $transaksi_pegawai = transaksi_pegawai::where('transaksi_id', $id)->get();
+
+        $pdf = PDF::loadView('transaksi/NotaTransaksi', compact('transaksi', 'detail_transaksi', 'transaksi_pegawai'));
+        $pdf->setPaper('A5', 'landscape');
+
+        return $pdf->download('notaTransaksi_'.$transaksi->antrian->id_antrian.'.pdf');
     }
 
     /**

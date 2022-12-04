@@ -30,6 +30,11 @@ class detail_produk extends Model
     {
         return $this->belongsTo(tinta::class);
     }
+    
+    public function finishing()
+    {
+        return $this->belongsTo(finishing::class);
+    }
 
     public function scopeCreateID()
     {

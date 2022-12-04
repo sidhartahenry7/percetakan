@@ -8,6 +8,7 @@ use App\Models\produk;
 use App\Models\tinta;
 use App\Http\Requests\Storedetail_produkRequest;
 use App\Http\Requests\Updatedetail_produkRequest;
+use App\Models\finishing;
 use Illuminate\Support\Facades\Auth;
 
 class DetailProdukController extends Controller
@@ -19,12 +20,26 @@ class DetailProdukController extends Controller
      */
     public function index()
     {
-        return view('produk.DetailProduk', [
-            "idproduk" => detail_produk::CreateID(),
-            "list_kategori" => kategori::where('deleted', 0)->get(),
-            "list_main_produk" => produk::where('deleted', 0)->get(),
-            "list_tinta" => tinta::where('deleted', 0)->get(),
-            "list_produk" => detail_produk::where('deleted', 0)->get()
+        if (Auth::user()->user_role == 'Admin') {
+            return view('produk.AddDetailProduk', [
+                "idproduk" => detail_produk::CreateID(),
+                "list_kategori" => kategori::where('deleted', 0)->get(),
+                "list_main_produk" => produk::where('deleted', 0)->get(),
+                "list_tinta" => tinta::where('deleted', 0)->get(),
+                "list_finishing" => finishing::where('deleted', 0)->get(),
+                "title" => "Add Detail Produk"
+            ]);
+        }
+        else {
+            abort(403);
+        }
+    }
+    
+    public function listDetailProduk()
+    {
+        return view('produk.ListDetailProduk', [
+            "list_produk" => detail_produk::where('deleted', 0)->get(),
+            "title" => "Daftar Detail Produk"
         ]);
     }
 
@@ -46,23 +61,31 @@ class DetailProdukController extends Controller
      */
     public function store(Storedetail_produkRequest $request)
     {
+        // dd($request->status_finishing);
         $validatedData = $request->validate([
             'id_detail_produk' => 'required|unique:detail_produks',
             'nama_produk' => 'required|max:255',
-            'finishing' => 'required|max:255',
             'keterangan' => '',
             'harga' => 'required',
             'diskon' => '',
             'kategori_id' => 'required',
             'produk_id' => 'required',
-            'tinta_id' => 'required'
+            'tinta_id' => 'required',
+            'finishing_id' => 'required'
         ]);
+
+        if($request->status_finishing == "on") {
+            $validatedData['status_finishing'] = 1;
+        }
+        else {
+            $validatedData['status_finishing'] = 0;
+        }
 
         detail_produk::create($validatedData);
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/detail-produk');
+        return redirect('/list-detail-produk');
     }
 
     /**
@@ -89,7 +112,8 @@ class DetailProdukController extends Controller
 
             return view('produk.EditDetailProduk', [
                 "title" => "Edit Detail Produk",
-                "detail_produk" => $detail_produks      
+                "detail_produk" => $detail_produks  ,
+                "title" => "Edit Detail Produk"    
             ]);
         }
     }
@@ -109,7 +133,7 @@ class DetailProdukController extends Controller
                              ]);
 
         // $request->session()->flash('success','Perusahaan Berhasil Diupdate');
-        return redirect('/detail-produk')->with('success', 'Detail produk berhasil diupdate');
+        return redirect('/list-detail-produk')->with('success', 'Detail produk berhasil diupdate');
     }
 
     /**
@@ -123,6 +147,6 @@ class DetailProdukController extends Controller
         detail_produk::where('id', $detail_produk->id)
               ->update(['deleted' => '1']);
         
-        return redirect('/detail-produk')->with('success', 'Produk berhasil dihapus!');
+        return redirect('/list-detail-produk')->with('success', 'Produk berhasil dihapus!');
     }
 }

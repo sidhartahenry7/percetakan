@@ -27,7 +27,8 @@ class DetailTransaksiController extends Controller
             "list_beli" => detail_transaksi::where('transaksi_id', '=', $id)->get(),
             "history_kasir" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Kasir')->first(),
             "history_operator_printer" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Operator Printer')->first(),
-            "history_desainer" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Desainer')->first()
+            "history_desainer" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Desainer')->first(),
+            "title" => "Detail Transaksi"
         ]);
     }
     
@@ -44,7 +45,8 @@ class DetailTransaksiController extends Controller
             "list_desainer" => pegawai::where('user_role', 'Desainer')->whereNull('tanggal_keluar')->where('cabang_id', $transaksi->antrian->cabang_id)->get(),
             "history_kasir" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Kasir')->first(),
             "history_operator_printer" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Operator Printer')->first(),
-            "history_desainer" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Desainer')->first()
+            "history_desainer" => transaksi_pegawai::join('pegawais', 'transaksi_pegawais.pegawai_id', '=', 'pegawais.id')->where('transaksi_id', $id)->where('pegawais.user_role', 'Desainer')->first(),
+            "title" => "Edit Detail Transaksi"
         ]);
 
     }
@@ -85,14 +87,15 @@ class DetailTransaksiController extends Controller
     
     public function fetchFinishing(Request $request)
     {
-        $data['list_finishing'] = detail_produk::select('detail_produks.finishing')
+        $data['list_finishing'] = detail_produk::select('detail_produks.finishing_id', 'finishings.jenis_finishing')
                                                 ->join('produks', 'detail_produks.produk_id', '=', 'produks.id')
                                                 ->join('tintas', 'detail_produks.tinta_id', '=', 'tintas.id')
+                                                ->join('finishings', 'detail_produks.finishing_id', '=', 'finishings.id')
                                                 ->where("detail_produks.nama_produk", '=', $request->nama_produk)
                                                 ->where("produks.ukuran", '=', $request->ukuran)
                                                 ->where("produks.jenis_kertas", '=', $request->jenis_kertas)
                                                 ->where("tintas.id", '=', $request->jenis_tinta)
-                                                ->groupBy('detail_produks.finishing')
+                                                ->groupBy('detail_produks.finishing_id')
                                                 ->get();                           
         return response()->json($data);
     }
@@ -112,23 +115,24 @@ class DetailTransaksiController extends Controller
     
     public function sub(Request $request)
     {
-        $data['list_detail'] = detail_produk::select('produks.ukuran', 'produks.jenis_kertas', 'tintas.jenis_tinta', 'detail_produks.*')
+        $data['list_detail'] = detail_produk::select('produks.ukuran', 'produks.jenis_kertas', 'tintas.jenis_tinta', 'finishings.jenis_finishing', 'finishings.finishing_harga', 'detail_produks.*')
                                             ->join('produks', 'detail_produks.produk_id', '=', 'produks.id')
                                             ->join('tintas', 'detail_produks.tinta_id', '=', 'tintas.id')
+                                            ->join('finishings', 'detail_produks.finishing_id', '=', 'finishings.id')
                                             ->where('detail_produks.nama_produk', '=', $request->nama_produk)
                                             ->where('produks.ukuran', '=', $request->ukuran)
                                             ->where('produks.jenis_kertas', '=', $request->jenis_kertas)
                                             ->where('tintas.id', '=', $request->jenis_tinta)
-                                            ->where('detail_produks.finishing', '=', $request->finishing)
+                                            ->where('finishings.id', '=', $request->jenis_finishing)
                                             ->get();
 
         $data['sub'] = detail_produk::select('detail_produks.*')
-                                            ->join('produks', 'detail_produks.produk_id', '=', 'produks.id')
-                                            ->where('detail_produks.nama_produk', '=', $request->nama_produk)
-                                            ->where('produks.ukuran', '=', $request->ukuran)
-                                            ->where('produks.jenis_kertas', '=', $request->jenis_kertas)
-                                            ->where('detail_produks.keterangan', '=', $request->keterangan)
-                                            ->get();
+                                    ->join('produks', 'detail_produks.produk_id', '=', 'produks.id')
+                                    ->where('detail_produks.nama_produk', '=', $request->nama_produk)
+                                    ->where('produks.ukuran', '=', $request->ukuran)
+                                    ->where('produks.jenis_kertas', '=', $request->jenis_kertas)
+                                    ->where('detail_produks.keterangan', '=', $request->keterangan)
+                                    ->get();
 
         if (is_null($request->promo_id)) {
             $data['promo'] = 0;
@@ -207,9 +211,12 @@ class DetailTransaksiController extends Controller
             $validatedData['detail_produk_id'] = $detail_produk->id;
             $validatedData['harga'] = $request->harga[$i];
             $validatedData['jumlah_produk'] = $request->quantity[$i];
+            $validatedData['harga_finishing'] = $request->harga_finishing[$i];
             $validatedData['diskon'] = $request->diskon[$i];
             $validatedData['harga_custom'] = $request->harga_custom[$i];
             $validatedData['custom'] = $request->custom[$i];
+            $validatedData['custom_panjang'] = $request->custom_panjang[$i];
+            $validatedData['custom_lebar'] = $request->custom_lebar[$i];
             $validatedData['sub_total'] = $request->sub_total[$i];
 
             $item += $request->quantity[$i];

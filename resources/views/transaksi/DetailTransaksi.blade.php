@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Detail Transaksi</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -30,6 +11,7 @@
             text-align: center;
             padding: 8px;
             color: black;
+            min-width: 150px;
         }
 
         body {
@@ -61,6 +43,15 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Detail Transaksi</h4>
                     </div>
+                    @if($transaksi->status_pengerjaan == "Selesai")
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('history-transaksi') }}'" style="margin-right: 10px;">
+                        Back
+                    </button>
+                    @else
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('transaksi') }}'" style="margin-right: 10px;">
+                        Back
+                    </button>
+                    @endif
                 </div>
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
@@ -72,16 +63,6 @@
                         </button>
                     </div>
                     @endif
-                    @if($transaksi->status_pengerjaan == "Selesai")
-                    <button onclick="window.location.href='/history-transaksi'" type="button" class="btn btn-success">
-                        Back
-                    </button>
-                    @else
-                    <button onclick="window.location.href='/transaksi'" type="button" class="btn btn-success">
-                        Back
-                    </button>
-                    @endif
-                    <br><br>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-3">
@@ -152,7 +133,7 @@
             </div>
             <br>
             <!--Tabel-->
-            <div class="table-responsive">
+            <div class="table-responsive container">
                 <table class="table table-striped table-borderless" id="tabel">
                     <thead class="thead-dark">
                         <tr>
@@ -164,6 +145,7 @@
                             <th>Finishing</th>
                             <th>Harga</th>
                             <th>Jumlah Produk</th>
+                            <th>Harga Finishing</th>
                             <th>Diskon (%)</th>
                             <th>Sub Total</th>
                             <th>Harga Custom</th>
@@ -176,12 +158,17 @@
                         <tr>
                             <td>{{ $beli->detail_produk->id_detail_produk }}</td>
                             <td>{{ $beli->detail_produk->nama_produk }}</td>
+                            @isset($beli->custom_panjang, $beli->custom_lebar)
+                            <td>{{ $beli->detail_produk->produk->ukuran }} ({{ $beli->custom_panjang }} x {{ $beli->custom_lebar }})</td>
+                            @else
                             <td>{{ $beli->detail_produk->produk->ukuran }}</td>
+                            @endisset
                             <td>{{ $beli->detail_produk->produk->jenis_kertas }}</td>
                             <td>{{ $beli->detail_produk->tinta->jenis_tinta }}</td>
-                            <td>{{ $beli->detail_produk->finishing }}</td>
+                            <td>{{ $beli->detail_produk->finishing->jenis_finishing }}</td>
                             <td>Rp {{ number_format($beli->harga, 2) }}</td>
                             <td>{{ $beli->jumlah_produk }}</td>
+                            <td>Rp {{ number_format($beli->harga_finishing, 2) }}</td>
                             <td>{{ $beli->diskon }}</td>
                             <td>Rp {{ number_format(($beli->harga*$beli->jumlah_produk*(1-$beli->diskon/100)), 2) }}</td>
                             <td>Rp {{ number_format($beli->harga_custom, 2) }}</td>
@@ -233,7 +220,7 @@
         </div> 
     </div>
 
-    {{-- <script src="/js/jquery.min.js"></script> --}}
+    <script src="/js/jquery.min.js"></script>
     <script src="/js/popper.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/main.js"></script>

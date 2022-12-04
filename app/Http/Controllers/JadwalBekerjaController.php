@@ -28,7 +28,8 @@ class JadwalBekerjaController extends Controller
                     "Thursday",
                     "Friday",
                     "Saturday"
-                ]
+                ],
+                "title" => "Add Jadwal Bekerja Pegawai"
             ]);
         }
         else {
@@ -40,17 +41,20 @@ class JadwalBekerjaController extends Controller
     {
         if (Auth::user()->user_role == 'Admin') {
             return view('jadwalkerja.ListJadwalKerjaPegawai', [
-                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get()
+                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get(),
+                "title" => "Daftar Jadwal Bekerja Pegawai"
             ]);
         }
         else if (Auth::user()->user_role == 'Kepala Toko' || Auth::user()->user_role == 'Wakil Kepala Toko') {
             return view('jadwalkerja.ListJadwalKerjaPegawai', [
-                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get()
+                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get(),
+                "title" => "Daftar Jadwal Bekerja Pegawai"
             ]);
         }
         else {
             return view('jadwalkerja.ListJadwalKerjaPegawai', [
-                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get()
+                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get(),
+                "title" => "Daftar Jadwal Bekerja Pegawai"
             ]);
         }
     }
@@ -84,7 +88,7 @@ class JadwalBekerjaController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/jadwal');
+        return redirect('/list-jadwal');
     }
 
     /**

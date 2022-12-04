@@ -21,7 +21,8 @@ class PegawaiController extends Controller
         if (Auth::user()->user_role == 'Admin') {
             return view('pegawai.AddPegawai', [
                 "idpegawai" => pegawai::CreateID(),
-                "list_cabang" => cabang::where('deleted', 0)->get()
+                "list_cabang" => cabang::where('deleted', 0)->get(),
+                "title" => "Add Pegawai"
             ]);
         }
         else {
@@ -33,12 +34,14 @@ class PegawaiController extends Controller
     {
         if (Auth::user()->user_role == 'Admin') {
             return view('pegawai.ListPegawai', [
-                "list_pegawai" => pegawai::oldest()->ListPegawai()->where('user_role', '!=', 'Admin')->where('deleted', 0)->whereNull('tanggal_keluar')->get()
+                "list_pegawai" => pegawai::oldest()->ListPegawai()->where('user_role', '!=', 'Admin')->where('deleted', 0)->whereNull('tanggal_keluar')->get(),
+                "title" => "Daftar Pegawai"
             ]);
         }
         else {
             return view('pegawai.ListPegawai', [
-                "list_pegawai" => pegawai::oldest()->ListPegawai()->where('user_role', '!=', 'Admin')->where('cabang_id', Auth::user()->cabang_id)->where('deleted', 0)->whereNull('tanggal_keluar')->get()
+                "list_pegawai" => pegawai::oldest()->ListPegawai()->where('user_role', '!=', 'Admin')->where('cabang_id', Auth::user()->cabang_id)->where('deleted', 0)->whereNull('tanggal_keluar')->get(),
+                "title" => "Daftar Pegawai"
             ]);
         }
     }
@@ -86,7 +89,7 @@ class PegawaiController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/pegawai');
+        return redirect('/list-pegawai');
     }
 
     /**

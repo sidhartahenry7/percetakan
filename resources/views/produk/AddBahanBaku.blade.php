@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Produk</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -64,8 +45,11 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Produk</h4>
+                        <h4 class="card-title">Add Bahan Baku</h4>
                     </div>
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-bahan-baku') }}'" style="margin-right: 10px;">
+                        Back
+                    </button>
                 </div>
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
@@ -78,7 +62,7 @@
                         </div>
                     @endif
                     @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
-                    <form action="/produk" method="post">
+                    <form action="/bahan-baku" method="post">
                         @csrf
                         <div class="form-group">
                             <label style="color: black; font-weight: bold;" for="text">ID Produk</label>
@@ -110,48 +94,15 @@
                         {{-- <button type="cancel" class="btn btn-danger">
                             Cancel
                         </button> --}}
+                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-bahan-baku') }}'">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn" style="background-color: #29a4da; color: white;">
                             Submit
                         </button>
                     </form>
                     @endif
                 </div>
-            </div>
-            <br>
-            <!--Tabel-->
-            <div class="table-responsive">
-                <table class="table table-striped table-borderless">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>ID Produk</th>
-                            <th>Ukuran</th>
-                            <th>Jenis Kertas</th>
-                            @if(auth()->user()->user_role == "Admin")
-                            <th>Action</th>
-                            @endif
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($list_produk as $produk)
-                        <tr>
-                            <td>{{ $produk->id_produk }}</td>
-                            <td>{{ $produk->ukuran }}</td>
-                            <td>{{ $produk->jenis_kertas }}</td>
-                            @if(auth()->user()->user_role == "Admin")
-                            <td>
-                                <form action="{{ url('/produk/'.$produk->id) }}" method="POST" class="d-inline">
-                                    @method('delete')
-                                    @csrf
-                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                            @endif
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
 

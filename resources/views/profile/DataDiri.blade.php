@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Data Diri</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -76,7 +57,7 @@
                         <div class="form-group">
                             <div class="row justify-content-start">
                                 <div class="col-2">
-                                    <label style="color: black; font-weight: bold;" for="text">ID Pegawai:</label>
+                                    <label style="color: black; font-weight: bold;" for="text">ID Pegawai</label>
                                 </div>
                                 <div class="col-2">
                                     <label style="color: black; font-weight: bold;" for="text">{{ $data_diri->id_pegawai }}</label>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\kategori;
 use App\Http\Requests\StoreKategoriRequest;
 use App\Http\Requests\UpdateKategoriRequest;
+use Illuminate\Support\Facades\Auth;
 
 class KategoriController extends Controller
 {
@@ -15,15 +16,22 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        return view('produk.AddKategori', [
-            "idkategori" => kategori::CreateID()
-        ]);
+        if (Auth::user()->user_role == 'Admin') {
+            return view('produk.AddKategori', [
+                "idkategori" => kategori::CreateID(),
+                "title" => "Add Kategori"
+            ]);
+        }
+        else {
+            abort(403);
+        }
     }
     
     public function listKategori()
     {
         return view('produk.ListKategori', [
-            "list_kategori" => kategori::where('deleted', 0)->get()
+            "list_kategori" => kategori::where('deleted', 0)->get(),
+            "title" => "Daftar Kategori"
         ]);
     }
 
@@ -54,7 +62,7 @@ class KategoriController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/kategori');
+        return redirect('/list-kategori');
     }
 
     /**

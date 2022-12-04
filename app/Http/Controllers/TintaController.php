@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\tinta;
 use App\Http\Requests\StoretintaRequest;
 use App\Http\Requests\UpdatetintaRequest;
+use Illuminate\Support\Facades\Auth;
 
 class TintaController extends Controller
 {
@@ -15,9 +16,22 @@ class TintaController extends Controller
      */
     public function index()
     {
-        return view('produk.Tinta', [
-            "idproduk" => tinta::CreateID(),
-            "list_tinta" => tinta::where('deleted', 0)->get()
+        if (Auth::user()->user_role == 'Admin') {
+            return view('produk.AddTinta', [
+                "idproduk" => tinta::CreateID(),
+                "title" => "Add Produk Tinta"
+            ]);
+        }
+        else {
+            abort(403);
+        }
+    }
+    
+    public function listTinta()
+    {
+        return view('produk.ListTinta', [
+            "list_tinta" => tinta::where('deleted', 0)->get(),
+            "title" => "Daftar Produk Tinta"
         ]);
     }
 
@@ -48,7 +62,7 @@ class TintaController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/tinta');
+        return redirect('/list-tinta');
     }
 
     /**
@@ -96,6 +110,6 @@ class TintaController extends Controller
         tinta::where('id', $tinta->id)
               ->update(['deleted' => '1']);
         
-        return redirect('/tinta')->with('success', 'Tinta berhasil dihapus!');
+        return redirect('/list-tinta')->with('success', 'Tinta berhasil dihapus!');
     }
 }

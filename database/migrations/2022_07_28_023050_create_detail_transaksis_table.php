@@ -19,9 +19,12 @@ class CreateDetailTransaksisTable extends Migration
             $table->foreignId('detail_produk_id');
             $table->integer('harga');
             $table->integer('jumlah_produk');
+            $table->integer('harga_finishing');
             $table->integer('diskon');
             $table->integer('harga_custom');
             $table->text('custom')->nullable();
+            $table->string('custom_panjang', 255)->nullable();
+            $table->string('custom_lebar', 255)->nullable();
             $table->integer('sub_total');
             $table->timestamps();
         });

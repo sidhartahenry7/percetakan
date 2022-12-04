@@ -1,26 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Detail Transaksi</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('/css/trix.css') }}">
-    <script type="text/javascript" src="{{ asset('/js/trix.js') }}"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -33,6 +11,7 @@
             text-align: center;
             padding: 8px;
             color: black;
+            min-width: 150px;
         }
 
         body {
@@ -64,8 +43,11 @@
                 <div class="iq-card">
                     <div class="iq-card-header d-flex justify-content-between">
                         <div class="iq-header-title">
-                            <h4 class="card-title">Detail Transaksi</h4>
+                            <h4 class="card-title">Edit Detail Transaksi</h4>
                         </div>
+                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('transaksi') }}'" style="margin-right: 10px;">
+                            Back
+                        </button>
                     </div>
                     <hr style="height: 10px;">
                     <div class="iq-card-body">
@@ -77,10 +59,6 @@
                             </button>
                         </div>
                         @endif
-                        <button onclick="window.location.href='/transaksi'" type="button" class="btn btn-success">
-                            Back
-                        </button>
-                        <br><br>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-3">
@@ -244,11 +222,21 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-4">
+                                    <div id="custom-panjang"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div id="custom-lebar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="text">Jenis Tinta</label>
                                         <select class="form-control" id="jenis-tinta-dropdown" name="tinta_id" autofocus>
                                             <option selected="" disabled="">
-                                                -- Pilih Keterangan --
+                                                -- Pilih Tinta --
                                             </option>
                                         </select>
                                     </div>
@@ -256,7 +244,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="text">Finishing</label>
-                                        <select class="form-control" id="finishing-dropdown" name="finishing" autofocus>
+                                        <select class="form-control" id="finishing-dropdown" name="finishing_id" autofocus>
                                             <option selected="" disabled="">
                                                 -- Pilih Finishing --
                                             </option>
@@ -333,6 +321,8 @@
                                 $('#ukuran-dropdown').change(function () {
                                     var nama_produk = $('#produk-dropdown').val();
                                     var ukuran = $('#ukuran-dropdown').val();
+                                    $("#custom-panjang").html('');
+                                    $("#custom-lebar").html('');
                                     $("#jenis_kertas-dropdown").html('');
                                     $("#jenis-tinta-dropdown").html('');
                                     $("#finishing-dropdown").html('');
@@ -346,6 +336,12 @@
                                         },
                                         dataType: 'json',
                                         success: function (result) {
+                                            if(ukuran == "Custom") {
+                                                $('#custom-panjang').append('<label for="custom-panjang">Ukuran Panjang Custom</label>\
+                                                                           <input type="text" class="form-control" id="custom_panjang" name="custom_panjang" required/>');
+                                                $('#custom-lebar').append('<label for="custom-lebar">Ukuran Lebar Custom</label>\
+                                                                         <input type="text" class="form-control" id="custom_lebar" name="custom_lebar" required/>');
+                                            }
                                             $('#jenis_kertas-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Kertas --</option>');
                                             $.each(result.list_kertas, function (key, value) {
                                                 $("#jenis_kertas-dropdown").append('<option value="' + value.jenis_kertas + '">' + value.jenis_kertas +'</option>');
@@ -402,7 +398,7 @@
                                         success: function (result) {
                                             $('#finishing-dropdown').html('<option selected="" disabled="" value="">-- Pilih Finishing --</option>');
                                             $.each(result.list_finishing, function (key, value) {
-                                                $("#finishing-dropdown").append('<option value="' + value.finishing + '">' + value.finishing +'</option>');
+                                                $("#finishing-dropdown").append('<option value="' + value.finishing_id + '">' + value.jenis_finishing +'</option>');
                                             });
                                         }
                                     });
@@ -415,7 +411,7 @@
                 </div>
                 <br>
                 <!--Tabel-->
-                <div class="table-responsive">
+                <div class="table-responsive container">
                     <table class="table table-striped table-borderless" id="tabel">
                         <thead class="thead-dark">
                             <tr>
@@ -425,8 +421,9 @@
                                 <th>Jenis Bahan</th>
                                 <th>Jenis Tinta</th>
                                 <th>Finishing</th>
-                                <th>Harga</th>
+                                <th>Harga Produk</th>
                                 <th>Jumlah Produk</th>
+                                <th>Harga Finishing</th>
                                 <th>Diskon (%)</th>
                                 <th>Sub Total</th>
                                 <th>Harga Custom</th>
@@ -440,14 +437,19 @@
                             <tr>
                                 <td>{{ $beli->detail_produk->id_detail_produk }}</td>
                                 <td>{{ $beli->detail_produk->nama_produk }}</td>
+                                @isset($beli->custom_panjang, $beli->custom_lebar)
+                                <td>{{ $beli->detail_produk->produk->ukuran }} ({{ $beli->custom_panjang }} x {{ $beli->custom_lebar }})</td>
+                                @else
                                 <td>{{ $beli->detail_produk->produk->ukuran }}</td>
+                                @endisset
                                 <td>{{ $beli->detail_produk->produk->jenis_kertas }}</td>
                                 <td>{{ $beli->detail_produk->tinta->jenis_tinta }}</td>
-                                <td>{{ $beli->detail_produk->finishing }}</td>
-                                <td>Rp {{ number_format($beli->detail_produk->harga, 2) }}</td>
+                                <td>{{ $beli->detail_produk->finishing->jenis_finishing }}</td>
+                                <td>Rp {{ number_format($beli->harga, 2) }}</td>
                                 <td>{{ $beli->jumlah_produk }}</td>
+                                <td>Rp {{ number_format($beli->harga_finishing, 2) }}</td>
                                 <td>{{ $beli->diskon }}</td>
-                                <td>Rp {{ number_format(($beli->detail_produk->harga*$beli->jumlah_produk*(1-$beli->detail_produk->diskon/100)), 2) }}</td>
+                                <td>Rp {{ number_format((($beli->harga*$beli->jumlah_produk+$beli->harga_finishing)*(1-$beli->diskon/100)), 2) }}</td>
                                 <td>Rp {{ number_format($beli->harga_custom, 2) }}</td>
                                 <td>Rp {{ number_format($beli->sub_total, 2) }}</td>
                                 <td>{!! $beli->custom !!}</td>
@@ -456,8 +458,11 @@
                                 <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="{{ $beli->harga }}" readonly/></td>
                                 <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="{{ $beli->jumlah_produk }}" readonly/></td>
                                 <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="{{ $beli->diskon }}" readonly/></td>
+                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="{{ $beli->harga_finishing }}" readonly/></td>
                                 <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="{{ $beli->harga_custom }}" readonly/></td>
                                 <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="{{ $beli->custom }}" readonly/></td>
+                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_panjang[]" value="{{ $beli->custom_panjang }}" readonly/></td>
+                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_lebar[]" value="{{ $beli->custom_lebar }}" readonly/></td>
                                 <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="{{ $beli->sub_total }}" readonly/></td>
                             </tr>
                             @endforeach
@@ -552,7 +557,7 @@
                     var table = document.getElementById("tabel");
                     var sub_total = 0;
                     for (var i = 1, row; row = table.rows[i]; i++) {
-                        sub_total += parseInt(table.rows[i].cells[20].getElementsByTagName('input')[0].value);
+                        sub_total += parseInt(table.rows[i].cells[24].getElementsByTagName('input')[0].value);
                         // sub_total += parseInt(table.rows[i].cells[11].innerHTML);
                     }
                     $.ajax({
@@ -582,17 +587,19 @@
                     var ukuran = $('#ukuran-dropdown').val();
                     var jenis_kertas = $('#jenis_kertas-dropdown').val();
                     var jenis_tinta = $('#jenis-tinta-dropdown').val();
-                    var finishing = $('#finishing-dropdown').val();
+                    var jenis_finishing = $('#finishing-dropdown').val();
                     var jumlah_produk = $('#jumlah_produk').val();
                     var harga_custom = $('#harga_custom').val();
                     var custom = $('#custom').val();
-                    // var custom = document.getElementById("custom");
+                    var custom_panjang = $('#custom_panjang').val();
+                    var custom_lebar = $('#custom_lebar').val();
                     var promo_id = $('#promo_id').val();
                     var promo = 0;
                     var table = document.getElementById("tabel");
                     var sub_total = 0;
+                    var hf = 0;
                     for (var i = 1, row; row = table.rows[i]; i++) {
-                        sub_total += parseInt(table.rows[i].cells[20].getElementsByTagName('input')[0].value);
+                        sub_total += parseInt(table.rows[i].cells[24].getElementsByTagName('input')[0].value);
                         // sub_total += parseInt(table.rows[i].cells[11].innerHTML);
                     }
                     $.ajax({
@@ -603,38 +610,80 @@
                             ukuran:ukuran,
                             jenis_kertas:jenis_kertas,
                             jenis_tinta:jenis_tinta,
-                            finishing:finishing,
+                            jenis_finishing:jenis_finishing,
                             promo_id:promo_id,
                             _token:'{{ csrf_token() }}'
                         },
                         dataType: 'json',
                         success: function (result) {
                             $.each(result.list_detail, function (key, produk) {
-                                $('#list-item').append('<tr>\
-                                                        <td>'+produk.id_detail_produk+'</td>\
-                                                        <td>'+produk.nama_produk+'</td>\
-                                                        <td>'+produk.ukuran+'</td>\
-                                                        <td>'+produk.jenis_kertas+'</td>\
-                                                        <td>'+produk.jenis_tinta+'</td>\
-                                                        <td>'+produk.finishing+'</td>\
-                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(produk.harga)+'</td>\
-                                                        <td>'+jumlah_produk+'</td>\
-                                                        <td>'+produk.diskon+'</td>\
-                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt(produk.harga*jumlah_produk*(1-(produk.diskon/100))))+'</td>\
-                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(harga_custom)+'</td>\
-                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt((produk.harga*jumlah_produk*(1-(produk.diskon/100)))+parseInt(harga_custom)))+'</td>\
-                                                        <td>'+custom+'</td>\
-                                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
-                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="' + produk.id_detail_produk + '" readonly/></td>\
-                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="' + produk.harga + '" readonly/></td>\
-                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="' + jumlah_produk + '" readonly/></td>\
-                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="' + produk.diskon + '" readonly/></td>\
-                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="' + harga_custom + '" readonly/></td>\
-                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="' + custom + '" readonly/></td>\
-                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="' + parseInt((produk.harga*jumlah_produk*(1-(produk.diskon/100)))+parseInt(harga_custom)) + '" readonly/></td>\
-                                                        </tr>');
+                                if(produk.status_finishing == 0)
+                                    hf = parseInt(produk.finishing_harga)
+                                else
+                                    hf = parseInt(produk.finishing_harga*jumlah_produk)
                                 
-                                sub_total += parseInt((jumlah_produk*produk.harga*(1-(produk.diskon/100)))+parseInt(harga_custom));
+                                if(ukuran != "Custom") {
+                                    $('#list-item').append('<tr>\
+                                                            <td>'+produk.id_detail_produk+'</td>\
+                                                            <td>'+produk.nama_produk+'</td>\
+                                                            <td>'+produk.ukuran+'</td>\
+                                                            <td>'+produk.jenis_kertas+'</td>\
+                                                            <td>'+produk.jenis_tinta+'</td>\
+                                                            <td>'+produk.jenis_finishing+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(produk.harga)+'</td>\
+                                                            <td>'+jumlah_produk+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(hf)+'</td>\
+                                                            <td>'+produk.diskon+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100))))+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(harga_custom)+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt(((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)))+'</td>\
+                                                            <td>'+custom+'</td>\
+                                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="' + produk.id_detail_produk + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="' + produk.harga + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="' + hf + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="' + jumlah_produk + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="' + produk.diskon + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="' + harga_custom + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="' + custom + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_panjang[]" value="" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_lebar[]" value="" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="' + parseInt(((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)) + '" readonly/></td>\
+                                                            </tr>');
+                                    sub_total += parseInt(((jumlah_produk*produk.harga+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom));
+                                }
+                                else if(ukuran == "Custom") {
+                                    var int_panjang = parseFloat(custom_panjang.match(/[\d\.]+/));
+                                    var int_lebar = parseFloat(custom_lebar.match(/[\d\.]+/));
+                                    $('#list-item').append('<tr>\
+                                                            <td>'+produk.id_detail_produk+'</td>\
+                                                            <td>'+produk.nama_produk+'</td>\
+                                                            <td>'+produk.ukuran+' ('+custom_panjang+' x '+custom_lebar+')'+'</td>\
+                                                            <td>'+produk.jenis_kertas+'</td>\
+                                                            <td>'+produk.jenis_tinta+'</td>\
+                                                            <td>'+produk.jenis_finishing+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(produk.harga*int_panjang*int_lebar)+'</td>\
+                                                            <td>'+jumlah_produk+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(hf)+'</td>\
+                                                            <td>'+produk.diskon+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100))))+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(harga_custom)+'</td>\
+                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt(((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)))+'</td>\
+                                                            <td>'+custom+'</td>\
+                                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="' + produk.id_detail_produk + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="' + parseInt(produk.harga*int_panjang*int_lebar) + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="' + hf + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="' + jumlah_produk + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="' + produk.diskon + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="' + harga_custom + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="' + custom + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_panjang[]" value="' + custom_panjang + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_lebar[]" value="' + custom_lebar + '" readonly/></td>\
+                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="' + parseInt(((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)) + '" readonly/></td>\
+                                                            </tr>');
+                                    sub_total += parseInt(((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom));
+                                }
                             });
                             $.each(result.promo, function (key, potongan) {
                                 promo = potongan.potongan;
@@ -686,7 +735,7 @@
                         var table = document.getElementById("tabel");
                         var sub_total = 0;
                         for (var i = 1, row; row = table.rows[i]; i++) {
-                            sub_total += parseInt(table.rows[i].cells[20].getElementsByTagName('input')[0].value);
+                            sub_total += parseInt(table.rows[i].cells[24].getElementsByTagName('input')[0].value);
                             // sub_total += parseInt(table.rows[i].cells[11].innerHTML);
                         }
                         $.ajax({

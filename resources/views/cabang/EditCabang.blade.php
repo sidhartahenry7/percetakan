@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Edit Cabang</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -61,7 +42,7 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Edit Cabang</h4>
                     </div>
-                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('cabang') }}'" style="margin-right: 10px;">
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-cabang') }}'" style="margin-right: 10px;">
                         Back
                     </button>
                 </div>
@@ -125,7 +106,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('cabang') }}'">
+                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-cabang') }}'">
                             Cancel
                         </button>
                         <button type="submit" class="btn" style="background-color: #29a4da; color: white;">
@@ -140,9 +121,9 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>

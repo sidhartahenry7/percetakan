@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Daftar Gaji</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -63,32 +44,39 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Daftar Gaji</h4>
                     </div>
+                    @if(auth()->user()->user_role == "Admin")
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ url('gaji') }}'" style="margin-right: 10px;">
+                        <span class="material-icons align-middle">
+                            add
+                        </span>
+                    </button>
+                    @endif
                 </div>
             </div>
             <hr style="height: 10px;">
             <div class="iq-card-body">
                 <!--Tabel-->
-                <div class="table-responsive">
+                <div class="table-responsive container">
                     <table class="table table-striped table-borderless">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Tanggal Penggajian</th>
-                                <th>Nama Pegawai</th>
-                                <th>Gaji Pokok</th>
-                                <th>Jumlah Hari Masuk</th>
-                                <th>Bonus</th>
-                                <th>Total Gaji</th>
+                                <th style="min-width: 120px">Tanggal Penggajian</th>
+                                <th style="min-width: 150px">Nama Pegawai</th>
+                                <th style="min-width: 150px">Gaji Pokok</th>
+                                <th style="min-width: 120px">Jumlah Hari Masuk</th>
+                                <th style="min-width: 150px">Bonus</th>
+                                <th style="min-width: 150px">Total Gaji</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach ($list_gaji as $gaji)
                             <tr>
-                                <td>{{ $gaji->tanggal_cetak }}</td>
+                                <td>{{ date('d-m-Y', strtotime($gaji->tanggal_cetak)) }}</td>
                                 <td>{{ $gaji->pegawai->nama_lengkap }}</td>
-                                <td>{{ $gaji->gaji_pokok }}</td>
+                                <td>Rp {{ number_format($gaji->gaji_pokok) }}</td>
                                 <td>{{ $gaji->jumlah_hari_masuk }}</td>
-                                <td>{{ $gaji->bonus }}</td>
-                                <td>{{ $gaji->total_gaji }}</td>
+                                <td>Rp {{ number_format($gaji->bonus) }}</td>
+                                <td>Rp {{ number_format($gaji->total_gaji) }}</td>
                             </tr>
                         @endforeach
                         </tbody>

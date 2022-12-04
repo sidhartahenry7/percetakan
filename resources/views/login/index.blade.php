@@ -135,10 +135,9 @@
             <br> <br>
             <button class="btn mt-3" onclick="window.location.href='/pegawai'" type="submit">Login</button>
         </form>
-        <div class="text-center fs-6">
-            {{-- <a href="#">Forget password?</a> or <a href="#">Sign up</a> --}}
+        {{-- <div class="text-center fs-6">
             <p class="text-center">Not Registered? <a href="/register">Register Now!</a></p>
-        </div>
+        </div> --}}
     </div>
 </body>
 

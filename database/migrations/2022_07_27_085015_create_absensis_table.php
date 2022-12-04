@@ -18,8 +18,8 @@ class CreateAbsensisTable extends Migration
             $table->foreignId('pegawai_id');
             $table->date('tanggal_masuk');
             $table->time('jam_masuk');
-            $table->decimal('longitude_masuk', 15, 5);
-            $table->decimal('latitude_masuk', 15, 5);
+            $table->decimal('longitude_masuk', 15, 7);
+            $table->decimal('latitude_masuk', 15, 7);
             $table->date('tanggal_keluar')->nullable();
             $table->time('jam_keluar')->nullable();
             $table->decimal('longitude_keluar', 15, 7)->nullable();

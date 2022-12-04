@@ -17,9 +17,22 @@ class CabangController extends Controller
      */
     public function index()
     {
-        return view('cabang.Cabang', [
-            "idcabang" => cabang::CreateID(),
-            "list_cabang" => cabang::where('deleted', 0)->get()
+        if (Auth::user()->user_role == 'Admin') {
+            return view('cabang.Cabang', [
+                "idcabang" => cabang::CreateID(),
+                "title" => "Add Cabang"
+            ]);
+        }
+        else {
+            abort(403);
+        }
+    }
+
+    public function listCabang()
+    {
+        return view('cabang.ListCabang', [
+            "list_cabang" => cabang::where('deleted', 0)->get(),
+            "title" => "Daftar Cabang"
         ]);
     }
 
@@ -65,7 +78,7 @@ class CabangController extends Controller
         // cabang::create($request->all());
 
         $request->session()->flash('success','Penyimpanan Berhasil');
-        return redirect('/cabang');
+        return redirect('/list-cabang');
     }
 
     /**
@@ -92,7 +105,8 @@ class CabangController extends Controller
 
             return view('cabang.EditCabang', [
                 "title" => "Edit Cabang",
-                "cabang" => $cabangs         
+                "cabang" => $cabangs,
+                "title" => "Edit Cabang"        
             ]);
         }
     }

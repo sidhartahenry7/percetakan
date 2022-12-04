@@ -17,14 +17,16 @@ class PelangganController extends Controller
     public function index()
     {
         return view('pelanggan.AddPelanggan', [
-            "idpelanggan" => pelanggan::CreateID()
+            "idpelanggan" => pelanggan::CreateID(),
+            "title" => "Add Pelanggan"
         ]);
     }
     
     public function listPelanggan()
     {
         return view('pelanggan.ListPelanggan', [
-            "list_pelanggan" => pelanggan::where('deleted', 0)->get()
+            "list_pelanggan" => pelanggan::where('deleted', 0)->get(),
+            "title" => "Daftar Pelanggan"
         ]);
     }
 
@@ -56,7 +58,7 @@ class PelangganController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/pelanggan');
+        return redirect('/list-pelanggan');
     }
 
     /**
@@ -83,7 +85,8 @@ class PelangganController extends Controller
 
             return view('pelanggan.EditPelanggan', [
                 "title" => "Edit Pelanggan",
-                "pelanggan" => $pelanggans         
+                "pelanggan" => $pelanggans,
+                "title" => "Edit Pelanggan"     
             ]);
         }
     }

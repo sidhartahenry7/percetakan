@@ -1,24 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Add Jadwal Kerja Pegawai</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -145,27 +125,14 @@
                         {{-- <button type="cancel" class="btn btn-danger">
                             Cancel
                         </button> --}}
+                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-jadwal') }}'">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn" style="background-color: #29a4da; color: white;">
                             Submit
                         </button>
                     </form>
-                    @endif
-
-                    @if(auth()->user()->user_role != "Admin")
-                    <div class="form-group">
-                        <label style="color: black; font-weight: bold;" for="text">Nama Cabang :</label>
-                        <label for="text">{{ auth()->user()->cabang->nama_cabang }}</label>
-                    </div>
-                    <div class="form-group">
-                        <label style="color: black; font-weight: bold;" for="text">Alamat :</label>
-                        <label for="text">{{ auth()->user()->cabang->alamat }}</label>
-                    </div>
-                    <div class="form-group">
-                        <label style="color: black; font-weight: bold;" for="text">Nomor Telepon :</label>
-                        <label for="text">{{ auth()->user()->cabang->nomor_telepon }}</label>
-                    </div>
-                    @endif
-                    
+                    @endif                    
                 </div>
             </div>
         </div>

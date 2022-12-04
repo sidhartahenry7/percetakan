@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Daftar Promo</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -64,6 +45,13 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Daftar Promo</h4>
                     </div>
+                    @if(auth()->user()->user_role == "Admin")
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ url('promo') }}'" style="margin-right: 10px;">
+                        <span class="material-icons align-middle">
+                            add
+                        </span>
+                    </button>
+                    @endif
                 </div>
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
@@ -76,7 +64,7 @@
                         </div>
                     @endif
                     <!--Tabel-->
-                    <div class="table-responsive">
+                    <div class="table-responsive container">
                         <table class="table table-striped table-borderless">
                             <thead class="thead-dark">
                                 <tr>

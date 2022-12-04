@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Daftar Absensi</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -66,22 +47,22 @@
             <hr style="height: 10px;">
             <div class="iq-card-body">
                 <!--Tabel-->
-                <div class="table-responsive">
+                <div class="table-responsive container">
                     <table class="table table-striped table-borderless">
                         <thead class="thead-dark">
                             <tr>
                                 {{-- <th>Nama Cabang</th> --}}
-                                <th>ID Pegawai</th>
-                                <th>Nama Pegawai</th>
-                                <th>Tanggal Masuk</th>
-                                <th>Jam Masuk</th>
-                                <th>Longitude Masuk</th>
-                                <th>Latitude Masuk</th>
-                                <th>Tanggal Keluar</th>
-                                <th>Jam Keluar</th>
-                                <th>Longitude Keluar</th>
-                                <th>Latitude Keluar</th>
-                                <th>Status</th>
+                                <th style="min-width: 100px">ID Pegawai</th>
+                                <th style="min-width: 150px">Nama Lengkap</th>
+                                <th style="min-width: 150px">Tanggal Masuk</th>
+                                <th style="min-width: 120px">Jam Masuk</th>
+                                <th style="min-width: 150px">Longitude Masuk</th>
+                                <th style="min-width: 150px">Latitude Masuk</th>
+                                <th style="min-width: 150px">Tanggal Keluar</th>
+                                <th style="min-width: 120px">Jam Keluar</th>
+                                <th style="min-width: 150px">Longitude Keluar</th>
+                                <th style="min-width: 150px">Latitude Keluar</th>
+                                <th style="min-width: 120px">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -99,9 +80,21 @@
                                 @else
                                 <td>&nbsp;</td>
                                 @endisset
+                                @isset ($absensi->jam_keluar)
                                 <td>{{ $absensi->jam_keluar }}</td>
+                                @else
+                                <td>&nbsp;</td>
+                                @endisset
+                                @isset ($absensi->longitude_keluar)
                                 <td>{{ $absensi->longitude_keluar }}</td>
+                                @else
+                                <td>&nbsp;</td>
+                                @endisset
+                                @isset ($absensi->latitude_keluar)
                                 <td>{{ $absensi->latitude_keluar }}</td>
+                                @else
+                                <td>&nbsp;</td>
+                                @endisset
                                 <td>{{ $absensi->status }}</td>
                             </tr>
                             @endforeach

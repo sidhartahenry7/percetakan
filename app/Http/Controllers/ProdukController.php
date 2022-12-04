@@ -16,9 +16,22 @@ class ProdukController extends Controller
      */
     public function index()
     {
-        return view('produk.Produk', [
-            "idproduk" => produk::CreateID(),
-            "list_produk" => produk::where('deleted', 0)->get()
+        if (Auth::user()->user_role == 'Admin') {
+            return view('produk.AddBahanBaku', [
+                "idproduk" => produk::CreateID(),
+                "title" => "Add Bahan Baku"
+            ]);
+        }
+        else {
+            abort(403);
+        }
+    }
+    
+    public function listProduk()
+    {
+        return view('produk.ListBahanBaku', [
+            "list_produk" => produk::where('deleted', 0)->get(),
+            "title" => "Daftar Bahan Baku"
         ]);
     }
 
@@ -50,7 +63,7 @@ class ProdukController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/produk');
+        return redirect('/list-bahan-baku');
     }
 
     /**
@@ -98,6 +111,6 @@ class ProdukController extends Controller
         produk::where('id', $produk->id)
               ->update(['deleted' => '1']);
         
-        return redirect('/produk')->with('success', 'Produk berhasil dihapus!');
+        return redirect('/list-bahan-baku')->with('success', 'Produk berhasil dihapus!');
     }
 }

@@ -23,13 +23,15 @@ class KomplainController extends Controller
         if (Auth::user()->user_role == 'Admin') {
             return view('komplain.AddKomplain', [
                 // "list_transaksi" => detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->where('transaksis.status_pengerjaan', 'Selesai')->get(),
-                "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get()
+                "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get(),
+                "title" => "Add Komplain"
             ]);
     
         } else {
             return view('komplain.AddKomplain', [
                 // "list_transaksi" => detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->where('transaksis.status_pengerjaan', 'Selesai')->get()
-                "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get()
+                "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get(),
+                "title" => "Add Komplain"
             ]);
         }
     }
@@ -37,10 +39,16 @@ class KomplainController extends Controller
     public function listKomplain()
     {
         return view('komplain.ListKomplain', [
-            "list_komplain" => komplain::join('detail_transaksis', 'detail_transaksis.id', '=', 'komplains.detail_transaksi_id')
-                                       ->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')                            
-                                       ->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')                            
-                                       ->get()
+            "list_komplain" => komplain::get(),
+            "title" => "Daftar Komplain"
+        ]);
+    }
+
+    public function indexDetail($id)
+    {
+        return view('komplain.DetailKomplain', [
+            "komplain" => komplain::where('komplains.id', $id)->first(),
+            "title" => "Detail Komplain"
         ]);
     }
 
@@ -89,7 +97,7 @@ class KomplainController extends Controller
             'bukti_komplain' => $filename
         ]);
         DB::commit();
-        return redirect('/komplain')->with("create_success", "Komplain Berhasil Ditambah");
+        return redirect('/list-komplain')->with("create_success", "Komplain Berhasil Ditambah");
     }
 
     /**
@@ -134,6 +142,8 @@ class KomplainController extends Controller
      */
     public function destroy(komplain $komplain)
     {
-        //
+        komplain::destroy($komplain->id);
+        
+        return redirect('/list-komplain')->with('success', 'Komplain berhasil dihapus!');
     }
 }

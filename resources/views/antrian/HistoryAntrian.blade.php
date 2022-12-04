@@ -1,24 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>History Antrian</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -65,7 +45,7 @@
                     {{-- <a href="{{ url('po-botol/history') }}" class="btn btn-warning " id="button-add" style="background:orange">
                         <i class="mdi mdi-history" ></i>
                     </a> --}}
-                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('antrian') }}'" style="margin-right: 10px;">
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-antrian') }}'" style="margin-right: 10px;">
                         Back
                     </button>
                 </div>
@@ -93,7 +73,7 @@
                         <tr>
                             <td>{{ $antrian->id_antrian }}</td>
                             <td>{{ $antrian->cabang->nama_cabang }}</td>
-                            <td>{{ $antrian->tanggal_antrian }}</td>
+                            <td>{{ date('d-m-Y', strtotime($antrian->tanggal_antrian)) }}</td>
                             <td>{{ $antrian->nomor_antrian }}</td>
                             <td>{{ $antrian->pelanggan->nama_pelanggan }}</td>
                             <td>{{ $antrian->pelanggan->nomor_handphone }}</td>

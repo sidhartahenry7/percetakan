@@ -19,6 +19,7 @@ use App\Http\Controllers\StokCabangController;
 use App\Http\Controllers\DetailProdukController;
 use App\Http\Controllers\JadwalBekerjaController;
 use App\Http\Controllers\DetailTransaksiController;
+use App\Http\Controllers\FinishingController;
 use App\Http\Controllers\TintaController;
 
 /*
@@ -45,6 +46,7 @@ Route::post('/cabang', [CabangController::class, 'store']);
 Route::delete('/cabang/{cabang:id}', [CabangController::class, 'destroy']);
 Route::put('/cabang/{cabang:id}', [CabangController::class, 'edit']);
 Route::post('/cabang/{cabang:id}', [CabangController::class, 'update']);
+Route::get('/list-cabang', [CabangController::class, 'listCabang'])->middleware('auth');
 
 Route::get('/pegawai', [PegawaiController::class, 'index'])->middleware('auth');
 Route::get('/list-pegawai', [PegawaiController::class, 'listPegawai'])->middleware('auth');
@@ -97,6 +99,8 @@ Route::get('/antrian', [AntrianController::class, 'index'])->middleware('auth');
 Route::post('api/fetch-nomor-antrian', [AntrianController::class, 'fetchNomorAntrian']);
 Route::get('/history-antrian', [AntrianController::class, 'indexHistory'])->middleware('auth');
 Route::post('/antrian', [AntrianController::class, 'store']);
+Route::delete('/antrian/{antrian:id}', [AntrianController::class, 'destroy']);
+Route::get('/list-antrian', [AntrianController::class, 'listAntrian'])->middleware('auth');
 
 Route::get('/pelanggan', [PelangganController::class, 'index'])->middleware('auth');
 Route::get('/list-pelanggan', [PelangganController::class, 'listPelanggan'])->middleware('auth');
@@ -110,19 +114,27 @@ Route::get('/list-kategori', [KategoriController::class, 'listKategori'])->middl
 Route::post('/kategori', [KategoriController::class, 'store']);
 Route::delete('/kategori/{kategori:id}', [KategoriController::class, 'destroy']);
 
-Route::get('/produk', [ProdukController::class, 'index'])->middleware('auth');
-Route::post('/produk', [ProdukController::class, 'store']);
-Route::delete('/produk/{produk:id}', [ProdukController::class, 'destroy']);
+Route::get('/bahan-baku', [ProdukController::class, 'index'])->middleware('auth');
+Route::post('/bahan-baku', [ProdukController::class, 'store']);
+Route::delete('/bahan-baku/{produk:id}', [ProdukController::class, 'destroy']);
+Route::get('/list-bahan-baku', [ProdukController::class, 'listProduk'])->middleware('auth');
 
 Route::get('/tinta', [TintaController::class, 'index'])->middleware('auth');
 Route::post('/tinta', [TintaController::class, 'store']);
 Route::delete('/tinta/{tinta:id}', [TintaController::class, 'destroy']);
+Route::get('/list-tinta', [TintaController::class, 'listTinta'])->middleware('auth');
+
+Route::get('/finishing', [FinishingController::class, 'index'])->middleware('auth');
+Route::post('/finishing', [FinishingController::class, 'store']);
+Route::delete('/finishing/{finishing:id}', [FinishingController::class, 'destroy']);
+Route::get('/list-finishing', [FinishingController::class, 'listFinishing'])->middleware('auth');
 
 Route::get('/detail-produk', [DetailProdukController::class, 'index'])->middleware('auth');
 Route::post('/detail-produk', [DetailProdukController::class, 'store']);
 Route::delete('/detail-produk/{detail_produk:id}', [DetailProdukController::class, 'destroy']);
 Route::put('/detail-produk/{detail_produk:id}', [DetailProdukController::class, 'edit']);
 Route::post('/detail-produk/{detail_produk:id}', [DetailProdukController::class, 'update']);
+Route::get('/list-detail-produk', [DetailProdukController::class, 'listDetailProduk'])->middleware('auth');
 
 Route::get('/stok', [StokCabangController::class, 'index'])->middleware('auth');
 Route::post('/stok', [StokCabangController::class, 'store']);
@@ -133,5 +145,7 @@ Route::post('/promo', [PromoController::class, 'store']);
 Route::delete('/promo/{promo:id}', [PromoController::class, 'destroy']);
 
 Route::get('/komplain', [KomplainController::class, 'index'])->middleware('auth');
+Route::get('/komplain/{komplain:id}', [KomplainController::class, 'indexDetail'])->middleware('auth');
+Route::delete('/komplain/{komplain:id}', [KomplainController::class, 'destroy']);
 Route::get('/list-komplain', [KomplainController::class, 'listKomplain'])->middleware('auth');
 Route::post('/komplain', [KomplainController::class, 'store']);

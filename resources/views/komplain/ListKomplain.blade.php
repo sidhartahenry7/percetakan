@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Daftar Komplain</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -63,18 +44,23 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Daftar Komplain</h4>
                     </div>
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ url('komplain') }}'" style="margin-right: 10px;">
+                        <span class="material-icons align-middle">
+                            add
+                        </span>
+                    </button>
                 </div>
                 <hr style="height: 10px;">
             </div>
             <!--Tabel-->
-            <div class="table-responsive">
+            <div class="table-responsive container">
                 <table class="table table-striped table-borderless">
                     <thead class="thead-dark">
                         <tr>
                             <th>ID Transaksi</th>
                             <th>Nama Produk</th>
                             <th>Isi Komplain</th>
-                            <th>Bukti Komplain</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,7 +69,21 @@
                                 <td>{{ $komplain->detail_transaksi->transaksi->id_transaksi }}</td>
                                 <td>{{ $komplain->detail_transaksi->detail_produk->nama_produk }}</td>
                                 <td>{{ $komplain->isi_komplain }}</td>
-                                <td><img src="images/bukti_komplain/{{ $komplain->bukti_komplain }}" style="height: 200px;"/></td>
+                                <td>
+                                    <a href="{{ url('/komplain/'.$komplain->id) }}" class="btn btn-success btn-sm">
+                                        <span class="material-icons align-middle">
+                                            visibility
+                                        </span>
+                                    </a>
+                                    <form action="{{ url('/komplain/'.$komplain->id) }}" method="POST" class="d-inline">
+                                        @method('delete')
+                                        @csrf
+                                        <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                {{-- <td><img src="images/bukti_komplain/{{ $komplain->bukti_komplain }}" style="height: 100px;"/></td> --}}
                             </tr>
                         @endforeach
                     </tbody>

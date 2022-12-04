@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Edit Detail Produk</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -48,6 +29,10 @@
             color: black;
         }
 
+        #status_finishing {
+            font-size: 12px;
+        }
+
     </style>
 </head>
 <body>
@@ -61,7 +46,7 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Edit Detail Produk</h4>
                     </div>
-                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('detail-produk') }}'" style="margin-right: 10px;">
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-detail-produk') }}'" style="margin-right: 10px;">
                         Back
                     </button>
                 </div>
@@ -130,10 +115,35 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label style="color: black; font-weight: bold;" for="finishing">Finishing</label>
+                                    <label style="color: black; font-weight: bold;" for="jenis_finishing">Finishing</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label id="finishing">{{ $detail_produk->finishing }}</label>
+                                    <label id="jenis_finishing">{{ $detail_produk->finishing->jenis_finishing }}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label style="color: black; font-weight: bold;" for="harga_finishing">Harga Finishing</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td class="p-0" style="text-align:left;">
+                                                <label class="m-0" id="harga_finishing">Rp {{ number_format($detail_produk->finishing->harga) }}</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-0" style="text-align:left;" id="status_finishing">
+                                                @if($detail_produk->status_finishing == 0)
+                                                <input disabled class="m-0" type="checkbox"> harga per quantity
+                                                @else
+                                                <input checked disabled class="m-0" type="checkbox"> harga per quantity
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +179,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('detail-produk') }}'">
+                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-detail-produk') }}'">
                             Cancel
                         </button>
                         <button type="submit" class="btn" style="background-color: #29a4da; color: white;">
@@ -265,9 +275,9 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>

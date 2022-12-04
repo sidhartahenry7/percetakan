@@ -19,18 +19,12 @@ class AntrianController extends Controller
      */
     public function index()
     {
-        // $cabang = cabang::all();
-
-        // $cabang->where();
-
-        $transaksi = transaksi::get('antrian_id');
-        
-        return view('antrian.Antrian', [
+        return view('antrian.AddAntrian', [
             "idantrian" => antrian::CreateID(),
             "nomorantrian" => antrian::CreateAntrian(),
-            "list_antrian" => antrian::leftJoin('transaksis', 'antrians.id', '=', 'transaksis.antrian_id')->whereNotIn('antrians.id', $transaksi)->orWhere('transaksis.status_pengerjaan', '!=', 'Selesai')->ListAntrian()->orderBy('antrians.id', 'DESC')->get(),
             "list_cabang" => cabang::where('deleted', 0)->get(),
             "list_pelanggan" => pelanggan::where('deleted', 0)->get(),
+            "title" => "Add Antrian",
             // "list_cara" => [
             //     "Onsite",
             //     "WhatsApp"
@@ -38,10 +32,21 @@ class AntrianController extends Controller
         ]);
     }
 
+    public function listAntrian()
+    {
+        $transaksi = transaksi::get('antrian_id');
+
+        return view('antrian.ListAntrian', [
+            "list_antrian" => antrian::leftJoin('transaksis', 'antrians.id', '=', 'transaksis.antrian_id')->whereNotIn('antrians.id', $transaksi)->orWhere('transaksis.status_pengerjaan', '!=', 'Selesai')->ListAntrian()->orderBy('antrians.id', 'DESC')->get(),
+            "title" => "Daftar Antrian"
+        ]);
+    }
+
     public function indexHistory()
     {   
         return view('antrian.HistoryAntrian', [
             "history_antrian" => antrian::join('transaksis', 'antrians.id', '=', 'transaksis.antrian_id')->where('transaksis.status_pengerjaan', 'Selesai')->ListAntrian()->where('antrians.deleted', 0)->orderBy('antrians.id', 'DESC')->get(),
+            "title" => "History Antrian"
         ]);
     }
 
@@ -98,7 +103,7 @@ class AntrianController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/antrian');
+        return redirect('/list-antrian');
     }
 
     /**
@@ -143,6 +148,9 @@ class AntrianController extends Controller
      */
     public function destroy(antrian $antrian)
     {
-        //
+        antrian::where('id', $antrian->id)
+               ->update(['deleted' => '1']);
+
+        return redirect('/list-antrian')->with('success', 'Antrian berhasil dihapus!');
     }
 }

@@ -22,7 +22,8 @@ class AbsensiController extends Controller
     {
         return view('absensi.AddAbsensi', [
             "single_absensi" => absensi::where('pegawai_id', Auth::user()->id)->where('tanggal_masuk',  Carbon::today())->first(),
-            "pegawai" => pegawai::where('id', Auth::user()->id)->where('deleted', 0)->first()
+            "pegawai" => pegawai::where('id', Auth::user()->id)->where('deleted', 0)->first(),
+            "title" => "Absensi"
         ]);
     }
     
@@ -33,7 +34,9 @@ class AbsensiController extends Controller
                                    ->where('pegawais.user_role', '!=', 'Admin')
                                    ->whereNull('pegawais.tanggal_keluar')
                                    ->where('pegawais.deleted', 0)
+                                   ->select('absensis.*', 'pegawais.id_pegawai', 'pegawais.nama_lengkap')
                                    ->get();
+                                //    dd($list_absensi);
         }
         else if (Auth::user()->user_role == "Kepala Toko" || Auth::user()->user_role == "Wakil Kepala Toko") {
             $list_absensi = absensi::join('pegawais', 'absensis.pegawai_id', '=', 'pegawais.id')
@@ -47,7 +50,8 @@ class AbsensiController extends Controller
             $list_absensi = absensi::where('pegawai_id', Auth::user()->id)->get();
         }
         return view('absensi.ListAbsensi', [
-            "list_absensi" => $list_absensi
+            "list_absensi" => $list_absensi,
+            "title" => "Daftar Absensi"
         ]);
     }
 

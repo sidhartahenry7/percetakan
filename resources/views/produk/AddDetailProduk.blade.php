@@ -1,26 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Detail Produk</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" type="text/css" href="{{ asset('/css/trix.css') }}">
-    <script type="text/javascript" src="{{ asset('/js/trix.js') }}"></script>
-    <link rel="stylesheet" href="css/style.css" />
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -67,8 +45,11 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Detail Produk</h4>
+                        <h4 class="card-title">Add Detail Produk</h4>
                     </div>
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-detail-produk') }}'" style="margin-right: 10px;">
+                        Back
+                    </button>
                 </div>
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
@@ -80,7 +61,6 @@
                             </button>
                         </div>
                     @endif
-                    @if(auth()->user()->user_role == "Admin")
                     <form action="/detail-produk" method="post">
                         @csrf
                         <div class="form-group">
@@ -203,6 +183,24 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
+                                        <label for="produk">Finishing</label>
+                                        <select class="form-control @error('finishing_id') is-invalid @enderror" id="finishing_id" name="finishing_id" required>
+                                            <option selected="" disabled="">
+                                                -- Pilih Finishing --
+                                            </option>
+                                            @foreach ($list_finishing as $finishing)
+                                                @if(old('finishing_id') == $finishing->id)
+                                                    <option value="{{ $finishing->id }}" selected>{{ $finishing->jenis_finishing }}</option>
+                                                @else
+                                                    <option value="{{ $finishing->id }}">{{ $finishing->jenis_finishing }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        <input type="checkbox" id="status_finishing" name="status_finishing"> harga per quantity
+                                    </div>
+                                </div>
+                                {{-- <div class="col-sm-3">
+                                    <div class="form-group">
                                         <label for="text">Finishing</label>
                                         <input type="text" class="form-control @error('finishing') is-invalid @enderror" id="finishing" name="finishing" required value="{{ old('finishing') }}"/>
                                         @error('keterangan')
@@ -211,7 +209,7 @@
                                             </div>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="form-group">
                                 <label for="text">Keterangan</label>
@@ -254,69 +252,14 @@
                         {{-- <button type="cancel" class="btn btn-danger">
                             Cancel
                         </button> --}}
+                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-detail-produk') }}'">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn" style="background-color: #29a4da; color: white;">
                             Submit
                         </button>
                     </form>
-                    @endif
                 </div>
-            </div>
-            <br>
-            <!--Tabel-->
-            <div class="table-responsive">
-                <table class="table table-striped table-borderless">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>ID Detail Produk</th>
-                        <th>Kategori</th>
-                        <th>Nama Produk</th>
-                        <th>Ukuran</th>
-                        <th>Jenis Bahan</th>
-                        <th>Jenis Tinta</th>
-                        <th>Finishing</th>
-                        <th>Keterangan</th>
-                        <th>Harga</th>
-                        <th>Diskon (%)</th>
-                        @if(auth()->user()->user_role == "Admin")
-                        <th>Action</th>
-                        @endif
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($list_produk as $detail_produk)
-                        <tr>
-                            <td>{{ $detail_produk->id_detail_produk }}</td>
-                            <td>{{ $detail_produk->kategori->nama_kategori }}</td>
-                            <td>{{ $detail_produk->nama_produk }}</td>
-                            <td>{{ $detail_produk->produk->ukuran }}</td>
-                            <td>{{ $detail_produk->produk->jenis_kertas }}</td>
-                            <td>{{ $detail_produk->tinta->jenis_tinta }}</td>
-                            <td>{{ $detail_produk->finishing }}</td>
-                            <td>{!! $detail_produk->keterangan !!}</td>
-                            <td>Rp {{ number_format($detail_produk->harga, 2) }}</td>
-                            <td>{{ $detail_produk->diskon }}</td>
-                            @if(auth()->user()->user_role == "Admin")
-                            <td>
-                                <form action="{{ url('/detail-produk/'.$detail_produk->id) }}" method="POST" class="d-inline">
-                                    @method('put')
-                                    @csrf
-                                    <button class="btn btn-success">
-                                        <i class="fa fa-pencil-square-o"></i>
-                                    </button>
-                                </form>
-                                <form action="{{ url('/detail-produk/'.$detail_produk->id) }}" method="POST" class="d-inline">
-                                    @method('delete')
-                                    @csrf
-                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                            @endif
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
 
@@ -334,6 +277,7 @@
             $('#kategori_id').select2();
             $('#produk_id').select2();
             $('#tinta_id').select2();
+            $('#finishing_id').select2();
         });
     </script>
 </body>

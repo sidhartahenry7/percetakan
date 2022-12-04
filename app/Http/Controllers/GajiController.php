@@ -22,7 +22,9 @@ class GajiController extends Controller
     public function index()
     {
         if (Auth::user()->user_role == 'Admin') {
-            return view('gaji.AddGaji');
+            return view('gaji.AddGaji', [
+                "title" => "Add Gaji"
+            ]);
         }
         else {
             abort(403);
@@ -37,12 +39,14 @@ class GajiController extends Controller
                                    ->whereNull('pegawais.tanggal_keluar')
                                    ->where('pegawais.deleted', 0)
                                    ->where('pegawais.user_role', '!=', 'Admin')
-                                   ->get()
+                                   ->get(),
+                "title" => "Daftar Gaji"
             ]);
         }
         else {
             return view('gaji.ListGaji', [
-                "list_gaji" => gaji::join('pegawais', 'gajis.pegawai_id', '=', 'pegawais.id')->where('pegawais.id', Auth::user()->id)->get()
+                "list_gaji" => gaji::join('pegawais', 'gajis.pegawai_id', '=', 'pegawais.id')->where('pegawais.id', Auth::user()->id)->get(),
+                "title" => "Daftar Gaji"
             ]);
         }
     }
@@ -120,7 +124,7 @@ class GajiController extends Controller
         }
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/gaji');
+        return redirect('/list-gaji');
     }
 
     /**

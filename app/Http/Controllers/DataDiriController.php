@@ -10,10 +10,16 @@ use Illuminate\Support\Facades\Hash;
 class DataDiriController extends Controller
 {
     public function index() {
-        return view('profile/DataDiri', [
-            "data_diri" => pegawai::where('id', Auth::user()->id)->first(),
-            "list_bank" => ['BCA', 'BRI', 'BNI', 'Bank Mandiri']
-        ]);
+        if (Auth::user()->user_role != 'Admin') {
+            return view('profile/DataDiri', [
+                "data_diri" => pegawai::where('id', Auth::user()->id)->first(),
+                "list_bank" => ['BCA', 'BRI', 'BNI', 'Bank Mandiri'],
+                "title" => "Data Diri"
+            ]);
+        }
+        else {
+            abort(403);
+        }
     }
 
     public function update($id, Request $request) {

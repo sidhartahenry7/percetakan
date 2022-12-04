@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Tinta</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -64,8 +45,15 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Tinta</h4>
+                        <h4 class="card-title">Daftar Finishing</h4>
                     </div>
+                    @if(auth()->user()->user_role == "Admin")
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ url('finishing') }}'" style="margin-right: 10px;">
+                        <span class="material-icons align-middle">
+                            add
+                        </span>
+                    </button>
+                    @endif
                 </div>
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
@@ -77,58 +65,30 @@
                             </button>
                         </div>
                     @endif
-                    @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
-                    <form action="/tinta" method="post">
-                        @csrf
-                        <div class="form-group">
-                            <label style="color: black; font-weight: bold;" for="text">ID Produk Tinta</label>
-                            <input type="text" readonly="readonly" class="form-control @error('id_tinta') is-invalid @enderror" id="id_tinta" name="id_tinta" required autofocus value="{{ $idproduk }}"/>
-                            @error('id_tinta')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="text">Jenis Tinta</label>
-                            <input type="text" class="form-control @error('jenis_tinta') is-invalid @enderror" id="jenis_tinta" name="jenis_tinta" required value="{{ old('jenis_tinta') }}"/>
-                            @error('jenis_tinta')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                        {{-- <button type="cancel" class="btn btn-danger">
-                            Cancel
-                        </button> --}}
-                        <button type="submit" class="btn" style="background-color: #29a4da; color: white;">
-                            Submit
-                        </button>
-                    </form>
-                    @endif
                 </div>
             </div>
-            <br>
             <!--Tabel-->
-            <div class="table-responsive">
+            <div class="table-responsive container">
                 <table class="table table-striped table-borderless">
                     <thead class="thead-dark">
                         <tr>
-                            <th>ID Produk Tinta</th>
-                            <th>Jenis Tinta</th>
+                            <th>ID Finishing</th>
+                            <th>Jenis Finishing</th>
+                            <th>Harga</th>
                             @if(auth()->user()->user_role == "Admin")
                             <th>Action</th>
                             @endif
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($list_tinta as $tinta)
+                    @foreach ($list_finishing as $finishing)
                         <tr>
-                            <td>{{ $tinta->id_tinta }}</td>
-                            <td>{{ $tinta->jenis_tinta }}</td>
+                            <td>{{ $finishing->id_finishing }}</td>
+                            <td>{{ $finishing->jenis_finishing }}</td>
+                            <td>Rp {{ number_format($finishing->finishing_harga) }}</td>
                             @if(auth()->user()->user_role == "Admin")
                             <td>
-                                <form action="{{ url('/tinta/'.$tinta->id) }}" method="POST" class="d-inline">
+                                <form action="{{ url('/finishing/'.$finishing->id) }}" method="POST" class="d-inline">
                                     @method('delete')
                                     @csrf
                                     <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
@@ -143,8 +103,6 @@
                 </table>
             </div>
         </div>
-
-      
     </div>
 
     <script src="js/jquery.min.js"></script>

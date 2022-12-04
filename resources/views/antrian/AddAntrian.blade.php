@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Antrian</title>
-    <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <link
-        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@include('layouts.main')
     <style>
         table {
             font-family: arial, sans-serif;
@@ -61,15 +40,13 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Antrian</h4>
+                        <h4 class="card-title">Add Antrian</h4>
                     </div>
                     {{-- <a href="{{ url('po-botol/history') }}" class="btn btn-warning " id="button-add" style="background:orange">
                         <i class="mdi mdi-history" ></i>
                     </a> --}}
-                    <button type="button" class="btn btn-success" onclick="location.href='{{ url('history-antrian') }}'" style="margin-right: 10px;">
-                        <span class="material-icons align-middle">
-                            browse_gallery
-                        </span>
+                    <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-antrian') }}'" style="margin-right: 10px;">
+                        Back
                     </button>
                 </div>
                 <hr style="height: 10px;">
@@ -226,53 +203,14 @@
                         {{-- <button type="cancel" class="btn btn-danger">
                             Cancel
                         </button> --}}
+                        <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-antrian') }}'">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn" style="background-color: #29a4da; color: white;">
                             Submit
                         </button>
                     </form>
                 </div>
-            </div>
-            <br>
-            <!--Tabel-->
-            <div class="table-responsive">
-                <table class="table table-striped table-borderless">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>ID Antrian</th>
-                            <th>Cabang</th>
-                            <th>Tanggal Antrian</th>
-                            <th>Nomor Antrian</th>
-                            <th>Nama Pelanggan</th>
-                            <th>Nomor Handphone Pelanggan</th>
-                            {{-- <th>Pemesanan VIA</th>
-                            <th>Bukti</th> --}}
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($list_antrian as $antrian)
-                        <tr>
-                            <td>{{ $antrian->id_antrian }}</td>
-                            <td>{{ $antrian->cabang->nama_cabang }}</td>
-                            <td>{{ $antrian->tanggal_antrian }}</td>
-                            <td>{{ $antrian->nomor_antrian }}</td>
-                            <td>{{ $antrian->pelanggan->nama_pelanggan }}</td>
-                            <td>{{ $antrian->pelanggan->nomor_handphone }}</td>
-                            {{-- <td>{{ $antrian->pemesanan_via }}</td>
-                            <td>{{ $antrian->bukti_pembayaran }}</td> --}}
-                            <td>
-                                <form action="{{ url('/antrian/'.$antrian->id) }}" method="POST" class="d-inline">
-                                    @method('delete')
-                                    @csrf
-                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
             </div>
         </div> 
     </div>

@@ -18,7 +18,8 @@ class PromoController extends Controller
     {
         if (Auth::user()->user_role == 'Admin') {
             return view('promo.AddPromo', [
-                "idpromo" => promo::CreateID()
+                "idpromo" => promo::CreateID(),
+                "title" => "Add Promo"
             ]);
         }
         else {
@@ -29,7 +30,8 @@ class PromoController extends Controller
     public function listPromo()
     {
         return view('promo.ListPromo', [
-            "list_promo" => promo::where('deleted', 0)->get()
+            "list_promo" => promo::where('deleted', 0)->get(),
+            "title" => "Daftar Promo"
         ]);
     }
 
@@ -62,7 +64,7 @@ class PromoController extends Controller
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 
-        return redirect('/promo');
+        return redirect('/list-promo');
     }
 
     /**
