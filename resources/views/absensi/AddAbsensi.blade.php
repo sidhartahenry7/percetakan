@@ -130,7 +130,7 @@
                                     <div class="col-sm-3">
                                         <label for="text">Jam Keluar</label>
                                         <br>
-                                        <label for="text" id="jam"></label>
+                                        <label for="text" id="jam">17:00:00</label>
                                         {{-- <input readonly="readonly" type="time" class="form-control" id="jam_keluar" name="jam_keluar" value="{{ date('H:i:m') }}" required autofocus/> --}}
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@
                                 <div class="col-sm-3">
                                     <label for="text">Longitude</label>
                                     <br>
-                                    <input type="text" class="form-control @error('longitude') is-invalid @enderror" id="longitude" name="longitude" required autofocus/>
+                                    <input type="text" class="form-control @error('longitude') is-invalid @enderror" id="longitude" name="longitude" required readonly/>
                                     @error('longitude')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -152,7 +152,7 @@
                                 <div class="col-sm-3">
                                     <label for="text">Latitude</label>
                                     <br>
-                                    <input type="text" class="form-control @error('latitude') is-invalid @enderror" id="latitude" name="latitude" required autofocus/>
+                                    <input type="text" class="form-control @error('latitude') is-invalid @enderror" id="latitude" name="latitude" required readonly/>
                                     @error('latitude')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -203,7 +203,6 @@
                     locationButton.classList.add("custom-map-control-button");
                     map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
                     locationButton.addEventListener("click", () => {
-                        // Try HTML5 geolocation.
                         if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(
                                 (position) => {

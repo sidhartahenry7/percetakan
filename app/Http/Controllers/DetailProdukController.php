@@ -61,7 +61,6 @@ class DetailProdukController extends Controller
      */
     public function store(Storedetail_produkRequest $request)
     {
-        // dd($request->status_finishing);
         $validatedData = $request->validate([
             'id_detail_produk' => 'required|unique:detail_produks',
             'nama_produk' => 'required|max:255',
@@ -132,7 +131,6 @@ class DetailProdukController extends Controller
                                'diskon' => $request->diskon
                              ]);
 
-        // $request->session()->flash('success','Perusahaan Berhasil Diupdate');
         return redirect('/list-detail-produk')->with('success', 'Detail produk berhasil diupdate');
     }
 

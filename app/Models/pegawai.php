@@ -39,6 +39,11 @@ class pegawai extends Authenticatable
         return $this->hasMany(transaksi_pegawai::class);
     }
 
+    public function penerimaan_bahan_baku()
+    {
+        return $this->hasMany(penerimaan_bahan_baku::class);
+    }
+
     public function scopeCreateID()
     {
         $jumlah_pegawai = pegawai::max('id');

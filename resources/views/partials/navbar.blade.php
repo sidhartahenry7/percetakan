@@ -5,8 +5,8 @@
         <span class="sr-only">Toggle Menu</span>
     </button>
     </div>
-    <div class="p-2 pt-5">
-        <img src="/images/Logo-Cassa.png" width="200" height="100" style="object-fit: scale-down;">
+    <div class="p-2 pt-5" style="background: #FFC300">
+        <img src="/images/Logo-Soerabaja45.png" width="200" height="100" style="object-fit: scale-down;">
         <br>
         <ul class="list-unstyled components mb-5" id="nav_accordion">
             @if(auth()->user()->user_role != "Admin")
@@ -106,6 +106,46 @@
                     </ul>
                 </div>
             </li> --}}
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#pembelian" aria-expanded="false"
+                    aria-controls="pembelian">
+                    <span class="menu-title">Pembelian</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="pembelian">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item {{ ($title === "Daftar Pembelian Bahan Baku") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{url('list-pembelian-bahan-baku')}}">Bahan Baku</a>
+                        </li>
+                        <li class="nav-item {{ ($title === "Daftar Pembelian Tinta") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{url('list-pembelian-tinta')}}">Tinta</a>
+                        </li>
+                        <li class="nav-item {{ ($title === "Daftar Pembelian Bahan Finishing") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{url('list-pembelian-bahan-finishing')}}">Bahan Finishing</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#kartu-stok" aria-expanded="false"
+                    aria-controls="kartu-stok">
+                    <span class="menu-title">Kartu Stok</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="kartu-stok">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item {{ ($title === "Kartu Stok Bahan Baku") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{url('kartu-stok-bahan-baku')}}">Bahan Baku</a>
+                        </li>
+                        <li class="nav-item {{ ($title === "Kartu Stok Tinta") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{url('kartu-stok-tinta')}}">Tinta</a>
+                        </li>
+                        <li class="nav-item {{ ($title === "Kartu Stok Bahan Finishing") ? 'active' : '' }}">
+                            <a class="nav-link" href="{{url('kartu-stok-bahan-finishing')}}">Bahan Finishing</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#produk" aria-expanded="false"
                     aria-controls="produk">

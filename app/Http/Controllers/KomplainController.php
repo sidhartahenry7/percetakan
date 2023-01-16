@@ -22,14 +22,12 @@ class KomplainController extends Controller
     {
         if (Auth::user()->user_role == 'Admin') {
             return view('komplain.AddKomplain', [
-                // "list_transaksi" => detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->where('transaksis.status_pengerjaan', 'Selesai')->get(),
                 "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get(),
                 "title" => "Add Komplain"
             ]);
     
         } else {
             return view('komplain.AddKomplain', [
-                // "list_transaksi" => detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->where('transaksis.status_pengerjaan', 'Selesai')->get()
                 "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get(),
                 "title" => "Add Komplain"
             ]);
@@ -78,9 +76,6 @@ class KomplainController extends Controller
 
         $transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->where('detail_transaksis.id', $request->detail_transaksi_id)->first();
         $produk = detail_transaksi::join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('detail_transaksis.id', $request->detail_transaksi_id)->first();
-        // $produk = detail_transaksi::where('detail_transaksis.id', $request->detail_transaksi_id)->first();
-
-        // dd($produk->nama_produk);
 
         $filename = "";
         if (Request()->hasFile('bukti_komplain')) {
@@ -90,7 +85,6 @@ class KomplainController extends Controller
                 $file->move(public_path('images/bukti_komplain/'), $filename);
             }
         }
-        // dd($filename);
         DB::table('komplains')->insert([
             'detail_transaksi_id' => Request()->detail_transaksi_id,
             'isi_komplain' => Request()->isi_komplain,

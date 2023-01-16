@@ -81,7 +81,6 @@
                     $('#tombol').click(function () {
                         var tanggal_cetak = $('#tanggal_cetak').val();
                         $("#list_gaji").html('');
-                        // alert(tanggal_cetak);
                         $.ajax({
                             url: "{{url('/api/hitung-gaji')}}",
                             type: 'POST',
@@ -91,7 +90,6 @@
                             },
                             dataType : 'json',
                             success: function (result) {
-                                // $('#list_gaji').html('<thead class="thead-dark"><tr><th>Tanggal</th><th>Nama Cabang</th><th>ID Pegawai</th><th>Nama Pegawai</th><th>Gaji Pokok</th><th>Jumlah Hari Masuk</th><th>Sub Total Gaji</th><th>Bonus</th><th>Total Gaji</th></tr></thead><tbody>');
                                 $('#list_gaji').html('<thead class="thead-dark"><tr><th>Tanggal</th><th>ID Pegawai</th><th>Nama Pegawai</th><th>Gaji Pokok</th><th>Jumlah Hari Masuk</th><th>Sub Total Gaji</th><th>Bonus</th><th>Total Gaji</th></tr></thead><tbody>');
                                 $.each(result.pegawai, function (key, value) {
                                     var jumlah_hari_masuk = 0;
@@ -105,19 +103,19 @@
                                         if(value.user_role == "Kepala Toko") {
                                             $.each(result.bonus_kepala_toko, function (key, bonus_kepala) {
                                                 if(value.cabang_id == bonus_kepala.cabang_id) {
-                                                    if(bonus_kepala.omset == 500000000) {
+                                                    if(bonus_kepala.omset == 50000000) {
                                                         bonus = 750000;
                                                     }
-                                                    else if(bonus_kepala.omset == 400000000) {
+                                                    else if(bonus_kepala.omset == 40000000) {
                                                         bonus = 600000;
                                                     }
-                                                    else if(bonus_kepala.omset == 200000000) {
+                                                    else if(bonus_kepala.omset == 30000000) {
                                                         bonus = 500000;
                                                     }
-                                                    else if(bonus_kepala.omset == 100000000) {
+                                                    else if(bonus_kepala.omset == 20000000) {
                                                         bonus = 400000;
                                                     }
-                                                    else if(bonus_kepala.omset == 50000000) {
+                                                    else if(bonus_kepala.omset == 15000000) {
                                                         bonus = 300000;
                                                     }
                                                     else {
@@ -129,19 +127,19 @@
                                         else if(value.user_role == "Wakil Kepala Toko") {
                                             $.each(result.bonus_kepala_toko, function (key, bonus_kepala) {
                                                 if(value.cabang_id == bonus_kepala.cabang_id) {
-                                                    if(bonus_kepala.omset == 500000000) {
+                                                    if(bonus_kepala.omset == 50000000) {
                                                         bonus = 650000;
                                                     }
-                                                    else if(bonus_kepala.omset == 400000000) {
+                                                    else if(bonus_kepala.omset == 40000000) {
                                                         bonus = 500000;
                                                     }
-                                                    else if(bonus_kepala.omset == 200000000) {
+                                                    else if(bonus_kepala.omset == 30000000) {
                                                         bonus = 400000;
                                                     }
-                                                    else if(bonus_kepala.omset == 100000000) {
+                                                    else if(bonus_kepala.omset == 20000000) {
                                                         bonus = 300000;
                                                     }
-                                                    else if(bonus_kepala.omset == 50000000) {
+                                                    else if(bonus_kepala.omset == 15000000) {
                                                         bonus = 200000;
                                                     }
                                                     else {
@@ -175,22 +173,6 @@
                                             }
                                         });
                                     }
-                                    // $("#list_gaji").append('<tr><td>'+tanggal_cetak+'</td>\
-                                    //                             <td style="display:none;"><input type="hidden" name="tanggal_cetak[]" value="'+tanggal_cetak+'"/></td>\
-                                    //                             <td>'+value.nama_cabang+'</td>\
-                                    //                             <td>'+value.id_pegawai+'</td>\
-                                    //                             <td style="display:none;"><input type="hidden" name="pegawai_id[]" value="'+value.id+'"/></td>\
-                                    //                             <td>'+value.nama_lengkap+'</td>\
-                                    //                             <td>'+value.gaji_pokok+'</td>\
-                                    //                             <td style="display:none;"><input type="hidden" name="gaji_pokok[]" value="'+value.gaji_pokok+'"/></td>\
-                                    //                             <td>'+jumlah_hari_masuk+'</td>\
-                                    //                             <td style="display:none;"><input type="hidden" name="jumlah_hari_masuk[]" value="'+jumlah_hari_masuk+'"/></td>\
-                                    //                             <td>'+value.gaji_pokok*jumlah_hari_masuk+'</td>\
-                                    //                             <td>'+bonus+'</td>\
-                                    //                             <td style="display:none;"><input type="hidden" name="bonus[]" value="'+bonus+'"/></td>\
-                                    //                             <td>'+parseInt(value.gaji_pokok*jumlah_hari_masuk+bonus)+'</td>\
-                                    //                             <td style="display:none;"><input type="hidden" name="total_gaji[]" value="'+parseInt(value.gaji_pokok*jumlah_hari_masuk+bonus)+'"/></td>\
-                                    //                         </tr>');
                                     $("#list_gaji").append('<tr><td>'+tanggal_cetak+'</td>\
                                                                 <td style="display:none;"><input type="hidden" name="tanggal_cetak[]" value="'+tanggal_cetak+'"/></td>\
                                                                 <td>'+value.id_pegawai+'</td>\

@@ -82,7 +82,7 @@
                             </div>
                             <div class="col">
                                 @isset($komplain->detail_transaksi->custom)
-                                <label style="color: black;" for="text">{{ $komplain->detail_transaksi->custom }}</label>
+                                <label style="color: black;" for="text">{!! $komplain->detail_transaksi->custom !!}</label>
                                 @else
                                 <label style="color: black;" for="text">None</label>
                                 @endisset
@@ -108,7 +108,7 @@
                         </div>
                         <div class="row justify-content-start align-self-center">
                             <div class="col">
-                                <img src="/images/bukti_komplain/{{ $komplain->bukti_komplain }}"/>
+                                <img src="/images/bukti_komplain/{{ $komplain->bukti_komplain }}" style="height: 350px"/>
                             </div>
                         </div>
                     </div>

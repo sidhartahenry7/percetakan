@@ -36,7 +36,6 @@ class AbsensiController extends Controller
                                    ->where('pegawais.deleted', 0)
                                    ->select('absensis.*', 'pegawais.id_pegawai', 'pegawais.nama_lengkap')
                                    ->get();
-                                //    dd($list_absensi);
         }
         else if (Auth::user()->user_role == "Kepala Toko" || Auth::user()->user_role == "Wakil Kepala Toko") {
             $list_absensi = absensi::join('pegawais', 'absensis.pegawai_id', '=', 'pegawais.id')
@@ -44,6 +43,7 @@ class AbsensiController extends Controller
                                    ->where('pegawais.user_role', '!=', 'Admin')
                                    ->whereNull('pegawais.tanggal_keluar')
                                    ->where('pegawais.deleted', 0)
+                                   ->select('absensis.*', 'pegawais.id_pegawai', 'pegawais.nama_lengkap')
                                    ->get();
         }
         else {
@@ -76,8 +76,6 @@ class AbsensiController extends Controller
         $cabang = cabang::where('id', Auth::user()->cabang_id)->first();
         
         if(($request->longitude <= (round($cabang->longitude, 4) + 0.0001)) AND ($request->longitude >= (round($cabang->longitude, 4) - 0.0001)) AND ($request->latitude <= (round($cabang->latitude, 4) + 0.0001)) AND ($request->latitude >= (round($cabang->latitude, 4) - 0.0001))) {
-            // dd('BERHASIL');
-            
             if ($request->tombol == 'check_in') {
                 $jadwal = jadwal_bekerja::where('pegawai_id', Auth::user()->id)
                                         ->where('hari', Carbon::today()->format('l'))
@@ -115,8 +113,6 @@ class AbsensiController extends Controller
             return redirect('/absensi');
         }
         else {
-            // dd('GAGAL');
-            
             $request->session()->flash('fail','Penyimpanan Gagal');
 
             return redirect('/absensi');

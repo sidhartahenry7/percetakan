@@ -600,7 +600,6 @@
                     var hf = 0;
                     for (var i = 1, row; row = table.rows[i]; i++) {
                         sub_total += parseInt(table.rows[i].cells[24].getElementsByTagName('input')[0].value);
-                        // sub_total += parseInt(table.rows[i].cells[11].innerHTML);
                     }
                     $.ajax({
                         url: "{{url('/api/sub-total')}}",
@@ -697,36 +696,6 @@
                 }
 
                 $(document).ready(function () {
-
-                    // $('#diskon').change(function () {
-                    //     $("#total-form").html('');
-                    //     var diskon = $('#diskon').val();
-                    //     var promo_id = $('#promo_id').val();
-                    //     var promo = 0;
-                    //     var table = document.getElementById("tabel");
-                    //     var sub_total = 0;
-                    //     for (var i = 1, row; row = table.rows[i]; i++) {
-                    //         sub_total += parseInt(table.rows[i].cells[15].getElementsByTagName('input')[0].value);
-                    //         // sub_total += parseInt(table.rows[i].cells[11].innerHTML);
-                    //     }
-                    //     $.ajax({
-                    //         url: "{{url('/api/hitung-total')}}",
-                    //         type: 'POST',
-                    //         data: {
-                    //                 promo_id:promo_id,
-                    //                 _token:'{{ csrf_token() }}'
-                    //         },
-                    //         dataType: 'json',
-                    //         success: function (result) {
-                    //             $.each(result.promo, function (key, potongan) {
-                    //                 promo = potongan.potongan;
-                    //             });
-                    //             $("#total-form").append('<label type="text" id="total" name="total" style="color: black; font-weight: bold; font-size: 20px;">' + Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(sub_total*(1-(diskon/100))*(1-(promo/100))) + '</label>\
-                    //                                         <input type="hidden" style="color: black; margin-left: 0px; width: 120px; padding-top: 3px;" name="total" value="' + sub_total*(1-(diskon/100))*(1-(promo/100)) + '"/>');
-                    //         }
-                    //     });
-                    // });
-
                     $('#promo_id').change(function () {
                         $("#total-form").html('');
                         var diskon = $('#diskon').val();
@@ -779,6 +748,19 @@
             $('#promo_id').select2();
         });
     </script>
-
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
 </body>
 </html>

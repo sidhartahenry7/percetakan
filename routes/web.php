@@ -20,6 +20,9 @@ use App\Http\Controllers\DetailProdukController;
 use App\Http\Controllers\JadwalBekerjaController;
 use App\Http\Controllers\DetailTransaksiController;
 use App\Http\Controllers\FinishingController;
+use App\Http\Controllers\KartuStokBahanController;
+use App\Http\Controllers\PembelianBahanController;
+use App\Http\Controllers\PenerimaanBahanBakuController;
 use App\Http\Controllers\TintaController;
 
 /*
@@ -108,6 +111,17 @@ Route::post('/pelanggan', [PelangganController::class, 'store']);
 Route::delete('/pelanggan/{pelanggan:id}', [PelangganController::class, 'destroy']);
 Route::put('/pelanggan/{pelanggan:id}', [PelangganController::class, 'edit']);
 Route::post('/pelanggan/{pelanggan:id}', [PelangganController::class, 'update']);
+
+Route::get('/pembelian-bahan-baku', [PembelianBahanController::class, 'index'])->middleware('auth');
+Route::post('/api/tambah-bahan-baku', [PembelianBahanController::class, 'tambahBahanBaku']);
+Route::post('/pembelian-bahan-baku', [PembelianBahanController::class, 'store']);
+Route::delete('/pembelian-bahan-baku/{pembelian_bahan:id}', [PembelianBahanController::class, 'destroy']);
+Route::get('/list-pembelian-bahan-baku', [PembelianBahanController::class, 'listPembelian'])->middleware('auth');
+Route::get('/pembelian-bahan-baku/{pembelian_bahan:id}', [PembelianBahanController::class, 'detailPembelian'])->middleware('auth');
+Route::get('/history-pembelian-bahan-baku', [PembelianBahanController::class, 'historyPembelian'])->middleware('auth');
+Route::get('/penerimaan-bahan-baku/{pembelian_bahan:id}', [PenerimaanBahanBakuController::class, 'index'])->middleware('auth');
+Route::post('/penerimaan-bahan-baku', [PenerimaanBahanBakuController::class, 'store']);
+Route::get('/kartu-stok-bahan-baku', [KartuStokBahanController::class, 'index'])->middleware('auth');
 
 Route::get('/kategori', [KategoriController::class, 'index'])->middleware('auth');
 Route::get('/list-kategori', [KategoriController::class, 'listKategori'])->middleware('auth');

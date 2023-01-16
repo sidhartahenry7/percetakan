@@ -54,8 +54,6 @@ class CabangController extends Controller
      */
     public function store(StorecabangRequest $request)
     {
-        // StorecabangRequest $request
-
         $validatedData = $request->validate([
             'id_cabang' => 'required|unique:cabangs',
             'nama_cabang' => 'required|max:255',
@@ -66,16 +64,6 @@ class CabangController extends Controller
         ]);
 
         cabang::create($validatedData);
-
-        // cabang::create([
-        //     'nama_cabang' => $request->nama_cabang,
-        //     'alamat' => $request->alamat,
-        //     'longitude' => $request->longitude,
-        //     'latitude' => $request->latitude,
-        //     'nomor_telepon' => $request->nomor_telepon
-        // ]);
-
-        // cabang::create($request->all());
 
         $request->session()->flash('success','Penyimpanan Berhasil');
         return redirect('/list-cabang');

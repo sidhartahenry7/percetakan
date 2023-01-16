@@ -25,10 +25,6 @@ class AntrianController extends Controller
             "list_cabang" => cabang::where('deleted', 0)->get(),
             "list_pelanggan" => pelanggan::where('deleted', 0)->get(),
             "title" => "Add Antrian",
-            // "list_cara" => [
-            //     "Onsite",
-            //     "WhatsApp"
-            // ]
         ]);
     }
 

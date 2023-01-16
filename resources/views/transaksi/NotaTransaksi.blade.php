@@ -48,7 +48,7 @@
         </table>
         <table style="width: 100%" id="tabel-isi">
             <tr>
-                <th colspan="2">
+                <th colspan="2" style="text-align:left">
                     Nota Transaksi
                 </th>
             </tr>

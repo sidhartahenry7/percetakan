@@ -20,13 +20,6 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        // return view('Transaksi', [
-        //     "idtransaksi" => transaksi::CreateID(),
-        //     "list_transaksi" => transaksi::all(),
-        //     "list_antrian" => antrian::ListAntrian()->get()
-        //     // "list_antrian" => antrian::whereNotIn('id', transaksi::all()->pluck('antrian_id'))->get()
-        // ]);
-
         if (Auth::user()->user_role == 'Admin') {
             
             return view('transaksi.Transaksi', [
@@ -69,6 +62,7 @@ class TransaksiController extends Controller
     
     public function printNota($id)
     {   
+        
         $transaksi = transaksi::where('id', $id)->first();
 
         $detail_transaksi = detail_transaksi::where('transaksi_id', $id)->get();

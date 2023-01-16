@@ -70,7 +70,6 @@ class PegawaiController extends Controller
             'alamat' => 'required|max:255',
             'nomor_handphone' => 'required|min:10|max:12',
             'email' => 'required|unique:pegawais|email',
-            // 'password' => 'required|min:8|max:255',
             'rekening_bank' => 'required',
             'nomor_rekening' => 'required|min:10|max:10',
             'gaji_pokok' => 'required',
@@ -79,11 +78,7 @@ class PegawaiController extends Controller
             'cabang_id' => 'required'
         ]);
 
-        // $validatedData['password'] = bcrypt($validatedData['password']);
-
         $validatedData['password'] = Hash::make('password');
-
-        // dd($validatedData['password']);
 
         pegawai::create($validatedData);
 
@@ -161,7 +156,6 @@ class PegawaiController extends Controller
                          'cabang_id' => $request->cabang_id
                         ]);
 
-        // $request->session()->flash('success','Perusahaan Berhasil Diupdate');
         return redirect('/list-pegawai')->with('success', 'Pegawai berhasil diupdate');
     }
 

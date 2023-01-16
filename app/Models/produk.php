@@ -21,6 +21,16 @@ class produk extends Model
         return $this->hasMany(stok_cabang::class);
     }
 
+    public function detail_pembelian_bahan()
+    {
+        return $this->hasMany(detail_pembelian_bahan::class);
+    }
+
+    public function kartu_stok_bahan()
+    {
+        return $this->hasMany(kartu_stok_bahan::class);
+    }
+
     public function scopeCreateID()
     {
         $jumlah_produk = produk::max('id');
