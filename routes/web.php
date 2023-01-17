@@ -21,8 +21,11 @@ use App\Http\Controllers\JadwalBekerjaController;
 use App\Http\Controllers\DetailTransaksiController;
 use App\Http\Controllers\FinishingController;
 use App\Http\Controllers\KartuStokBahanController;
+use App\Http\Controllers\KartuStokTintaController;
 use App\Http\Controllers\PembelianBahanController;
+use App\Http\Controllers\PembelianTintaController;
 use App\Http\Controllers\PenerimaanBahanBakuController;
+use App\Http\Controllers\PenerimaanTintaController;
 use App\Http\Controllers\TintaController;
 
 /*
@@ -122,6 +125,17 @@ Route::get('/history-pembelian-bahan-baku', [PembelianBahanController::class, 'h
 Route::get('/penerimaan-bahan-baku/{pembelian_bahan:id}', [PenerimaanBahanBakuController::class, 'index'])->middleware('auth');
 Route::post('/penerimaan-bahan-baku', [PenerimaanBahanBakuController::class, 'store']);
 Route::get('/kartu-stok-bahan-baku', [KartuStokBahanController::class, 'index'])->middleware('auth');
+
+Route::get('/pembelian-tinta', [PembelianTintaController::class, 'index'])->middleware('auth');
+Route::post('/api/tambah-tinta', [PembelianTintaController::class, 'tambahTinta']);
+Route::post('/pembelian-tinta', [PembelianTintaController::class, 'store']);
+Route::delete('/pembelian-tinta/{pembelian_tinta:id}', [PembelianTintaController::class, 'destroy']);
+Route::get('/list-pembelian-tinta', [PembelianTintaController::class, 'listPembelian'])->middleware('auth');
+Route::get('/pembelian-tinta/{pembelian_tinta:id}', [PembelianTintaController::class, 'detailPembelian'])->middleware('auth');
+Route::get('/history-pembelian-tinta', [PembelianTintaController::class, 'historyPembelian'])->middleware('auth');
+Route::get('/penerimaan-tinta/{pembelian_tinta:id}', [PenerimaanTintaController::class, 'index'])->middleware('auth');
+Route::post('/penerimaan-tinta', [PenerimaanTintaController::class, 'store']);
+Route::get('/kartu-stok-tinta', [KartuStokTintaController::class, 'index'])->middleware('auth');
 
 Route::get('/kategori', [KategoriController::class, 'index'])->middleware('auth');
 Route::get('/list-kategori', [KategoriController::class, 'listKategori'])->middleware('auth');

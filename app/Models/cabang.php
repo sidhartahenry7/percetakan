@@ -35,19 +35,29 @@ class cabang extends Model
     {
         return $this->hasMany(kartu_stok_bahan::class);
     }
+    
+    public function pembelian_tinta()
+    {
+        return $this->hasMany(pembelian_tinta::class);
+    }
+    
+    public function kartu_stok_tinta()
+    {
+        return $this->hasMany(kartu_stok_tinta::class);
+    }
 
     public function scopeCreateID()
     {
         $jumlah_cabang = cabang::max('id');
 
         if ($jumlah_cabang >= 99) {
-            $idcabang = "CDV-".($jumlah_cabang+1);
+            $idcabang = "S-".($jumlah_cabang+1);
         }
         else if ($jumlah_cabang >= 9) {
-            $idcabang = "CDV-0".($jumlah_cabang+1);
+            $idcabang = "S-0".($jumlah_cabang+1);
         }
         else {
-            $idcabang = "CDV-00".($jumlah_cabang+1);
+            $idcabang = "S-00".($jumlah_cabang+1);
         }
         return $idcabang;
     }

@@ -45,22 +45,22 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Kartu Stok Bahan Baku</h4>
+                        <h4 class="card-title">Daftar Pembelian Tinta</h4>
                     </div>
-                    {{-- <div class="d-inline">
-                        <button type="button" class="btn btn-success" onclick="location.href='{{ url('history-pembelian-bahan-baku') }}'" style="margin-right: 10px;">
+                    <div class="d-inline">
+                        <button type="button" class="btn" onclick="location.href='{{ url('history-pembelian-tinta') }}'" style="margin-right: 10px; background-color: #29a4da; color:white;">
                             <span class="material-icons align-middle">
                                 history
                             </span>
                         </button>
                         @if(auth()->user()->user_role == "Admin")
-                        <button type="button" class="btn btn-primary" onclick="location.href='{{ url('pembelian-bahan-baku') }}'" style="margin-right: 10px;">
+                        <button type="button" class="btn btn-primary" onclick="location.href='{{ url('pembelian-tinta') }}'" style="margin-right: 10px;">
                             <span class="material-icons align-middle">
                                 add
                             </span>
                         </button>
                         @endif
-                    </div> --}}
+                    </div>
                 </div>
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
@@ -79,25 +79,39 @@
                 <table class="table table-striped table-borderless" id="dtBasicExample">
                     <thead class="thead-dark">
                         <tr>
-                            <th>Tanggal</th>
-                            <th>Cabang</th>
-                            <th>Bahan Baku</th>
-                            <th>Quantity Masuk</th>
-                            <th>Quantity Keluar</th>
-                            <th>Quantity Sekarang</th>
-                            <th>Status</th>
+                            <th>ID Pembelian</th>
+                            <th>Tanggal Pembelian</th>
+                            <th>Total</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($kartu_stok as $stok)
+                    @foreach ($list_pembelian as $tinta)
                         <tr>
-                            <td>{{ $stok->tanggal }}</td>
-                            <td>{{ $stok->cabang->nama_cabang }}</td>
-                            <td>{{ $stok->produk->ukuran. ' ' .$stok->produk->jenis_kertas }}</td>
-                            <td>{{ $stok->quantity_masuk }}</td>
-                            <td>{{ $stok->quantity_keluar }}</td>
-                            <td>{{ $stok->quantity_sekarang }}</td>
-                            <td>{{ $stok->status }}</td>
+                            <td>{{ $tinta->id_pembelian_tinta }}</td>
+                            <td>{{ $tinta->tanggal_pembelian_tinta }}</td>
+                            <td>Rp {{ number_format($tinta->total) }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='{{ url('pembelian-tinta/'.$tinta->id) }}'"><span class="material-icons align-middle">visibility</span></button>
+                                @if($tinta->status == 'Pending')
+                                @if(auth()->user()->user_role == "Admin")
+                                <form action="{{ url('pembelian-tinta/'.$tinta->id) }}" method="POST" class="d-inline">
+                                    @method('delete')
+                                    @csrf
+                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><span class="material-icons align-middle">delete</span></button>
+                                </form>
+                                @endif
+                                <button type="button" class="btn btn-sm" style="background-color: #29a4da; color:white;" onclick="location.href='{{ url('penerimaan-tinta/'.$tinta->id) }}'">Penerimaan</button>
+                                @endif
+                            </td>
+                            {{-- <td>
+                                <form action="{{ url('/penerimaan-bahan-baku/'.$bahan->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td> --}}
                         </tr>
                     @endforeach
                     </tbody>

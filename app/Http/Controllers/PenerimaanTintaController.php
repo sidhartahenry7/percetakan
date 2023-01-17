@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\penerimaan_bahan_baku;
-use App\Http\Requests\Storepenerimaan_bahan_bakuRequest;
-use App\Http\Requests\Updatepenerimaan_bahan_bakuRequest;
-use App\Models\pembelian_bahan;
-use App\Models\detail_pembelian_bahan;
-use App\Models\kartu_stok_bahan;
+use App\Models\penerimaan_tinta;
+use App\Http\Requests\Storepenerimaan_tintaRequest;
+use App\Http\Requests\Updatepenerimaan_tintaRequest;
+use App\Models\pembelian_tinta;
+use App\Models\detail_pembelian_tinta;
+use App\Models\kartu_stok_tinta;
 use Illuminate\Support\Carbon;
 
-class PenerimaanBahanBakuController extends Controller
+class PenerimaanTintaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,10 +19,10 @@ class PenerimaanBahanBakuController extends Controller
      */
     public function index($id)
     {
-        return view('penerimaan.bahan_baku.AddPenerimaanBahanBaku', [
-            "pembelian" => pembelian_bahan::where('id', $id)->where('deleted', 0)->first(),
-            "detail" => detail_pembelian_bahan::where('pembelian_bahan_id', $id)->get(),
-            "title" => "Penerimaan Bahan Baku"
+        return view('penerimaan.tinta.AddPenerimaanTinta', [
+            "pembelian" => pembelian_tinta::where('id', $id)->where('deleted', 0)->first(),
+            "detail" => detail_pembelian_tinta::where('pembelian_tinta_id', $id)->get(),
+            "title" => "Penerimaan Tinta"
         ]);
     }
 
@@ -39,41 +39,41 @@ class PenerimaanBahanBakuController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\Storepenerimaan_bahan_bakuRequest  $request
+     * @param  \App\Http\Requests\Storepenerimaan_tintaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Storepenerimaan_bahan_bakuRequest $request)
+    public function store(Storepenerimaan_tintaRequest $request)
     {
         $validatedData = $request->validate([
-            'pembelian_bahan_id' => 'required',
+            'pembelian_tinta_id' => 'required',
             'pegawai_id' => 'required',
             'tanggal_penerimaan' => 'required',
             'status' => 'required'
         ]);
 
-        penerimaan_bahan_baku::create($validatedData);
+        penerimaan_tinta::create($validatedData);
 
-        pembelian_bahan::where('id', $request->pembelian_bahan_id)
+        pembelian_tinta::where('id', $request->pembelian_tinta_id)
                        ->update(['status' => $request->status]);
 
-        $detail = detail_pembelian_bahan::where('pembelian_bahan_id', $request->pembelian_bahan_id)->get();
+        $detail = detail_pembelian_tinta::where('pembelian_tinta_id', $request->pembelian_tinta_id)->get();
 
-        $pembelian = pembelian_bahan::where('id', $request->pembelian_bahan_id)->first();
+        $pembelian = pembelian_tinta::where('id', $request->pembelian_tinta_id)->first();
 
         if ($request->status == "Terima") {
             foreach ($detail as $res) {
                 // dd($res->produk_id);
-                $stok = kartu_stok_bahan::where('produk_id', $res->produk_id)->max('id');
+                $stok = kartu_stok_tinta::where('detail_tinta_id', $res->detail_tinta_id)->max('id');
                 if($stok == NULL) {
                     $quantity_sekarang = 0;
                 }
                 else {
                     $quantity_sekarang = $stok->quantity_sekarang;
                 }
-                kartu_stok_bahan::create([
+                kartu_stok_tinta::create([
                     'tanggal' => Carbon::today(),
                     'cabang_id' => $pembelian->cabang_id,
-                    'produk_id' => $res->produk_id,
+                    'detail_tinta_id' => $res->detail_tinta_id,
                     'quantity_masuk' => $res->quantity,
                     'quantity_keluar' => 0,
                     'quantity_sekarang' => $quantity_sekarang+$res->quantity,
@@ -84,16 +84,16 @@ class PenerimaanBahanBakuController extends Controller
 
         $request->session()->flash('success','Penerimaan Berhasil');
 
-        return redirect('/list-pembelian-bahan-baku/');
+        return redirect('/list-pembelian-tinta/');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\penerimaan_bahan_baku  $penerimaan_bahan_baku
+     * @param  \App\Models\penerimaan_tinta  $penerimaan_tinta
      * @return \Illuminate\Http\Response
      */
-    public function show(penerimaan_bahan_baku $penerimaan_bahan_baku)
+    public function show(penerimaan_tinta $penerimaan_tinta)
     {
         //
     }
@@ -101,10 +101,10 @@ class PenerimaanBahanBakuController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\penerimaan_bahan_baku  $penerimaan_bahan_baku
+     * @param  \App\Models\penerimaan_tinta  $penerimaan_tinta
      * @return \Illuminate\Http\Response
      */
-    public function edit(penerimaan_bahan_baku $penerimaan_bahan_baku)
+    public function edit(penerimaan_tinta $penerimaan_tinta)
     {
         //
     }
@@ -112,11 +112,11 @@ class PenerimaanBahanBakuController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\Updatepenerimaan_bahan_bakuRequest  $request
-     * @param  \App\Models\penerimaan_bahan_baku  $penerimaan_bahan_baku
+     * @param  \App\Http\Requests\Updatepenerimaan_tintaRequest  $request
+     * @param  \App\Models\penerimaan_tinta  $penerimaan_tinta
      * @return \Illuminate\Http\Response
      */
-    public function update(Updatepenerimaan_bahan_bakuRequest $request, penerimaan_bahan_baku $penerimaan_bahan_baku)
+    public function update(Updatepenerimaan_tintaRequest $request, penerimaan_tinta $penerimaan_tinta)
     {
         //
     }
@@ -124,10 +124,10 @@ class PenerimaanBahanBakuController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\penerimaan_bahan_baku  $penerimaan_bahan_baku
+     * @param  \App\Models\penerimaan_tinta  $penerimaan_tinta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(penerimaan_bahan_baku $penerimaan_bahan_baku)
+    public function destroy(penerimaan_tinta $penerimaan_tinta)
     {
         //
     }

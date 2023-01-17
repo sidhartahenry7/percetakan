@@ -138,7 +138,7 @@
                                 <div class="col-3">
                                     <select class="form-control" id="status" name="status">                    
                                         <option value="Terima">Terima</option>
-                                        <option value="Terima">Tolak</option>
+                                        <option value="Tolak">Tolak</option>
                                     </select>
                                 </div>                
                             </div>
@@ -150,7 +150,7 @@
                                         <th>ID Bahan Baku</th>
                                         <th>Ukuran</th>
                                         <th>Jenis Kertas</th>
-                                        <th>Quantity</th>
+                                        <th>Quantity (lbr)</th>
                                         <th>Harga</th>
                                     </tr>
                                 </thead>

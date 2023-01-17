@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>{{ $title }}</title>
+    <link rel="shortcut icon" href="{{ asset('/images/Logo-Soerabaja45-Short.png') }}">
     <meta charset="utf-8" />
     <meta
         name="viewport"

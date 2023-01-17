@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\tinta;
 use App\Http\Requests\StoretintaRequest;
 use App\Http\Requests\UpdatetintaRequest;
+use App\Models\detail_tinta;
 use Illuminate\Support\Facades\Auth;
 
 class TintaController extends Controller
@@ -59,6 +60,17 @@ class TintaController extends Controller
         ]);
 
         tinta::create($validatedData);
+
+        $tinta = tinta::where('id_tinta', $request->id_tinta)->first();
+
+        $warna = ["Cyan", "Magenta", "Yellow", "Black"];
+
+        for($i = 0; $i < 4; $i++) {
+            detail_tinta::create([
+                'tinta_id' => $tinta->id,
+                'warna' => $warna[$i]
+            ]);
+        }
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 

@@ -31,13 +31,13 @@ class pembelian_bahan extends Model
         $jumlah_pembelian_bahan = pembelian_bahan::max('id');
 
         if ($jumlah_pembelian_bahan >= 99) {
-            $idpembelianbahan = "PO-".($jumlah_pembelian_bahan+1);
+            $idpembelianbahan = "BPO-".($jumlah_pembelian_bahan+1);
         }
         else if ($jumlah_pembelian_bahan >= 9) {
-            $idpembelianbahan = "PO-0".($jumlah_pembelian_bahan+1);
+            $idpembelianbahan = "BPO-0".($jumlah_pembelian_bahan+1);
         }
         else {
-            $idpembelianbahan = "PO-00".($jumlah_pembelian_bahan+1);
+            $idpembelianbahan = "BPO-00".($jumlah_pembelian_bahan+1);
         }
         return $idpembelianbahan;
     }

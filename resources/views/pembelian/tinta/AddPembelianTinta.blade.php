@@ -45,9 +45,9 @@
             <div class="iq-card">
                 <div class="iq-card-header d-flex justify-content-between">
                     <div class="iq-header-title">
-                        <h4 class="card-title">Add Pembelian Bahan Baku</h4>
+                        <h4 class="card-title">Add Pembelian Tinta</h4>
                     </div>
-                    <button type="button" class="btn" onclick="location.href='{{ url('list-pembelian-bahan-baku') }}'" style="margin-right: 10px; background-color: #29a4da; color:white;">
+                    <button type="button" class="btn" onclick="location.href='{{ url('list-pembelian-tinta') }}'" style="margin-right: 10px; background-color: #29a4da; color:white;">
                         <span class="material-icons align-middle">arrow_back</span>
                     </button>
                 </div>
@@ -62,16 +62,16 @@
                         </div>
                     @endif
                     @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
-                    <form action="/pembelian-bahan-baku" method="post">
+                    <form action="/pembelian-tinta" method="post">
                         @csrf
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label style="color: black; font-weight: bold;" for="text">ID Pembelian Bahan</label>
+                                    <label style="color: black; font-weight: bold;" for="text">ID Pembelian Tinta</label>
                                 </div>
                                 <div class="col-3">
-                                    <input type="text" readonly="readonly" class="form-control @error('id_pembelian_bahan') is-invalid @enderror" id="id_pembelian_bahan" name="id_pembelian_bahan" required autofocus value="{{ $idpembelianbahan }}"/>
-                                    @error('id_pembelian_bahan')
+                                    <input type="text" readonly="readonly" class="form-control @error('id_pembelian_tinta') is-invalid @enderror" id="id_pembelian_tinta" name="id_pembelian_tinta" required autofocus value="{{ $idpembeliantinta }}"/>
+                                    @error('id_pembelian_tinta')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -85,8 +85,8 @@
                                     <label for="date">Tanggal Pembelian</label>
                                 </div>
                                 <div class="col-3">
-                                    <input type="date" class="form-control @error('tanggal_pembelian_bahan') is-invalid @enderror" id="tanggal_pembelian_bahan" name="tanggal_pembelian_bahan" required value="{{ date('Y-m-d') }}"/>
-                                    @error('tanggal_pembelian')
+                                    <input type="date" class="form-control @error('tanggal_pembelian_tinta') is-invalid @enderror" id="tanggal_pembelian_tinta" name="tanggal_pembelian_tinta" required value="{{ date('Y-m-d') }}"/>
+                                    @error('tanggal_pembelian_tinta')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -97,7 +97,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="nama_bahan_baku" class="text">Cabang</label>
+                                    <label for="cabang_id">Cabang</label>
                                 </div>
                                 <div class="col-3">
                                     <select class="form-control" data-live-search="true" id="cabang_id" name="cabang_id">                    
@@ -111,12 +111,12 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="nama_bahan_baku" class="text">Nama Bahan Baku</label>
+                                    <label for="detail_tinta_id">Jenis Tinta</label>
                                 </div>
                                 <div class="col-3">
-                                    <select class="form-control" data-live-search="true" id="produk_id" name="produk_id">                    
-                                        @foreach ($bahan as $b)
-                                            <option value="{{ $b->id }}">{{ $b->ukuran}} {{ $b->jenis_kertas }} </option>
+                                    <select class="form-control" data-live-search="true" id="detail_tinta_id" name="detail_tinta_id">                    
+                                        @foreach ($tinta as $t)
+                                            <option value="{{ $t->id }}">{{ $t->tinta->jenis_tinta}} {{ $t->warna }} </option>
                                         @endforeach
                                     </select>
                                 </div>                
@@ -125,7 +125,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="quantity" class="text">Quantity (lembar)</label>
+                                    <label for="quantity" class="text">Quantity (mL)</label>
                                 </div>
                                 <div class="col-3">
                                     <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" required autofocus/>
@@ -152,26 +152,25 @@
                                 </div>                
                             </div>
                         </div>
-                        <button type="button" class="btn" style="background-color: #EC268F; color: white;" onclick="tambahBahan()">Tambah</button>
+                        <button type="button" class="btn" style="background-color: #EC268F; color: white;" onclick="tambahTinta()">Tambah</button>
                         <br><br>
                         <div class="table-responsive container">
                             <table class="table table-striped table-borderless" id="tabel">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>ID Bahan Baku</th>
-                                        <th>Ukuran</th>
-                                        <th>Jenis Kertas</th>
-                                        <th>Quantity</th>
+                                        <th>Jenis Tinta</th>
+                                        <th>Warna</th>
+                                        <th>Quantity (mL)</th>
                                         <th>Harga</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="table_del_bahan">
+                                <tbody id="table_del_tinta">
                                     
                                 </tbody> 
                             </table>
                         </div>
-                        <button type="button" class="btn" style="background-color: #29a4da; color:white;" onclick="location.href='{{ url('list-pembelian-bahan-baku') }}'">
+                        <button type="button" class="btn" style="background-color: #29a4da; color:white;" onclick="location.href='{{ url('list-pembelian-tinta') }}'">
                             Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
@@ -195,12 +194,12 @@
 
     <script>
         $(document).ready(function() {
-            $('#produk_id').select2();
+            $('#detail_tinta_id').select2();
             $('#cabang_id').select2();
         });
         
-        function tambahBahan() {
-            var produk_id = $('#produk_id').val();
+        function tambahTinta() {
+            var detail_tinta_id = $('#detail_tinta_id').val();
             var quantity = $('#quantity').val();
             var harga = $('#harga').val();
             var table = document.getElementById("tabel");
@@ -208,28 +207,27 @@
             var quantity_temp = 0;
             var harga_temp = 0;
             $.ajax({
-                url: "{{url('/api/tambah-bahan-baku')}}",
+                url: "{{url('/api/tambah-tinta')}}",
                 type: 'POST',
                 data: {
-                    produk_id:produk_id,
+                    detail_tinta_id:detail_tinta_id,
                     _token:'{{ csrf_token() }}'
                 },
                 dataType: 'json',
                 success: function (result) {
-                    $.each(result.produk, function (key, produk) {
+                    $.each(result.detail_tinta, function (key, detail_tinta) {
                         for (var i = 1, row; row = table.rows[i]; i++) {
-                            if ($(table.rows[i].cells[0]).html() == produk.id_produk) {
-                                quantity_temp = parseInt($(table.rows[i].cells[3]).html())+parseInt(quantity);
-                                harga_temp = parseInt($(table.rows[i].cells[4]).html())+parseInt(harga);
+                            if (($(table.rows[i].cells[0]).html() == detail_tinta.jenis_tinta) && ($(table.rows[i].cells[1]).html() == detail_tinta.warna)) {
+                                quantity_temp = parseInt($(table.rows[i].cells[2]).html())+parseInt(quantity);
+                                harga_temp = parseInt($(table.rows[i].cells[3]).html())+parseInt(harga);
                                 $(table.rows[i]).remove();
-                                $('#table_del_bahan').append('<tr>\
-                                                        <td>'+produk.id_produk+'</td>\
-                                                        <td>'+produk.ukuran+'</td>\
-                                                        <td>'+produk.jenis_kertas+'</td>\
+                                $('#table_del_tinta').append('<tr>\
+                                                        <td>'+detail_tinta.jenis_tinta+'</td>\
+                                                        <td>'+detail_tinta.warna+'</td>\
                                                         <td>'+quantity_temp+'</td>\
                                                         <td>'+harga_temp+'</td>\
                                                         <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
-                                                        <td hidden><input type="hidden" name="produk_id[]" value="'+produk.id+'"/></td>\
+                                                        <td hidden><input type="hidden" name="detail_tinta_id[]" value="'+detail_tinta.id+'"/></td>\
                                                         <td hidden><input type="hidden" name="quantity[]" value="'+quantity_temp+'"/></td>\
                                                         <td hidden><input type="hidden" name="harga[]" value="'+harga_temp+'"/></td>\
                                                         </tr>');
@@ -238,14 +236,13 @@
                             }
                         }
                         if (count == 0) {
-                            $('#table_del_bahan').append('<tr>\
-                                                        <td>'+produk.id_produk+'</td>\
-                                                        <td>'+produk.ukuran+'</td>\
-                                                        <td>'+produk.jenis_kertas+'</td>\
+                            $('#table_del_tinta').append('<tr>\
+                                                        <td>'+detail_tinta.jenis_tinta+'</td>\
+                                                        <td>'+detail_tinta.warna+'</td>\
                                                         <td>'+quantity+'</td>\
                                                         <td>'+harga+'</td>\
                                                         <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
-                                                        <td hidden><input type="hidden" name="produk_id[]" value="'+produk.id+'"/></td>\
+                                                        <td hidden><input type="hidden" name="detail_tinta_id[]" value="'+detail_tinta.id+'"/></td>\
                                                         <td hidden><input type="hidden" name="quantity[]" value="'+quantity+'"/></td>\
                                                         <td hidden><input type="hidden" name="harga[]" value="'+harga+'"/></td>\
                                                         </tr>');

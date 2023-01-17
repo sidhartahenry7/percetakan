@@ -22,7 +22,7 @@ class PembelianBahanController extends Controller
     public function index()
     {
         if (Auth::user()->user_role == 'Admin') {
-            return view('pembelian.AddPembelianBahanBaku', [
+            return view('pembelian.bahan_baku.AddPembelianBahanBaku', [
                 "idpembelianbahan" => pembelian_bahan::CreateID(),
                 "bahan" => produk::where('deleted', 0)->get(),
                 "cabang" => cabang::where('deleted', 0)->get(),
@@ -36,7 +36,7 @@ class PembelianBahanController extends Controller
 
     public function detailPembelian($id)
     {
-        return view('pembelian.DetailPembelianBahanBaku', [
+        return view('pembelian.bahan_baku.DetailPembelianBahanBaku', [
             "pembelian" => pembelian_bahan::where('deleted', 0)->where('id', $id)->first(),
             "penerimaan" => penerimaan_bahan_baku::where('pembelian_bahan_id', $id)->first(),
             "detail" => detail_pembelian_bahan::where('pembelian_bahan_id', $id)->get(),
@@ -47,13 +47,13 @@ class PembelianBahanController extends Controller
     public function listPembelian()
     {
         if (Auth::user()->user_role == 'Admin') {
-            return view('pembelian.ListPembelianBahanBaku', [
+            return view('pembelian.bahan_baku.ListPembelianBahanBaku', [
                 "list_pembelian" => pembelian_bahan::where('deleted', 0)->where('status', 'Pending')->get(),
                 "title" => "Daftar Pembelian Bahan Baku"
             ]);
         }
         else {
-            return view('pembelian.ListPembelianBahanBaku', [
+            return view('pembelian.bahan_baku.ListPembelianBahanBaku', [
                 "list_pembelian" => pembelian_bahan::where('deleted', 0)->where('status', 'Pending')->where('cabang_id', Auth::user()->cabang_id)->get(),
                 "title" => "Daftar Pembelian Bahan Baku"
             ]);
@@ -63,13 +63,13 @@ class PembelianBahanController extends Controller
     public function historyPembelian()
     {
         if (Auth::user()->user_role == 'Admin') {
-            return view('pembelian.HistoryPembelianBahanBaku', [
+            return view('pembelian.bahan_baku.HistoryPembelianBahanBaku', [
                 "list_pembelian" => pembelian_bahan::where('deleted', 0)->where('status', '!=', 'Pending')->get(),
                 "title" => "History Pembelian Bahan Baku"
             ]);
         }
         else {
-            return view('pembelian.HistoryPembelianBahanBaku', [
+            return view('pembelian.bahan_baku.HistoryPembelianBahanBaku', [
                 "list_pembelian" => pembelian_bahan::where('deleted', 0)->whereNot('status', '!=', 'Pending')->where('cabang_id', Auth::user()->cabang_id)->get(),
                 "title" => "History Pembelian Bahan Baku"
             ]);

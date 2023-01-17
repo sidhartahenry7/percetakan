@@ -103,7 +103,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="text">Cabang</label>
+                                    <label for="cabang_id">Cabang</label>
                                 </div>
                                 <div class="col-3">
                                     <input type="text" class="form-control" id="cabang_id" readonly value="{{ $pembelian->cabang->nama_cabang }}"/>
@@ -113,7 +113,17 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="text">Status</label>
+                                    <label for="total">Total</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="text" class="form-control" id="total" readonly value="Rp {{ number_format($pembelian->total) }}"/>
+                                </div>                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label for="status">Status</label>
                                 </div>
                                 <div class="col-3">
                                     <input type="text" class="form-control" id="status" readonly value="{{ $pembelian->status }}"/>
@@ -127,7 +137,7 @@
                                         <th>ID Bahan Baku</th>
                                         <th>Ukuran</th>
                                         <th>Jenis Kertas</th>
-                                        <th>Quantity</th>
+                                        <th>Quantity (lbr)</th>
                                         <th>Harga</th>
                                     </tr>
                                 </thead>

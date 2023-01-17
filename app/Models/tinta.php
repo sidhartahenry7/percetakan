@@ -16,6 +16,12 @@ class tinta extends Model
         return $this->hasMany(detail_produk::class);
     }
 
+    public function detail_tinta()
+    {
+        return $this->hasMany(detail_tinta::class);
+    }
+
+
     public function scopeCreateID()
     {
         $jumlah_produk = tinta::max('id');

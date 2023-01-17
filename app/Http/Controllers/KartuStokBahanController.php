@@ -15,7 +15,7 @@ class KartuStokBahanController extends Controller
      */
     public function index()
     {
-        return view('kartu_stok.ListKartuStokBahanBaku', [
+        return view('kartu_stok.bahan_baku.ListKartuStokBahanBaku', [
             "kartu_stok" => kartu_stok_bahan::get(),
             "title" => "Kartu Stok Bahan Baku"
         ]);

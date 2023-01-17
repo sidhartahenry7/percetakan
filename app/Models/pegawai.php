@@ -43,6 +43,11 @@ class pegawai extends Authenticatable
     {
         return $this->hasMany(penerimaan_bahan_baku::class);
     }
+    
+    public function penerimaan_tinta()
+    {
+        return $this->hasMany(penerimaan_tinta::class);
+    }
 
     public function scopeCreateID()
     {

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
     {
         //Cabang
         DB::table('cabangs')->insert([
-            'id_cabang' => 'CDV-001',
+            'id_cabang' => 'S-001',
             'nama_cabang' => 'Cabang 1',
             'alamat' => 'Jalan Coba No. 1',
             'longitude' => '112.6871203',
