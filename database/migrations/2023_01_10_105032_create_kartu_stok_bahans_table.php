@@ -21,6 +21,9 @@ class CreateKartuStokBahansTable extends Migration
             $table->integer('quantity_masuk');
             $table->integer('quantity_keluar');
             $table->integer('quantity_sekarang');
+            $table->string('satuan', 255);
+            $table->integer('harga_beli');
+            $table->float('harga_average');
             $table->string('status');
             $table->timestamps();
         });

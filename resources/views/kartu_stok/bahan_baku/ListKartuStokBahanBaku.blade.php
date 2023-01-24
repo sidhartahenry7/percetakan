@@ -82,9 +82,11 @@
                             <th>Tanggal</th>
                             <th>Cabang</th>
                             <th>Bahan Baku</th>
-                            <th>Qty Masuk (lbr)</th>
-                            <th>Qty Keluar (lbr)</th>
-                            <th>Qty Sekarang (lbr)</th>
+                            <th>Qty Masuk</th>
+                            <th>Qty Keluar</th>
+                            <th>Qty Sekarang</th>
+                            <th>Harga Beli Satuan</th>
+                            <th>Harga Beli Rata-Rata Satuan</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -93,10 +95,16 @@
                         <tr>
                             <td>{{ $stok->tanggal }}</td>
                             <td>{{ $stok->cabang->nama_cabang }}</td>
-                            <td>{{ $stok->produk->ukuran. ' ' .$stok->produk->jenis_kertas }}</td>
-                            <td>{{ $stok->quantity_masuk }}</td>
-                            <td>{{ $stok->quantity_keluar }}</td>
-                            <td>{{ $stok->quantity_sekarang }}</td>
+                            @isset($stok->produk->ukuran)
+                            <td>{{ $stok->produk->jenis_kertas. ' ' .$stok->produk->ukuran }}</td>
+                            @else
+                            <td>{{ $stok->produk->jenis_kertas. ' ' .$stok->produk->lebar." ".$stok->produk->satuan." x ".$stok->produk->panjang." ".$stok->produk->satuan }}</td>
+                            @endisset
+                            <td>{{ $stok->quantity_masuk." ".$stok->satuan }}</td>
+                            <td>{{ $stok->quantity_keluar." ".$stok->satuan }}</td>
+                            <td>{{ $stok->quantity_sekarang." ".$stok->satuan }}</td>
+                            <td>Rp {{ number_format($stok->harga_beli, 2) }}</td>
+                            <td>Rp {{ number_format($stok->harga_average, 2) }}</td>
                             <td>{{ $stok->status }}</td>
                         </tr>
                     @endforeach

@@ -73,8 +73,8 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>ID Bahan Baku</th>
+                            <th>Jenis Bahan</th>
                             <th>Ukuran</th>
-                            <th>Jenis Kertas</th>
                             @if(auth()->user()->user_role == "Admin")
                             <th>Action</th>
                             @endif
@@ -84,8 +84,12 @@
                     @foreach ($list_produk as $produk)
                         <tr>
                             <td>{{ $produk->id_produk }}</td>
-                            <td>{{ $produk->ukuran }}</td>
                             <td>{{ $produk->jenis_kertas }}</td>
+                            @isset($produk->ukuran)
+                            <td>{{ $produk->ukuran }}</td>
+                            @else
+                            <td>{{ $produk->lebar." ".$produk->satuan." x ".$produk->panjang." ".$produk->satuan }}</td>
+                            @endisset
                             @if(auth()->user()->user_role == "Admin")
                             <td>
                                 <form action="{{ url('/bahan-baku/'.$produk->id) }}" method="POST" class="d-inline">

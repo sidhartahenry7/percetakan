@@ -74,22 +74,23 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="text">Ukuran</label>
-                            <input type="text" class="form-control @error('ukuran') is-invalid @enderror" id="ukuran" name="ukuran" required value="{{ old('ukuran') }}"/>
-                            @error('ukuran')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="text">Jenis Kertas</label>
+                            <label for="text">Jenis Bahan</label>
                             <input type="text" class="form-control @error('jenis_kertas') is-invalid @enderror" id="jenis_kertas" name="jenis_kertas" required value="{{ old('jenis_kertas') }}"/>
                             @error('jenis_kertas')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="status_ukuran" onclick="ubahUkuran()"> ukuran panjang x lebar
+                        </div>
+                        <div class="form-group" id="ukuran_field">
+                            <label for="text">Ukuran</label>
+                            <input type="text" class="form-control" id="ukuran" name="ukuran" value="{{ old('ukuran') }}"/>
+                        </div>
+                        <div class="form-group" id="ukuran_field_panjang_lebar_satuan">
+                            
                         </div>
                         {{-- <button type="cancel" class="btn btn-danger">
                             Cancel
@@ -113,5 +114,34 @@
     <script src="js/popper.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
+
+    <script>
+        function ubahUkuran() {
+            $("#ukuran_field").html('');
+            $("#ukuran_field_panjang_lebar_satuan").html('');
+            var checkBox = document.getElementById("status_ukuran");
+            if (checkBox.checked == true) {
+                $("#ukuran_field").html('');
+                $("#ukuran_field_panjang_lebar_satuan").append('<div class="row">\
+                                                                    <div class="col-4"><label for="text">Lebar</label>\
+                                                                        <input type="number" class="form-control" id="lebar" name="lebar"/>\
+                                                                    </div>\
+                                                                    <div class="col-4"><label for="text">Panjang</label>\
+                                                                        <input type="number" class="form-control" id="panjang" name="panjang"/>\
+                                                                    </div>\
+                                                                    <div class="col-4"><label for="text">Satuan</label>\
+                                                                        <select class="form-control" id="satuan" name="satuan">\
+                                                                            <option value="meter">meter</option>\
+                                                                            <option value="cm">cm</option>\
+                                                                        </select>\
+                                                                    </div>\
+                                                                </div>');
+            }
+            else {
+                $("#ukuran_field").append('<label for="text">Ukuran</label>\
+                                           <input type="text" class="form-control" id="ukuran" name="ukuran"/>');
+            }
+        }
+    </script>
 </body>
 </html>

@@ -116,7 +116,11 @@
                                 <div class="col-3">
                                     <select class="form-control" data-live-search="true" id="produk_id" name="produk_id">                    
                                         @foreach ($bahan as $b)
-                                            <option value="{{ $b->id }}">{{ $b->ukuran}} {{ $b->jenis_kertas }} </option>
+                                        @isset($b->ukuran)
+                                        <option value="{{ $b->id }}">{{ $b->jenis_kertas}} {{ $b->ukuran }} </option>
+                                        @else
+                                        <option value="{{ $b->id }}">{{ $b->jenis_kertas}} {{ $b->lebar." ".$b->satuan." x ".$b->panjang." ".$b->satuan }} </option>
+                                        @endisset
                                         @endforeach
                                     </select>
                                 </div>                
@@ -125,7 +129,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="quantity" class="text">Quantity (lembar)</label>
+                                    <label for="quantity" class="text">Quantity</label>
                                 </div>
                                 <div class="col-3">
                                     <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" required autofocus/>
@@ -134,6 +138,13 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
+                                </div>                
+                                <div class="col-2">
+                                    <select class="form-control" data-live-search="true" id="satuan">                    
+                                        <option value="rim">rim</option>
+                                        <option value="lembar">lembar</option>
+                                        <option value="rol">rol</option>
+                                    </select>
                                 </div>                
                             </div>
                         </div>
@@ -159,9 +170,10 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>ID Bahan Baku</th>
+                                        <th>Jenis Bahan</th>
                                         <th>Ukuran</th>
-                                        <th>Jenis Kertas</th>
-                                        <th>Quantity (lbr)</th>
+                                        <th>Quantity</th>
+                                        <th>Satuan</th>
                                         <th>Harga</th>
                                         <th>Action</th>
                                     </tr>
@@ -197,16 +209,19 @@
         $(document).ready(function() {
             $('#produk_id').select2();
             $('#cabang_id').select2();
+            $('#satuan').select2();
         });
         
         function tambahBahan() {
             var produk_id = $('#produk_id').val();
             var quantity = $('#quantity').val();
+            var satuan = $('#satuan').val();
             var harga = $('#harga').val();
             var table = document.getElementById("tabel");
             var count = 0;
             var quantity_temp = 0;
             var harga_temp = 0;
+            var ukuran_temp = "";
             $.ajax({
                 url: "{{url('/api/tambah-bahan-baku')}}",
                 type: 'POST',
@@ -217,6 +232,12 @@
                 dataType: 'json',
                 success: function (result) {
                     $.each(result.produk, function (key, produk) {
+                        if (produk.ukuran == null) {
+                            ukuran_temp = produk.lebar+" "+produk.satuan+" x "+produk.panjang+" "+produk.satuan
+                        }
+                        else {
+                            ukuran_temp = produk.ukuran
+                        }
                         for (var i = 1, row; row = table.rows[i]; i++) {
                             if ($(table.rows[i].cells[0]).html() == produk.id_produk) {
                                 quantity_temp = parseInt($(table.rows[i].cells[3]).html())+parseInt(quantity);
@@ -224,13 +245,15 @@
                                 $(table.rows[i]).remove();
                                 $('#table_del_bahan').append('<tr>\
                                                         <td>'+produk.id_produk+'</td>\
-                                                        <td>'+produk.ukuran+'</td>\
                                                         <td>'+produk.jenis_kertas+'</td>\
+                                                        <td>'+ukuran_temp+'</td>\
                                                         <td>'+quantity_temp+'</td>\
+                                                        <td>'+satuan+'</td>\
                                                         <td>'+harga_temp+'</td>\
                                                         <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
                                                         <td hidden><input type="hidden" name="produk_id[]" value="'+produk.id+'"/></td>\
                                                         <td hidden><input type="hidden" name="quantity[]" value="'+quantity_temp+'"/></td>\
+                                                        <td hidden><input type="hidden" name="satuan[]" value="'+satuan+'"/></td>\
                                                         <td hidden><input type="hidden" name="harga[]" value="'+harga_temp+'"/></td>\
                                                         </tr>');
                                 count++;
@@ -240,13 +263,15 @@
                         if (count == 0) {
                             $('#table_del_bahan').append('<tr>\
                                                         <td>'+produk.id_produk+'</td>\
-                                                        <td>'+produk.ukuran+'</td>\
                                                         <td>'+produk.jenis_kertas+'</td>\
+                                                        <td>'+ukuran_temp+'</td>\
                                                         <td>'+quantity+'</td>\
+                                                        <td>'+satuan+'</td>\
                                                         <td>'+harga+'</td>\
                                                         <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
                                                         <td hidden><input type="hidden" name="produk_id[]" value="'+produk.id+'"/></td>\
                                                         <td hidden><input type="hidden" name="quantity[]" value="'+quantity+'"/></td>\
+                                                        <td hidden><input type="hidden" name="satuan[]" value="'+satuan+'"/></td>\
                                                         <td hidden><input type="hidden" name="harga[]" value="'+harga+'"/></td>\
                                                         </tr>');
                         }

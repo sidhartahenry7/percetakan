@@ -78,7 +78,7 @@ class PembelianBahanController extends Controller
 
     public function tambahBahanBaku(Request $request)
     {
-        $data['produk'] = produk::select('id', 'id_produk', 'ukuran', 'jenis_kertas')->where('id', '=', $request->produk_id)->get();
+        $data['produk'] = produk::select('id', 'id_produk', 'ukuran', 'panjang', 'lebar', 'satuan', 'jenis_kertas')->where('id', '=', $request->produk_id)->get();
         // $data['produk'] = $request->produk_id;
         return response()->json($data);
     }
@@ -118,6 +118,7 @@ class PembelianBahanController extends Controller
             $validatedData['produk_id'] = $request->produk_id[$i];
             $validatedData['pembelian_bahan_id'] = $id->id;
             $validatedData['quantity'] = $request->quantity[$i];
+            $validatedData['satuan'] = $request->satuan[$i];
             $validatedData['harga'] = $request->harga[$i];
 
             detail_pembelian_bahan::create($validatedData);

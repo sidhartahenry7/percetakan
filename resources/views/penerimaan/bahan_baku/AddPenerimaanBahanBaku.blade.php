@@ -148,8 +148,8 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>ID Bahan Baku</th>
+                                        <th>Jenis Bahan</th>
                                         <th>Ukuran</th>
-                                        <th>Jenis Kertas</th>
                                         <th>Quantity (lbr)</th>
                                         <th>Harga</th>
                                     </tr>
@@ -158,9 +158,13 @@
                                     @foreach($detail as $d)
                                     <tr>
                                         <td>{{ $d->produk->id_produk }}</td>
-                                        <td>{{ $d->produk->ukuran }}</td>
                                         <td>{{ $d->produk->jenis_kertas }}</td>
-                                        <td>{{ $d->quantity }}</td>
+                                        @isset($d->produk->ukuran)
+                                        <td>{{ $d->produk->ukuran }}</td>
+                                        @else
+                                        <td>{{ $d->produk->lebar." ".$d->produk->satuan." x ".$d->produk->panjang." ".$d->produk->satuan }}</td>
+                                        @endisset
+                                        <td>{{ $d->quantity." ".$d->satuan }}</td>
                                         <td>Rp {{ number_format($d->harga) }}</td>
                                     </tr>
                                     @endforeach

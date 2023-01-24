@@ -63,20 +63,44 @@ class PenerimaanBahanBakuController extends Controller
         if ($request->status == "Terima") {
             foreach ($detail as $res) {
                 // dd($res->produk_id);
-                $stok = kartu_stok_bahan::where('produk_id', $res->produk_id)->max('id');
+                $stok = kartu_stok_bahan::where('produk_id', $res->produk_id)->latest('id')->first();
+                $jumlah = kartu_stok_bahan::where('produk_id', $res->produk_id)->where('status', 'Masuk')->sum('quantity_masuk');
+                if($res->satuan == "rim") {
+                    $quantity_masuk = $res->quantity*500;
+                    $satuan = "lembar";
+                }
+                else if($res->satuan == "rol") {
+                    if($res->produk->satuan == "meter") {
+                        $quantity_masuk = $res->produk->panjang*$res->quantity;
+                        $satuan = "meter";
+                    }
+                    else if($res->produk->satuan == "cm") {
+                        $quantity_masuk = $res->produk->panjang*$res->quantity;
+                        $satuan = "cm";
+                    }
+                }
+                else {
+                    $quantity_masuk = $res->quantity;
+                    $satuan = "lembar";
+                }
                 if($stok == NULL) {
                     $quantity_sekarang = 0;
+                    $harga_average = $res->harga/$quantity_masuk;
                 }
                 else {
                     $quantity_sekarang = $stok->quantity_sekarang;
+                    $harga_average = (($stok->harga_average*$jumlah)+$res->harga)/($jumlah+$quantity_masuk);
                 }
                 kartu_stok_bahan::create([
                     'tanggal' => Carbon::today(),
                     'cabang_id' => $pembelian->cabang_id,
                     'produk_id' => $res->produk_id,
-                    'quantity_masuk' => $res->quantity,
+                    'quantity_masuk' => $quantity_masuk,
                     'quantity_keluar' => 0,
-                    'quantity_sekarang' => $quantity_sekarang+$res->quantity,
+                    'quantity_sekarang' => $quantity_sekarang+$quantity_masuk,
+                    'satuan' => $satuan,
+                    'harga_beli' => $res->harga/$quantity_masuk,
+                    'harga_average' => $harga_average,
                     'status' => "Masuk"
                 ]);
             }

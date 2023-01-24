@@ -18,6 +18,7 @@ class CreateDetailPembelianBahansTable extends Migration
             $table->foreignId('produk_id');
             $table->foreignId('pembelian_bahan_id');
             $table->integer('quantity');
+            $table->string('satuan', 255);
             $table->integer('harga');
             $table->timestamps();
         });

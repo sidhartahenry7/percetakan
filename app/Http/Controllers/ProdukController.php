@@ -55,8 +55,11 @@ class ProdukController extends Controller
     {
         $validatedData = $request->validate([
             'id_produk' => 'required|unique:produks',
-            'ukuran' => 'required|max:255',
-            'jenis_kertas' => 'required|max:255'
+            'jenis_kertas' => 'required|max:255',
+            'ukuran' => '',
+            'panjang' => '',
+            'lebar' => '',
+            'satuan' => '',
         ]);
 
         produk::create($validatedData);
