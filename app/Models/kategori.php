@@ -16,6 +16,16 @@ class kategori extends Model
     {
         return $this->hasMany(detail_produk::class);
     }
+
+    public function cart()
+    {
+        return $this->hasMany(cart::class);
+    }
+
+    public function detail_penawaran()
+    {
+        return $this->hasMany(detail_penawaran::class);
+    }
     
     public function scopeCreateID()
     {

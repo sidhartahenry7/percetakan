@@ -39,6 +39,16 @@ class pegawai extends Authenticatable
         return $this->hasMany(transaksi_pegawai::class);
     }
 
+    public function pembelian_bahan()
+    {
+        return $this->hasMany(pembelian_bahan::class);
+    }
+    
+    public function pembelian_tinta()
+    {
+        return $this->hasMany(pembelian_tinta::class);
+    }
+    
     public function penerimaan_bahan_baku()
     {
         return $this->hasMany(penerimaan_bahan_baku::class);
@@ -47,6 +57,16 @@ class pegawai extends Authenticatable
     public function penerimaan_tinta()
     {
         return $this->hasMany(penerimaan_tinta::class);
+    }
+
+    public function status_transaksi()
+    {
+        return $this->hasMany(status_transaksi::class);
+    }
+
+    public function status_penawaran()
+    {
+        return $this->hasMany(status_penawaran::class);
     }
 
     public function scopeCreateID()

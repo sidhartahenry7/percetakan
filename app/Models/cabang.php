@@ -46,6 +46,11 @@ class cabang extends Model
         return $this->hasMany(kartu_stok_tinta::class);
     }
 
+    public function pembayaran()
+    {
+        return $this->hasMany(pembayaran::class);
+    }
+
     public function scopeCreateID()
     {
         $jumlah_cabang = cabang::max('id');

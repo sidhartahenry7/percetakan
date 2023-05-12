@@ -16,15 +16,22 @@ class CreateDetailTransaksisTable extends Migration
         Schema::create('detail_transaksis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaksi_id');
+            $table->string('jenis_bahan_input', 255);
+            $table->string('ukuran_input', 255);
+            $table->string('finishing_input', 255);
+            $table->string('warna_input', 255);
             $table->foreignId('detail_produk_id');
             $table->integer('harga');
             $table->integer('jumlah_produk');
+            $table->float('persen_cyan');
+            $table->float('persen_magenta');
+            $table->float('persen_yellow');
+            $table->float('persen_black');
             $table->integer('harga_finishing');
             $table->integer('diskon');
             $table->integer('harga_custom');
             $table->text('custom')->nullable();
-            $table->string('custom_panjang', 255)->nullable();
-            $table->string('custom_lebar', 255)->nullable();
+            $table->string('file_cetak', 255)->nullable();
             $table->integer('sub_total');
             $table->timestamps();
         });

@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -62,7 +62,7 @@
                         </div>
                     @endif
                     @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
-                    <form action="/pembelian-tinta" method="post">
+                    <form action="{{ url('/pembelian-tinta') }}" method="post">
                         @csrf
                         <div class="form-group">
                             <div class="row">
@@ -97,13 +97,33 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="cabang_id">Cabang</label>
+                                    <label for="text">PIC</label>
                                 </div>
                                 <div class="col-3">
-                                    <select class="form-control" data-live-search="true" id="cabang_id" name="cabang_id">                    
+                                    <input type="text" class="form-control" value="{{ auth()->user()->nama_lengkap }}" readonly/>
+                                    <input type="hidden" class="form-control @error('pegawai_id') is-invalid @enderror" id="pegawai_id" name="pegawai_id" required value="{{ auth()->user()->id }}" readonly/>
+                                    @error('tanggal_pembelian')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label for="cabang_id" class="text">Cabang</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-control" data-live-search="true" id="cabang_id" name="cabang_id">
+                                        @if(auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
+                                            <option value="{{ auth()->user()->cabang_id }}">{{ auth()->user()->cabang->nama_cabang}}</option>
+                                        @else
                                         @foreach ($cabang as $c)
                                             <option value="{{ $c->id }}">{{ $c->nama_cabang}}</option>
                                         @endforeach
+                                        @endif
                                     </select>
                                 </div>                
                             </div>
@@ -125,7 +145,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-2">
-                                    <label for="quantity" class="text">Quantity (mL)</label>
+                                    <label for="quantity" class="text">Quantity (L)</label>
                                 </div>
                                 <div class="col-3">
                                     <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" required autofocus/>
@@ -160,7 +180,7 @@
                                     <tr>
                                         <th>Jenis Tinta</th>
                                         <th>Warna</th>
-                                        <th>Quantity (mL)</th>
+                                        <th>Quantity (L)</th>
                                         <th>Harga</th>
                                         <th>Action</th>
                                     </tr>
@@ -185,10 +205,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 

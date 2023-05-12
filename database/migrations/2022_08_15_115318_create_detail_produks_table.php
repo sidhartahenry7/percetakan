@@ -17,14 +17,14 @@ class CreateDetailProduksTable extends Migration
             $table->id();
             $table->string('id_detail_produk', 255)->unique();
             $table->string('nama_produk', 255);
+            $table->string('jenis_bahan', 255);
+            $table->string('ukuran', 255);
             $table->string('keterangan', 255)->nullable();
-            $table->integer('harga');
-            $table->integer('diskon')->default(0);
             $table->foreignId('kategori_id');
-            $table->foreignId('produk_id');
-            $table->foreignId('tinta_id');
             $table->foreignId('finishing_id');
             $table->integer('status_finishing');
+            $table->integer('harga');
+            $table->integer('diskon')->default(0);
             $table->integer('deleted')->default(0);
             $table->timestamps();
         });

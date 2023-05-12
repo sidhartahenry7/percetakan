@@ -10,19 +10,30 @@ class LoginController extends Controller
 {
     public function index()
     {
-        return view('login.index');
+        return view('register_login.Login');
     }
 
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email:dns',
+            // 'email' => 'required|email:dns',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        if(Auth::attempt($credentials)) {
+        // if(Auth::attempt($credentials)) {
+        //     $request->session()->regenerate();
+        //     return redirect()->intended('/dashboard');
+        // }
+
+        if(Auth::guard('pelanggan')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/data-diri');
+            return redirect()->intended('/dashboard');
+        }
+        else if(Auth::guard('user')->attempt($credentials))
+        {
+            $request->session()->regenerate();
+            return redirect()->intended('/dashboard');
         }
         
         return back()->with('loginError', 'Login failed');

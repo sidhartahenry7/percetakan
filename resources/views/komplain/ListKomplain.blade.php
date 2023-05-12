@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -44,11 +44,13 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Daftar Komplain</h4>
                     </div>
+                    @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
                     <button type="button" class="btn btn-primary" onclick="location.href='{{ url('komplain') }}'" style="margin-right: 10px;">
                         <span class="material-icons align-middle">
                             add
                         </span>
                     </button>
+                    @endif
                 </div>
                 <hr style="height: 10px;">
             </div>
@@ -95,10 +97,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

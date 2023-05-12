@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -64,6 +64,8 @@
                             <th>Promo</th>
                             <th>Total</th>
                             <th>Status Pengerjaan</th>
+                            <th>Status Transaksi</th>
+                            <th>Bukti Pembayaran</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -76,28 +78,33 @@
                             <td>Rp {{ number_format($transaksi->sub_total_transaksi, 2) }}</td>
                             <td>
                                 @if(is_null($transaksi->promo_id))
-                                    {{ $transaksi->promo_id }}
+                                    0%
                                 @else
-                                    {{ $transaksi->promo->id_promo }}
+                                    {{ $transaksi->promo->potongan }}%
                                 @endif
                             </td>
                             <td>Rp {{ number_format($transaksi->total, 2) }}</td>
                             <td>
                                 {{ $transaksi->status_pengerjaan }}
                             </td>
+                            <td>{{ $transaksi->status_transaksi }}</td>
+                            <td>
+                                @isset($transaksi->bukti_pembayaran)
+                                <div class="d-inline">
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalViewBukti{{ $transaksi->id }}">
+                                        <span class="material-icons align-middle">visibility</span>
+                                    </button>
+                                    <button type="button" onclick="location.href='{{ url('bukti-pembayaran-transaksi/'.$transaksi->id) }}'" class="btn btn-sm" style="background-color: #29a4da; color:white;"><span class="material-icons align-middle">description</span></button>
+                                </div>
+                                @else
+                                &nbsp;
+                                @endif
+                            </td>
                             <td>
                                 <div class="d-inline">
-                                    <a href="{{ url('/transaksi/'.$transaksi->id) }}" class="btn btn-success btn-sm">
-                                        <span class="material-icons align-middle">
-                                            visibility
-                                        </span>
-                                    </a>
+                                    <button type="button" onclick="location.href='{{ url('/transaksi/'.$transaksi->id) }}'" class="btn btn-success btn-sm"><span class="material-icons align-middle">visibility</span></button>
                                     @if($transaksi->status_pengerjaan == "Selesai")
-                                    <a href="{{ url('/transaksi/'.$transaksi->id.'/nota') }}" class="btn btn-primary btn-sm">
-                                        <span class="material-icons align-middle">
-                                            description
-                                        </span>
-                                    </a>
+                                    <button type="button" onclick="location.href='{{ url('/transaksi/'.$transaksi->id.'/nota') }}'" class="btn btn-primary btn-sm"><span class="material-icons align-middle">description</span></button>
                                     @endif
                                 </div>
                             </td>
@@ -105,14 +112,36 @@
                         @endforeach
                     </tbody>
                 </table>
+                <!-- Modal View Bukti Pembayaran -->
+                @foreach ($history_transaksi as $t)
+                    <div class="modal fade" id="modalViewBukti{{$t->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Bukti Pembayaran</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <center>
+                                            <img class="responsive" src="{{ asset('/storage/'.$t->bukti_pembayaran) }}" style="max-width: 400px; max-height: 550px;">
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div> 
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

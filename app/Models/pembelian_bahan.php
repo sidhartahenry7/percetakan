@@ -25,6 +25,11 @@ class pembelian_bahan extends Model
     {
         return $this->belongsTo(cabang::class);
     }
+    
+    public function pegawai()
+    {
+        return $this->belongsTo(pegawai::class);
+    }
 
     public function scopeCreateID()
     {

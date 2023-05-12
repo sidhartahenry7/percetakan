@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'user',
         'passwords' => 'users',
     ],
 
@@ -39,6 +39,14 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+        'user' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'pelanggan' => [
+            'driver' => 'session',
+            'provider' => 'pelanggans',
         ],
     ],
 
@@ -65,7 +73,7 @@ return [
             'model' => App\Models\pegawai::class,
         ],
 
-        'pelanggan' => [
+        'pelanggans' => [
             'driver' => 'eloquent',
             'model' => App\Models\pelanggan::class,
         ],

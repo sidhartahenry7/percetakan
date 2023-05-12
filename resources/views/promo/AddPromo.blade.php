@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -60,7 +60,7 @@
                         </div>
                     @endif
                     @if(auth()->user()->user_role == "Admin")
-                    <form action="/promo" method="post">
+                    <form action="{{ url('/promo') }}" method="post">
                         @csrf
                         <div class="form-group">
                             <label style="color: black; font-weight: bold;" for="text">ID Promo</label>
@@ -123,9 +123,9 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
 </body>
 </html>

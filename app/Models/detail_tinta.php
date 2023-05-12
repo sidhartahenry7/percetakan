@@ -20,4 +20,9 @@ class detail_tinta extends Model
     {
         return $this->hasMany(kartu_stok_tinta::class);
     }
+
+    public function penggunaan_tinta()
+    {
+        return $this->hasMany(penggunaan_tinta::class);
+    }
 }

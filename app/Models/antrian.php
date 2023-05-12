@@ -32,7 +32,7 @@ class antrian extends Model
 
     public function scopeCreateID()
     {
-        $jumlah_antrian = antrian::where('tanggal_antrian', '=', Carbon::today())->where('cabang_id', '=', Auth::user()->cabang_id)->max('nomor_antrian');
+        $jumlah_antrian = antrian::whereDate('tanggal_antrian', '=', Carbon::today())->where('cabang_id', '=', Auth::user()->cabang_id)->max('nomor_antrian');
 
         if(Auth::user()->user_role == "Admin") {
             $cabang = cabang::where('id', 1)->first();
@@ -59,7 +59,7 @@ class antrian extends Model
 
     public function scopeCreateAntrian()
     {
-        $jumlah_antrian = antrian::where('tanggal_antrian', '=', Carbon::today())->where('cabang_id', '=', Auth::user()->cabang_id)->max('nomor_antrian');
+        $jumlah_antrian = antrian::whereDate('tanggal_antrian', '=', Carbon::today())->where('cabang_id', '=', Auth::user()->cabang_id)->max('nomor_antrian');
 
         $nomorantrian = $jumlah_antrian+1;
         

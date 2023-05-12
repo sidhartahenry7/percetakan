@@ -26,6 +26,11 @@ class pembelian_tinta extends Model
         return $this->belongsTo(cabang::class);
     }
 
+    public function pegawai()
+    {
+        return $this->belongsTo(pegawai::class);
+    }
+
     public function scopeCreateID()
     {
         $jumlah_pembelian_tinta = pembelian_tinta::max('id');

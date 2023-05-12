@@ -22,6 +22,11 @@ class transaksi extends Model
         return $this->belongsTo(antrian::class);
     }
 
+    public function status_transaksi()
+    {
+        return $this->hasMany(status_transaksi::class);
+    }
+
     public function detail_transaksi()
     {
         return $this->hasMany(detail_transaksi::class);
@@ -30,6 +35,21 @@ class transaksi extends Model
     public function transaksi_pegawai()
     {
         return $this->hasMany(transaksi_pegawai::class);
+    }
+
+    public function penawaran()
+    {
+        return $this->belongsTo(penawaran::class);
+    }
+    
+    public function kartu_stok_bahan()
+    {
+        return $this->hasMany(kartu_stok_bahan::class);
+    }
+
+    public function kartu_stok_tinta()
+    {
+        return $this->hasMany(kartu_stok_tinta::class);
     }
 
     public function scopeListAntrian($query)

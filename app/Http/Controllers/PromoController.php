@@ -23,7 +23,7 @@ class PromoController extends Controller
             ]);
         }
         else {
-            abort(403);
+            return redirect('/dashboard');
         }
     }
     

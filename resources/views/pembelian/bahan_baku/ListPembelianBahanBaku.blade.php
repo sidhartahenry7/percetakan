@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -53,7 +53,7 @@
                                 history
                             </span>
                         </button>
-                        @if(auth()->user()->user_role == "Admin")
+                        @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
                         <button type="button" class="btn btn-primary" onclick="location.href='{{ url('pembelian-bahan-baku') }}'" style="margin-right: 10px;">
                             <span class="material-icons align-middle">
                                 add
@@ -81,6 +81,7 @@
                         <tr>
                             <th>ID Pembelian</th>
                             <th>Tanggal Pembelian</th>
+                            <th>PIC</th>
                             <th>Total</th>
                             <th>Action</th>
                         </tr>
@@ -90,18 +91,19 @@
                         <tr>
                             <td>{{ $bahan->id_pembelian_bahan }}</td>
                             <td>{{ $bahan->tanggal_pembelian_bahan }}</td>
+                            <td>{{ $bahan->pegawai->nama_lengkap }}</td>
                             <td>Rp {{ number_format($bahan->total) }}</td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm" onclick="location.href='{{ url('pembelian-bahan-baku/'.$bahan->id) }}'"><span class="material-icons align-middle">visibility</span></button>
                                 @if($bahan->status == 'Pending')
-                                @if(auth()->user()->user_role == "Admin")
-                                <form action="{{ url('pembelian-bahan-baku/'.$bahan->id) }}" method="POST" class="d-inline">
-                                    @method('delete')
-                                    @csrf
-                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><span class="material-icons align-middle">delete</span></button>
-                                </form>
-                                @endif
-                                <button type="button" class="btn btn-sm" style="background-color: #29a4da; color:white;" onclick="location.href='{{ url('penerimaan-bahan-baku/'.$bahan->id) }}'">Penerimaan</button>
+                                    @if(auth()->user()->user_role == "Admin")
+                                    <form action="{{ url('pembelian-bahan-baku/'.$bahan->id) }}" method="POST" class="d-inline">
+                                        @method('delete')
+                                        @csrf
+                                        <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><span class="material-icons align-middle">delete</span></button>
+                                    </form>
+                                    @endif
+                                    <button type="button" class="btn btn-sm" style="background-color: #29a4da; color:white;" onclick="location.href='{{ url('penerimaan-bahan-baku/'.$bahan->id) }}'">Penerimaan</button>
                                 @endif
                             </td>
                             {{-- <td>
@@ -122,10 +124,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

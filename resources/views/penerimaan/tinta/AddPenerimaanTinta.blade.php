@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -61,7 +61,7 @@
                             </button>
                         </div>
                     @endif
-                    <form action="/penerimaan-tinta" method="post">
+                    <form action="{{ url('/penerimaan-tinta') }}" method="post">
                         @csrf
                         <div class="form-group">
                             <div class="row">
@@ -149,7 +149,7 @@
                                     <tr>
                                         <th>Jenis Tinta</th>
                                         <th>Warna</th>
-                                        <th>Quantity (mL)</th>
+                                        <th>Quantity (L)</th>
                                         <th>Harga</th>
                                     </tr>
                                 </thead>
@@ -177,10 +177,10 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>

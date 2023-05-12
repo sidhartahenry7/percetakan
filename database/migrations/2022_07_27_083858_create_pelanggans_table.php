@@ -18,6 +18,8 @@ class CreatePelanggansTable extends Migration
             $table->string('id_pelanggan', 255)->unique();
             $table->string('nama_pelanggan', 255);
             $table->string('nomor_handphone', 255)->unique();
+            $table->string('email', 255)->unique()->nullable();
+            $table->string('password', 255)->nullable();
             $table->integer('deleted')->default(0);
             $table->timestamps();
         });

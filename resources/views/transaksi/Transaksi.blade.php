@@ -8,7 +8,7 @@
 
         td, th {
             border: 1px solid black;
-            text-align: center;
+            /* text-align: center; */
             padding: 8px;
             color: black;
         }
@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -57,7 +57,7 @@
                             </button>
                         </div>
                     @endif
-                    <form action="/transaksi" method="post">
+                    <form action="{{ url('/transaksi') }}" method="post">
                         @csrf
                         {{-- <div class="form-group">
                             <label style="color: black; font-weight: bold;" for="text">ID Transaksi</label>
@@ -122,6 +122,8 @@
                             <th>Promo</th>
                             <th>Total</th>
                             <th>Status Pengerjaan</th>
+                            <th>Status Transaksi</th>
+                            <th>Bukti Pembayaran</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -134,32 +136,42 @@
                             <td>Rp {{ number_format($transaksi->sub_total_transaksi, 2) }}</td>
                             <td>
                                 @if(is_null($transaksi->promo_id))
-                                    {{ $transaksi->promo_id }}
+                                    0%
                                 @else
-                                    {{ $transaksi->promo->id_promo }}
+                                    {{ $transaksi->promo->potongan }}%
                                 @endif
                             </td>
                             <td>Rp {{ number_format($transaksi->total, 2) }}</td>
                             <td>
                                 {{ $transaksi->status_pengerjaan }}
-                                @if($transaksi->status_pengerjaan != "Selesai")
+                                @if($transaksi->status_pengerjaan != "Pesanan telah diambil")
                                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalEditStatus{{ $transaksi->id }}" style="height: 35px; font-size: small; padding: 5px; margin-left: 5px;">Update</button>
+                                @endif
+                            </td>
+                            <td>{{ $transaksi->status_transaksi }}</td>
+                            <td>
+                                @isset($transaksi->bukti_pembayaran)
+                                <div class="d-inline">
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalViewBukti{{ $transaksi->id }}">
+                                        <span class="material-icons align-middle">visibility</span>
+                                    </button>
+                                    <button type="button" onclick="location.href='{{ url('bukti-pembayaran-transaksi/'.$transaksi->id) }}'" class="btn btn-sm" style="background-color: #29a4da; color:white;"><span class="material-icons align-middle">description</span></button>
+                                </div>
+                                @else
+                                &nbsp;
                                 @endif
                             </td>
                             <td>
                                 <div class="d-inline">
-                                    <a href="{{ url('/transaksi/'.$transaksi->id) }}" class="btn btn-success btn-sm">
-                                        <span class="material-icons align-middle">
-                                            visibility
-                                        </span>
-                                    </a>
-                                    @if($transaksi->status_pengerjaan != "Selesai")
-                                    <a href="{{ url('/transaksi/'.$transaksi->id.'/edit') }}" class="btn btn-warning btn-sm">
-                                        {{-- <i class="mdi mdi-history"></i> --}}
-                                        <span class="material-icons align-middle">
-                                            edit
-                                        </span>
-                                    </a>
+                                    <button type="button" onclick="location.href='{{ url('/transaksi/'.$transaksi->id) }}'" class="btn btn-success btn-sm">
+                                        <span class="material-icons align-middle">visibility</span>
+                                    </button>
+                                    @if($transaksi->status_pengerjaan == "Belum dikerjakan")
+                                        @if($transaksi->status_transaksi == "Onsite")
+                                        <button type="button" onclick="location.href='{{ url('/transaksi/'.$transaksi->id.'/edit') }}'" class="btn btn-warning btn-sm">
+                                            <span class="material-icons align-middle">edit</span>
+                                        </button>
+                                        @endif
                                     @endif
                                 </div>
                             </td>
@@ -182,19 +194,41 @@
                                     @csrf
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="statusPengerjaan">Status Pengerjaan</label>
+                                            <label for="statusPengerjaan">Status Pengerjaan: {{ $t->status_pengerjaan }}</label>
                                             <input hidden type="text" readonly="readonly" class="form-control" id="id" name="id" value="{{ $t->id }}"/>
                                             <br>
                                             <div class="form-group">
                                                 <select class="form-control @error('status_pengerjaan') is-invalid @enderror" id="status_pengerjaan" name="status_pengerjaan" required>
-                                                    {{-- <option selected="" disabled="">
-                                                        -- Pilih Status --
-                                                    </option> --}}
+                                                    <option selected="" disabled="">
+                                                        -- Update Status --
+                                                    </option>
                                                     @foreach ($list_status as $status)
-                                                        @if(old('status_pengerjaan', $t->status_pengerjaan) == $status)
-                                                            <option value="{{ $status }}" selected>{{ $status }}</option>
-                                                        @else
-                                                            <option value="{{ $status }}">{{ $status }}</option>
+                                                        @if($t->status_pengerjaan == "Belum dikerjakan")
+                                                            @if($t->status_transaksi == 'Online')
+                                                                @if($status != "Pesanan telah diambil" && $status != "Selesai" && $status != "Batal")
+                                                                    @if($t->status_pengerjaan != $status)
+                                                                    <option value="{{ $status }}">{{ $status }}</option>
+                                                                    @endif
+                                                                @endif
+                                                            @else
+                                                                @if($status != "Pesanan telah diambil" && $status != "Selesai")
+                                                                    @if($t->status_pengerjaan != $status)
+                                                                    <option value="{{ $status }}">{{ $status }}</option>
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        @elseif($t->status_pengerjaan == "Sedang dikerjakan")
+                                                            @if($status != "Belum dikerjakan" && $status != "Batal" && $status != "Pesanan telah diambil")
+                                                                @if($t->status_pengerjaan != $status)
+                                                                    <option value="{{ $status }}">{{ $status }}</option>
+                                                                @endif
+                                                            @endif
+                                                        @elseif($t->status_pengerjaan == "Selesai")
+                                                            @if($status == "Pesanan telah diambil")
+                                                                @if($t->status_pengerjaan != $status)
+                                                                    <option value="{{ $status }}">{{ $status }}</option>
+                                                                @endif
+                                                            @endif
                                                         @endif
                                                     @endforeach
                                                 </select>
@@ -209,14 +243,36 @@
                         </div>
                     </div>
                 @endforeach
+                <!-- Modal View Bukti Pembayaran -->
+                @foreach ($list_transaksi as $t)
+                    <div class="modal fade" id="modalViewBukti{{$t->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Bukti Pembayaran</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <center>
+                                            <img class="responsive" src="{{ asset('/storage/'.$t->bukti_pembayaran) }}" style="max-width: 400px; max-height: 550px;">
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
@@ -243,7 +299,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script>
         $(document).ready(function () {
-            $('#dtBasicExample').DataTable();
+            $('#dtBasicExample').DataTable(
+                {
+                    'autowidth' : false,
+                    'columnDefs' : [
+                        { 'width': '40%', 'targets': [3,5,6,9] }
+                    ]
+                }
+            );
             $('.dataTables_length').addClass('bs-select');
         });
     </script>

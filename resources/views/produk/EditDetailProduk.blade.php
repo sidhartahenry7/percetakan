@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -85,24 +85,24 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label style="color: black; font-weight: bold;" for="ukuran">Ukuran</label>
+                                    <label style="color: black; font-weight: bold;" for="jenis_kertas">Jenis Bahan</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label id="ukuran">{{ $detail_produk->produk->ukuran }}</label>
+                                    <label id="jenis_bahan">{{ $detail_produk->jenis_bahan }}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label style="color: black; font-weight: bold;" for="jenis_kertas">Jenis Bahan</label>
+                                    <label style="color: black; font-weight: bold;" for="ukuran">Ukuran</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label id="jenis_kertas">{{ $detail_produk->produk->jenis_kertas }}</label>
+                                    <label id="ukuran">{{ $detail_produk->ukuran }}</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-2">
                                     <label style="color: black; font-weight: bold;" for="jenis_tinta">Jenis Tinta</label>
@@ -111,7 +111,7 @@
                                     <label id="jenis_tinta">{{ $detail_produk->tinta->jenis_tinta }}</label>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-2">
@@ -131,7 +131,7 @@
                                     <table class="table table-borderless">
                                         <tr>
                                             <td class="p-0" style="text-align:left;">
-                                                <label class="m-0" id="harga_finishing">Rp {{ number_format($detail_produk->finishing->harga) }}</label>
+                                                <label class="m-0" id="harga_finishing">Rp {{ number_format($detail_produk->finishing->harga, 2) }}</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -275,9 +275,9 @@
       
     </div>
 
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/popper.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
 </body>
 </html>

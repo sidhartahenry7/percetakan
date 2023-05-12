@@ -20,4 +20,14 @@ class kartu_stok_bahan extends Model
     {
         return $this->belongsTo(cabang::class);
     }
+    
+    public function konversi_bahan()
+    {
+        return $this->hasOne(konversi_bahan::class);
+    }
+    
+    public function transaksi()
+    {
+        return $this->belongsTo(transaksi::class);
+    }
 }

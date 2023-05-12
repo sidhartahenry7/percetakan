@@ -20,21 +20,41 @@ class detail_produk extends Model
     {
         return $this->belongsTo(kategori::class);
     }
-    
-    public function produk()
+
+    public function detail_produk_bahan()
     {
-        return $this->belongsTo(produk::class);
+        return $this->hasMany(detail_produk_bahan::class);
     }
-    
-    public function tinta()
-    {
-        return $this->belongsTo(tinta::class);
-    }
-    
+
     public function finishing()
     {
         return $this->belongsTo(finishing::class);
     }
+
+    public function detail_penawaran()
+    {
+        return $this->hasMany(detail_penawaran::class);
+    }
+    
+    // public function produk()
+    // {
+    //     return $this->belongsTo(produk::class);
+    // }
+    
+    // public function tinta()
+    // {
+    //     return $this->belongsTo(tinta::class);
+    // }
+
+    // public function penggunaan_bahan()
+    // {
+    //     return $this->hasOne(penggunaan_bahan::class);
+    // }
+    
+    // public function penggunaan_tinta()
+    // {
+    //     return $this->hasMany(penggunaan_tinta::class);
+    // }
 
     public function scopeCreateID()
     {

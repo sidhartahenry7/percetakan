@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\finishing;
 use App\Http\Requests\StorefinishingRequest;
 use App\Http\Requests\UpdatefinishingRequest;
+use App\Models\bahan_setengah_jadi;
+use App\Models\detail_finishing;
+use App\Models\kartu_stok_bahan;
+use App\Models\kartu_stok_tinta;
+use App\Models\penggunaan_bahan;
+use App\Models\penggunaan_tinta;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FinishingController extends Controller
@@ -19,11 +26,12 @@ class FinishingController extends Controller
         if (Auth::user()->user_role == 'Admin') {
             return view('produk.AddFinishing', [
                 "idproduk" => finishing::CreateID(),
+                "list_bahan_setengah_jadi" => bahan_setengah_jadi::where('deleted', 0)->get(),
                 "title" => "Add Finishing"
             ]);
         }
         else {
-            abort(403);
+            return redirect('/dashboard');
         }
     }
 
@@ -33,6 +41,102 @@ class FinishingController extends Controller
             "list_finishing" => finishing::where('deleted', 0)->get(),
             "title" => "Daftar Finishing"
         ]);
+    }
+
+    public function detailBahanFinishing($id)
+    {
+        // if (Auth::user()->user_role == 'Admin') {
+        //     $stok_bahan = kartu_stok_bahan::latest()->get()->unique('produk_id');
+        //     $stok_tinta = kartu_stok_tinta::latest()->get()->unique('detail_tinta_id');
+        // }
+        // else {
+        //     $stok_bahan = kartu_stok_bahan::where('cabang_id', Auth::user()->cabang_id)->latest()->get()->unique('produk_id');
+        //     $stok_tinta = kartu_stok_tinta::where('cabang_id', Auth::user()->cabang_id)->latest()->get()->unique('detail_tinta_id');
+        // }
+
+        $detail_finishing = detail_finishing::where('finishing_id', $id)->get();
+        $data = array();
+        
+        foreach ($detail_finishing as $res) {
+            $penggunaan_bahan = penggunaan_bahan::where('bahan_setengah_jadi_id', $res->bahan_setengah_jadi_id)->first();
+            if (Auth::user()->user_role == 'Admin') {
+                $stok_bahan = kartu_stok_bahan::where('produk_id', $penggunaan_bahan->produk_id)->latest('created_at')->first();
+            } else {
+                $stok_bahan = kartu_stok_bahan::where('produk_id', $penggunaan_bahan->produk_id)->where('cabang_id', Auth::user()->cabang_id)->latest('created_at')->first();
+            }
+            if ($stok_bahan->harga_average == null) {
+                $harga_bahan = 0*$penggunaan_bahan->jumlah_pemakaian;
+            }
+            else {
+                $harga_bahan = $stok_bahan->harga_average*$penggunaan_bahan->jumlah_pemakaian;
+            }
+            
+            $penggunaan_tinta = penggunaan_tinta::where('bahan_setengah_jadi_id', $res->bahan_setengah_jadi_id)->get();
+            $harga_tinta_total = 0;
+            foreach($penggunaan_tinta as $tintas) {
+                if (Auth::user()->user_role == 'Admin') {
+                    $stok_tinta = kartu_stok_tinta::where('detail_tinta_id', $tintas->detail_tinta_id)->latest('created_at')->first();
+                } else {
+                    $stok_tinta = kartu_stok_tinta::where('detail_tinta_id', $tintas->detail_tinta_id)->where('cabang_id', Auth::user()->cabang_id)->latest('created_at')->first();
+                }
+                if ($stok_tinta->harga_average == null) {
+                    $harga_tinta = 0*$tintas->jumlah_pemakaian;
+                }
+                else {
+                    $harga_tinta = $stok_tinta->harga_average*$tintas->jumlah_pemakaian;
+                }
+                $harga_tinta_total += $harga_tinta;
+            }
+            $data[] = ['id' => $res->id, 'harga_total' => ($harga_bahan+$harga_tinta_total)*$res->quantity];
+        }
+
+        return view('produk.DetailFinishing', [
+            "finishing" => finishing::where('id', $id)->first(),
+            "detail_finishing" => detail_finishing::where('finishing_id', $id)->get(),
+            "data" => $data,
+            "title" => "Detail Finishing"
+        ]);
+    }
+
+    public function tambahBahanFinishing(Request $request)
+    {
+        $data['bahan_setengah_jadi'] = bahan_setengah_jadi::select('id', 'nama_bahan_setengah_jadi', 'harga')
+                                                          ->where('id', '=', $request->bahan_setengah_jadi_id)
+                                                          ->get();
+        
+        $penggunaan_bahan = penggunaan_bahan::where('bahan_setengah_jadi_id', $request->bahan_setengah_jadi_id)->first();
+        if (Auth::user()->user_role == 'Admin') {
+            $stok_bahan = kartu_stok_bahan::where('produk_id', $penggunaan_bahan->produk_id)->latest('created_at')->first();
+        } else {
+            $stok_bahan = kartu_stok_bahan::where('produk_id', $penggunaan_bahan->produk_id)->where('cabang_id', Auth::user()->cabang_id)->latest('created_at')->first();
+        }
+        if ($stok_bahan->harga_average == null) {
+            $harga_bahan = 0*$penggunaan_bahan->jumlah_pemakaian;
+        }
+        else {
+            $harga_bahan = $stok_bahan->harga_average*$penggunaan_bahan->jumlah_pemakaian;
+        }
+        
+        $penggunaan_tinta = penggunaan_tinta::where('bahan_setengah_jadi_id', $request->bahan_setengah_jadi_id)->get();
+        $harga_tinta_total = 0;
+        foreach($penggunaan_tinta as $tintas) {
+            if (Auth::user()->user_role == 'Admin') {
+                $stok_tinta = kartu_stok_tinta::where('detail_tinta_id', $tintas->detail_tinta_id)->latest('created_at')->first();
+            } else {
+                $stok_tinta = kartu_stok_tinta::where('detail_tinta_id', $tintas->detail_tinta_id)->where('cabang_id', Auth::user()->cabang_id)->latest('created_at')->first();
+            }
+            if ($stok_tinta->harga_average == null) {
+                $harga_tinta = 0*$tintas->jumlah_pemakaian;
+            }
+            else {
+                $harga_tinta = $stok_tinta->harga_average*$tintas->jumlah_pemakaian;
+            }
+            $harga_tinta_total += $harga_tinta;
+        }
+        $harga_tinta_total = $harga_tinta_total;
+        $data['harga_total'] = ($harga_bahan+$harga_tinta_total)*$request->quantity_bahan;
+
+        return response()->json($data);
     }
 
     /**
@@ -60,6 +164,23 @@ class FinishingController extends Controller
         ]);
 
         finishing::create($validatedData);
+
+        $finishing = finishing::where('id_finishing', $request->id_finishing)->first();
+        
+        if ($request->input('bahan_setengah_jadi_id') != null) {
+            $count = count($request->input('bahan_setengah_jadi_id'));
+        }
+        else {
+            $count = 0;
+        }
+
+        for($i = 0; $i < $count; $i++) {
+            $detail_finishing['finishing_id'] = $finishing->id;
+            $detail_finishing['bahan_setengah_jadi_id'] = $request->bahan_setengah_jadi_id[$i];
+            $detail_finishing['quantity'] = $request->quantity[$i];
+            
+            detail_finishing::create($detail_finishing);
+        }
 
         $request->session()->flash('success','Penyimpanan Berhasil');
 

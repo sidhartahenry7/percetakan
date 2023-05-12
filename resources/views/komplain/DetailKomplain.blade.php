@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -108,7 +108,7 @@
                         </div>
                         <div class="row justify-content-start align-self-center">
                             <div class="col">
-                                <img src="/images/bukti_komplain/{{ $komplain->bukti_komplain }}" style="height: 350px"/>
+                                <img src="{{ asset('/storage/'.$komplain->bukti_komplain) }}" style="height: 350px"/>
                             </div>
                         </div>
                     </div>
@@ -121,10 +121,10 @@
       
     </div>
 
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/popper.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
 
 </body>
 </html>

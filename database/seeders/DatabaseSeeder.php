@@ -484,9 +484,6 @@ class DatabaseSeeder extends Seeder
             'jam_keluar' => Carbon::parse('00:00:00')
         ]);
 
-        
-
-
         //Operator Printer 1
         DB::table('jadwal_bekerjas')->insert([
             'pegawai_id' => '13',
@@ -2109,6 +2106,117 @@ class DatabaseSeeder extends Seeder
             'longitude_keluar' => '112.6871203',
             'latitude_keluar' => '-7.2630996',
             'status' => 'hadir',
+        ]);
+
+        //Kategori
+        DB::table('kategoris')->insert([
+            'id_kategori' => 'CAT-001',
+            'nama_kategori' => 'Print on Paper',
+            'estimasi_durasi' => '10',
+            'satuan_durasi' => 'menit',
+            'deleted' => 0
+        ]);
+
+        DB::table('kategoris')->insert([
+            'id_kategori' => 'CAT-002',
+            'nama_kategori' => 'Giant Banner',
+            'estimasi_durasi' => '1440',
+            'satuan_durasi' => 'menit',
+            'deleted' => 0
+        ]);
+
+        //Bahan Baku
+        DB::table('produks')->insert([
+            'id_produk' => 'PRO-001',
+            'jenis_kertas' => 'HVS 70 gsm',
+            'ukuran' => 'A4',
+            'deleted' => 0
+        ]);
+        
+        DB::table('produks')->insert([
+            'id_produk' => 'PRO-002',
+            'jenis_kertas' => 'Flexy China',
+            'panjang' => 50,
+            'lebar' => 4,
+            'satuan' => 'm2',
+            'deleted' => 0
+        ]);
+        
+        DB::table('produks')->insert([
+            'id_produk' => 'PRO-003',
+            'jenis_kertas' => 'Art Paper 150 gsm',
+            'ukuran' => 'A4',
+            'deleted' => 0
+        ]);
+
+        //Tinta
+        DB::table('tintas')->insert([
+            'id_tinta' => 'T-001',
+            'jenis_tinta' => 'Dye Base',
+            'deleted' => 0
+        ]);
+        
+        DB::table('tintas')->insert([
+            'id_tinta' => 'T-002',
+            'jenis_tinta' => 'Solvent',
+            'deleted' => 0
+        ]);
+
+        //Detail Tinta
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 1,
+            'warna' => 'Cyan',
+            'deleted' => 0
+        ]);
+        
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 1,
+            'warna' => 'Magenta',
+            'deleted' => 0
+        ]);
+
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 1,
+            'warna' => 'Yellow',
+            'deleted' => 0
+        ]);
+
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 1,
+            'warna' => 'Black',
+            'deleted' => 0
+        ]);
+
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 2,
+            'warna' => 'Cyan',
+            'deleted' => 0
+        ]);
+        
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 2,
+            'warna' => 'Magenta',
+            'deleted' => 0
+        ]);
+
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 2,
+            'warna' => 'Yellow',
+            'deleted' => 0
+        ]);
+
+        DB::table('detail_tintas')->insert([
+            'tinta_id' => 2,
+            'warna' => 'Black',
+            'deleted' => 0
+        ]);
+
+        //Finishing
+        DB::table('finishings')->insert([
+            'id_finishing' => 'F-001',
+            'jenis_finishing' => 'None',
+            'finishing_harga' => 0,
+            'deleted' => 0
         ]);
     }
 }

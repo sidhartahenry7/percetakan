@@ -17,7 +17,8 @@ class CreateDetailPembelianTintasTable extends Migration
             $table->id();
             $table->foreignId('detail_tinta_id');
             $table->foreignId('pembelian_tinta_id');
-            $table->integer('quantity');
+            $table->float('quantity');
+            $table->string('satuan', 255)->default('L');
             $table->integer('harga');
             $table->timestamps();
         });

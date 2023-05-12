@@ -18,7 +18,7 @@ class DataDiriController extends Controller
             ]);
         }
         else {
-            abort(403);
+            return redirect('/dashboard');
         }
     }
 

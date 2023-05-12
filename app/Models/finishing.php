@@ -11,6 +11,11 @@ class finishing extends Model
 
     protected $guarded = ['id'];
 
+    public function detail_finishing()
+    {
+        return $this->hasMany(detail_finishing::class);
+    }
+
     public function detail_produk()
     {
         return $this->hasMany(detail_produk::class);

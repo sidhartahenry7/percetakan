@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -52,7 +52,7 @@
                             </button>
                         </div>
                     @endif
-                    <form action="/data-diri/{{ $data_diri->id }}" method="post">
+                    <form action="{{ url('data-diri/'.$data_diri->id) }}" method="post">
                         @csrf
                         <div class="form-group">
                             <div class="row justify-content-start">
@@ -308,10 +308,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
 
     <script>
         function myFunction() {

@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -88,17 +88,19 @@
                             @isset($produk->ukuran)
                             <td>{{ $produk->ukuran }}</td>
                             @else
-                            <td>{{ $produk->lebar." ".$produk->satuan." x ".$produk->panjang." ".$produk->satuan }}</td>
+                            <td>{{ $produk->lebar." x ".$produk->panjang." ".$produk->satuan }}</td>
                             @endisset
                             @if(auth()->user()->user_role == "Admin")
                             <td>
-                                <form action="{{ url('/bahan-baku/'.$produk->id) }}" method="POST" class="d-inline">
-                                    @method('delete')
-                                    @csrf
-                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
+                                <div class="d-inline">
+                                    <form action="{{ url('/bahan-baku/'.$produk->id) }}" method="POST" class="d-inline">
+                                        @method('delete')
+                                        @csrf
+                                        <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                             @endif
                         </tr>
@@ -111,10 +113,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

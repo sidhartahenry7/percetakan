@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class penggunaan_bahan extends Model
+{
+    use HasFactory;
+
+    protected $guarded = ['id'];
+
+    public function bahan_setengah_jadi()
+    {
+        return $this->belongsTo(bahan_setengah_jadi::class);
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(produk::class);
+    }
+}

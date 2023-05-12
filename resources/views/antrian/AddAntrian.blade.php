@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -59,7 +59,7 @@
                             </button>
                         </div>
                     @endif
-                    <form action="/antrian" method="post">
+                    <form action="{{url('/antrian')}}" method="post">
                         @csrf
                         <div class="form-group">
                             <label style="color: black; font-weight: bold;" for="text">ID Antrian</label>
@@ -93,18 +93,20 @@
                                     </select>
                                     @else
                                     <input type="text" readonly="readonly" class="form-control" required value="{{ auth()->user()->cabang->nama_cabang }}"/>
-                                    <input type="hidden" readonly="readonly" class="form-control @error('cabang_id') is-invalid @enderror" id="cabang_id" name="cabang_id" required value="{{ auth()->user()->cabang_id }}"/>
-                                    @error('cabang_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                    <div hidden>
+                                        <input type="hidden" readonly="readonly" class="form-control @error('cabang_id') is-invalid @enderror" id="cabang_id" name="cabang_id" required value="{{ auth()->user()->cabang_id }}"/>
+                                        @error('cabang_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                     @endif
                                 </div>
                                 <div class="col-sm-3">
                                     <label for="date">Tanggal Antrian</label>
                                     <br>
-                                    <input type="date" class="form-control @error('tanggal_antrian') is-invalid @enderror" id="tanggal_antrian" name="tanggal_antrian" required value="{{ date('Y-m-d') }}"/>
+                                    <input type="date" class="form-control @error('tanggal_antrian') is-invalid @enderror" id="tanggal_antrian" name="tanggal_antrian" required value="{{ date('Y-m-d') }}" readonly/>
                                     @error('tanggal_antrian')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -129,7 +131,7 @@
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                         <script>
                             $(document).ready(function () {
-                                $('#cabang_id').change(function () {
+                                $('#cabang_id, #tanggal_antrian').change(function () {
                                     var cabang_id = $('#cabang_id').val();
                                     var tanggal_antrian = $('#tanggal_antrian').val();
                                     $("#id_antrian_input").html('');
@@ -144,7 +146,7 @@
                                         },
                                         dataType: 'json',
                                         success: function (result) {
-                                            $('#nomor_antrian_input').html('<input type="text" readonly="readonly" class="form-control" id="nomor_antrian" name="nomor_antrian" required value="'+parseInt(result.nomor_antrian+1)+'"/>');
+                                            $('#nomor_antrian_input').html('<input type="text" readonly="readonly" class="form-control" id="nomor_antrian" name="nomor_antrian" required value="'+parseInt(result.nomor_antrian)+'"/>');
                                             $('#id_antrian_input').html('<input type="text" readonly="readonly" class="form-control" id="id_antrian" name="id_antrian" required value="'+result.id_antrian+'"/>');
                                         },
                                         error: function (xhr, ajaxOptions, thrownError) {
@@ -214,11 +216,11 @@
             </div>
         </div> 
     </div>
-
-    {{-- <script src="js/jquery.min.js"></script> --}}
-    <script src="/js/popper.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
+    
+    {{-- <script src="{{asset('js/jquery.min.js')}}"></script> --}}
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>

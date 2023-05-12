@@ -17,7 +17,7 @@ class CreateAntriansTable extends Migration
             $table->id();
             $table->string('id_antrian', 255)->unique();
             $table->foreignId('cabang_id');
-            $table->date('tanggal_antrian');
+            $table->dateTime('tanggal_antrian');
             $table->integer('nomor_antrian');
             $table->foreignId('pelanggan_id');
             $table->integer('deleted')->default(0);

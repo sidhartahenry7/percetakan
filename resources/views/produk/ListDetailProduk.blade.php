@@ -8,7 +8,7 @@
 
         td, th {
             border: 1px solid black;
-            text-align: center;
+            text-align: left;
             padding: 8px;
             color: black;
         }
@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -47,13 +47,18 @@
                     <div class="iq-header-title">
                         <h4 class="card-title">Daftar Detail Produk</h4>
                     </div>
-                    @if(auth()->user()->user_role == "Admin")
-                    <button type="button" class="btn btn-primary" onclick="location.href='{{ url('detail-produk') }}'" style="margin-right: 10px;">
-                        <span class="material-icons align-middle">
-                            add
-                        </span>
-                    </button>
-                    @endif
+                    <div class="d-inline">
+                        <button type="button" class="btn" onclick="location.href='{{ url('kalkulasi-produk') }}'" style="margin-right: 10px; background-color: #29a4da; color:white;">
+                            Kalkulasi Produk
+                        </button>
+                        @if(auth()->user()->user_role == "Admin")
+                        <button type="button" class="btn btn-primary" onclick="location.href='{{ url('detail-produk') }}'" style="margin-right: 10px;">
+                            <span class="material-icons align-middle">
+                                add
+                            </span>
+                        </button>
+                        @endif
+                    </div>
                 </div>
                 <hr style="height: 10px;">
                 <div class="iq-card-body">
@@ -76,16 +81,14 @@
                         <th>ID Detail Produk</th>
                         <th>Kategori</th>
                         <th>Nama Produk</th>
-                        <th>Ukuran</th>
                         <th>Jenis Bahan</th>
-                        <th>Jenis Tinta</th>
+                        <th>Ukuran</th>
+                        {{-- <th>Jenis Tinta</th> --}}
                         <th>Finishing</th>
                         <th>Keterangan</th>
                         <th>Harga</th>
                         <th>Diskon (%)</th>
-                        @if(auth()->user()->user_role == "Admin")
                         <th>Action</th>
-                        @endif
                     </tr>
                     </thead>
                     <tbody>
@@ -94,15 +97,20 @@
                             <td style="min-width: 150px">{{ $detail_produk->id_detail_produk }}</td>
                             <td style="min-width: 120px">{{ $detail_produk->kategori->nama_kategori }}</td>
                             <td style="min-width: 200px">{{ $detail_produk->nama_produk }}</td>
-                            <td>{{ $detail_produk->produk->ukuran }}</td>
-                            <td style="min-width: 120px">{{ $detail_produk->produk->jenis_kertas }}</td>
-                            <td style="min-width: 120px">{{ $detail_produk->tinta->jenis_tinta }}</td>
+                            <td style="min-width: 120px">{{ $detail_produk->jenis_bahan }}</td>
+                            <td style="min-width: 120px">{{ $detail_produk->ukuran }}</td>
+                            {{-- <td style="min-width: 120px">{{ $detail_produk->tinta->jenis_tinta }}</td> --}}
                             <td style="min-width: 120px">{{ $detail_produk->finishing->jenis_finishing }}</td>
                             <td style="min-width: 300px; text-align: left;">{!! $detail_produk->keterangan !!}</td>
                             <td style="min-width: 130px">Rp {{ number_format($detail_produk->harga, 2) }}</td>
                             <td style="min-width: 100px">{{ $detail_produk->diskon }}</td>
-                            @if(auth()->user()->user_role == "Admin")
-                            <td style="min-width: 120px">
+                            <td style="min-width: 130px">
+                                <div class="d-inline">
+                                    <button class="btn btn-info" onclick="window.location.href='{{ url('/detail-produk/'.$detail_produk->id) }}'">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                                @if(auth()->user()->user_role == "Admin")
                                 <div class="d-inline">
                                     <form action="{{ url('/detail-produk/'.$detail_produk->id) }}" method="POST" class="d-inline">
                                         @method('put')
@@ -121,8 +129,8 @@
                                         </button>
                                     </form>
                                 </div>
+                                @endif
                             </td>
-                            @endif
                         </tr>
                     @endforeach
                     </tbody>
@@ -133,10 +141,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

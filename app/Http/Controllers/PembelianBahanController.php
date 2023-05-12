@@ -21,7 +21,7 @@ class PembelianBahanController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->user_role == 'Admin') {
+        if (Auth::user()->user_role == 'Admin' || Auth::user()->user_role == 'Kepala Toko' || Auth::user()->user_role == 'Wakil Kepala Toko') {
             return view('pembelian.bahan_baku.AddPembelianBahanBaku', [
                 "idpembelianbahan" => pembelian_bahan::CreateID(),
                 "bahan" => produk::where('deleted', 0)->get(),
@@ -30,7 +30,7 @@ class PembelianBahanController extends Controller
             ]);
         }
         else {
-            abort(403);
+            return redirect('/dashboard');
         }
     }
 
@@ -70,7 +70,7 @@ class PembelianBahanController extends Controller
         }
         else {
             return view('pembelian.bahan_baku.HistoryPembelianBahanBaku', [
-                "list_pembelian" => pembelian_bahan::where('deleted', 0)->whereNot('status', '!=', 'Pending')->where('cabang_id', Auth::user()->cabang_id)->get(),
+                "list_pembelian" => pembelian_bahan::where('deleted', 0)->where('status', '!=', 'Pending')->where('cabang_id', Auth::user()->cabang_id)->get(),
                 "title" => "History Pembelian Bahan Baku"
             ]);
         }
@@ -105,6 +105,7 @@ class PembelianBahanController extends Controller
         $validatedData = $request->validate([
             'id_pembelian_bahan' => 'required|unique:pembelian_bahans',
             'cabang_id' => 'required',
+            'pegawai_id' => 'required',
             'tanggal_pembelian_bahan' => 'required'
         ]);
 

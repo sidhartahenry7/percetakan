@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -71,7 +71,7 @@
                                     <th>ID Promo</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Berakhir</th>
-                                    <th>Potongan (%)</th>
+                                    <th>Potongan</th>
                                     @if(auth()->user()->user_role == "Admin")
                                     <th>Action</th>
                                     @endif
@@ -81,9 +81,9 @@
                                 @foreach ($list_promo as $promo)
                                 <tr>
                                     <td>{{ $promo->id_promo }}</td>
-                                    <td>{{ $promo->tanggal_mulai }}</td>
-                                    <td>{{ $promo->tanggal_berakhir }}</td>
-                                    <td>{{ $promo->potongan }}</td>
+                                    <td>{{ date('d F Y', strtotime($promo->tanggal_mulai)) }}</td>
+                                    <td>{{ date('d F Y', strtotime($promo->tanggal_berakhir)) }}</td>
+                                    <td>{{ $promo->potongan }}%</td>
                                     @if(auth()->user()->user_role == "Admin")
                                     <td>
                                         <form action="{{ url('/promo/'.$promo->id) }}" method="POST" class="d-inline">
@@ -105,10 +105,10 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

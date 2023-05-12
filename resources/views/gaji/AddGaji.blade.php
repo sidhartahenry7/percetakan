@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -199,7 +199,7 @@
             
             <br>
             <!--Tabel-->
-            <form action="/gaji" method="post" id="form_gaji">
+            <form action="{{url('/gaji')}}" method="post" id="form_gaji">
                 @csrf
                 <table id="list_gaji" class="table table-striped table-borderless">
                 </table>
@@ -209,8 +209,8 @@
     </div>
 
     {{-- <script src="js/jquery.min.js"></script> --}}
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
 </body>
 </html>

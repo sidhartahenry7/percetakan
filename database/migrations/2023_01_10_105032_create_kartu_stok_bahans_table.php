@@ -18,13 +18,14 @@ class CreateKartuStokBahansTable extends Migration
             $table->date('tanggal');
             $table->foreignId('cabang_id');
             $table->foreignId('produk_id');
-            $table->integer('quantity_masuk');
-            $table->integer('quantity_keluar');
-            $table->integer('quantity_sekarang');
+            $table->float('quantity_masuk');
+            $table->float('quantity_keluar');
+            $table->float('quantity_sekarang');
             $table->string('satuan', 255);
             $table->integer('harga_beli');
             $table->float('harga_average');
             $table->string('status');
+            $table->foreignId('transaksi_id')->nullable();
             $table->timestamps();
         });
     }

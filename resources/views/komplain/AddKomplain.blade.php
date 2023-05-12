@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -59,7 +59,7 @@
                         </div>
                     @endif
                     @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
-                    <form action="/komplain" method="POST" enctype="multipart/form-data">
+                    <form action="{{ url('/komplain') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label style="color: black; font-weight: bold;" for="text">Transaksi</label>
@@ -69,9 +69,9 @@
                                 </option>
                                 @foreach ($list_transaksi as $detail)
                                     @if(old('detail_transaksi_id') == $detail->id)
-                                        <option value="{{ $detail->id }}" selected>{{ $detail->id }} {{ $detail->id_transaksi }} {{ $detail->nama_produk }}</option>
+                                        <option value="{{ $detail->id }}" selected>{{ $detail->id }} {{ $detail->transaksi->id_transaksi }} {{ $detail->jenis_bahan_input }} {{ $detail->ukuran_input }} {{ $detail->finishing_input }} {{ $detail->warna_input }}</option>
                                     @else
-                                        <option value="{{ $detail->id }}">{{ $detail->id }} {{ $detail->id_transaksi }} {{ $detail->nama_produk }}</option>
+                                        <option value="{{ $detail->id }}">{{ $detail->id }} {{ $detail->transaksi->id_transaksi }} {{ $detail->jenis_bahan_input }} {{ $detail->ukuran_input }} {{ $detail->finishing_input }} {{ $detail->warna_input }}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -98,7 +98,12 @@
                             <div class="custom-file">
                                 {{-- <input type="file" class="custom-file-input" id="validatedCustomFile" name="bukti_komplain" accept=".jpg,.jpeg,.png"> --}}
                                 {{-- <label class="custom-file-label" for="validatedCustomFile">Masukan Bukti...</label> --}}
-                                <input type="file" name="bukti_komplain" class="inp-img" id="ordinary" accept=".jpg,.jpeg,.png">
+                                <input type="file" name="bukti_komplain" class="inp-img @error('bukti_komplain') is-invalid @enderror" id="ordinary" accept=".jpg,.jpeg,.png">
+                                @error('bukti_komplain')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                             </div>
                         </div>
                         <button type="button" class="btn btn-danger" onclick="location.href='{{ url('list-komplain') }}'">
@@ -117,10 +122,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>

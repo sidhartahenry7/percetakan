@@ -8,6 +8,7 @@ use App\Models\pelanggan;
 use App\Http\Requests\StoreantrianRequest;
 use App\Http\Requests\UpdateantrianRequest;
 use App\Models\transaksi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AntrianController extends Controller
@@ -48,8 +49,7 @@ class AntrianController extends Controller
 
     public function fetchNomorAntrian(Request $request)
     {
-        $data['nomor_antrian'] = antrian::where('tanggal_antrian', '=', $request->tanggal_antrian)->where('cabang_id', '=', $request->cabang_id)->max('nomor_antrian');
-        $jumlah_antrian = antrian::where('tanggal_antrian', '=', $request->tanggal_antrian)->where('cabang_id', '=', $request->cabang_id)->max('nomor_antrian');
+        $jumlah_antrian = antrian::whereDate('tanggal_antrian', '=', $request->tanggal_antrian)->where('cabang_id', '=', $request->cabang_id)->max('nomor_antrian');
         $cabang = cabang::where('id', $request->cabang_id)->first();
 
         if ($jumlah_antrian >= 99) {
@@ -64,8 +64,10 @@ class AntrianController extends Controller
         else {
             $idantrian = date('Ymd')."/".$cabang->nama_cabang."/00".(1);
         }
+        // dd($jumlah_antrian);
 
         $data['id_antrian'] = $idantrian;
+        $data['nomor_antrian'] = $jumlah_antrian+1;
         return response()->json($data);
     }
 
@@ -94,6 +96,7 @@ class AntrianController extends Controller
             'nomor_antrian' => 'required',
             'pelanggan_id' => 'required'
         ]);
+        $validatedData['tanggal_antrian'] = Carbon::now();
 
         antrian::create($validatedData);
 

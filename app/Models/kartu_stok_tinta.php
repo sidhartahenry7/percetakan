@@ -20,4 +20,9 @@ class kartu_stok_tinta extends Model
     {
         return $this->belongsTo(cabang::class);
     }
+
+    public function transaksi()
+    {
+        return $this->belongsTo(transaksi::class);
+    }
 }

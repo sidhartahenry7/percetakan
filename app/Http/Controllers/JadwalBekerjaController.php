@@ -33,7 +33,7 @@ class JadwalBekerjaController extends Controller
             ]);
         }
         else {
-            abort(403);
+            return redirect('/dashboard');
         }
     }
     
@@ -47,13 +47,13 @@ class JadwalBekerjaController extends Controller
         }
         else if (Auth::user()->user_role == 'Kepala Toko' || Auth::user()->user_role == 'Wakil Kepala Toko') {
             return view('jadwalkerja.ListJadwalKerjaPegawai', [
-                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get(),
+                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->where('pegawais.cabang_id', Auth::user()->cabang_id)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get(),
                 "title" => "Daftar Jadwal Bekerja Pegawai"
             ]);
         }
         else {
             return view('jadwalkerja.ListJadwalKerjaPegawai', [
-                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get(),
+                "list_jadwal" => jadwal_bekerja::join('pegawais', 'jadwal_bekerjas.pegawai_id', '=', 'pegawais.id')->ListJadwal()->where('pegawais.user_role', '!=', 'Admin')->whereNull('pegawais.tanggal_keluar')->where('pegawais.deleted', 0)->orderBy('pegawais.id')->where('pegawais.id', Auth::user()->id)->orderBy('jadwal_bekerjas.hari')->select('pegawais.*', 'jadwal_bekerjas.*')->get(),
                 "title" => "Daftar Jadwal Bekerja Pegawai"
             ]);
         }

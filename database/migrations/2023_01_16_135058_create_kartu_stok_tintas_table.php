@@ -18,10 +18,14 @@ class CreateKartuStokTintasTable extends Migration
             $table->date('tanggal');
             $table->foreignId('cabang_id');
             $table->foreignId('detail_tinta_id');
-            $table->integer('quantity_masuk');
-            $table->integer('quantity_keluar');
-            $table->integer('quantity_sekarang');
+            $table->float('quantity_masuk');
+            $table->float('quantity_keluar');
+            $table->float('quantity_sekarang');
+            $table->string('satuan', 255)->default('mL');
+            $table->integer('harga_beli');
+            $table->float('harga_average');
             $table->string('status');
+            $table->foreignId('transaksi_id')->nullable();
             $table->timestamps();
         });
     }

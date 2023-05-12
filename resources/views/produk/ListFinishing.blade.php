@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -88,6 +88,11 @@
                             <td>Rp {{ number_format($finishing->finishing_harga) }}</td>
                             @if(auth()->user()->user_role == "Admin")
                             <td>
+                                <a href="{{ url('/finishing/'.$finishing->id) }}" class="btn btn-success btn-sm">
+                                    <span class="material-icons align-middle">
+                                        visibility
+                                    </span>
+                                </a>
                                 <form action="{{ url('/finishing/'.$finishing->id) }}" method="POST" class="d-inline">
                                     @method('delete')
                                     @csrf
@@ -105,10 +110,10 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

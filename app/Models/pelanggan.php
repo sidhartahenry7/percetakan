@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class pelanggan extends Model
+class pelanggan extends Authenticatable
 {
     use HasFactory;
 
@@ -14,6 +15,16 @@ class pelanggan extends Model
     public function antrian()
     {
         return $this->hasMany(antrian::class);
+    }
+    
+    public function penawaran()
+    {
+        return $this->hasMany(penawaran::class);
+    }
+    
+    public function status_penawaran()
+    {
+        return $this->hasMany(status_penawaran::class);
     }
 
     public function scopeCreateID()

@@ -10,6 +10,7 @@ use App\Http\Requests\StorekomplainRequest;
 use App\Http\Requests\UpdatekomplainRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class KomplainController extends Controller
 {
@@ -21,16 +22,32 @@ class KomplainController extends Controller
     public function index()
     {
         if (Auth::user()->user_role == 'Admin') {
+            $list_transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')
+                                              ->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')
+                                              ->where('transaksis.status_pengerjaan', 'Pesanan telah diambil')
+                                              ->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))
+                                              ->get();
+
             return view('komplain.AddKomplain', [
-                "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get(),
+                "list_transaksi" => $list_transaksi,
                 "title" => "Add Komplain"
             ]);
     
-        } else {
+        } else if (Auth::user()->user_role == 'Kepala Toko' || Auth::user()->user_role == 'Wakil Kepala Toko') {
+            $list_transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')
+                                              ->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')
+                                              ->join('antrians', 'transaksis.antrian_id', 'antrians.id')
+                                              ->where('transaksis.status_pengerjaan', 'Pesanan telah diambil')
+                                              ->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))
+                                              ->where('antrians.cabang_id', Auth::user()->cabang_id)
+                                              ->get();
+
             return view('komplain.AddKomplain', [
-                "list_transaksi" => DB::table('detail_transaksis')->join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('transaksis.status_pengerjaan', 'Selesai')->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')->get(),
+                "list_transaksi" => $list_transaksi,
                 "title" => "Add Komplain"
             ]);
+        } else {
+            return redirect('/dashboard');
         }
     }
     
@@ -42,12 +59,55 @@ class KomplainController extends Controller
         ]);
     }
 
+    public function listKomplainPelanggan()
+    {
+        return view('komplain.pelanggan.ListKomplainPelanggan', [
+            "list_komplain" => komplain::join('detail_transaksis', 'komplains.detail_transaksi_id', 'detail_transaksis.id')
+                                       ->join('transaksis', 'detail_transaksis.transaksi_id', 'transaksis.id')
+                                       ->join('antrians', 'transaksis.antrian_id', 'antrians.id')
+                                       ->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')
+                                       ->where('antrians.pelanggan_id', Auth::guard('pelanggan')->user()->id)
+                                       ->select('komplains.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')
+                                       ->get(),
+            "title" => "Daftar Komplain"
+        ]);
+    }
+
+    public function addKomplainPelanggan()
+    {
+        return view('komplain.pelanggan.AddKomplainPelanggan', [
+            "list_transaksi" => detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')
+                                                ->join('antrians', 'transaksis.antrian_id', '=', 'antrians.id')
+                                                ->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')
+                                                ->where('transaksis.status_pengerjaan', 'Selesai')
+                                                ->where('antrians.pelanggan_id', Auth::guard('pelanggan')->user()->id)
+                                                ->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))
+                                                ->select('detail_transaksis.*', 'transaksis.id_transaksi', 'detail_produks.nama_produk')
+                                                ->get(),
+            "title" => "Add Komplain"
+        ]);
+    }
+
     public function indexDetail($id)
     {
-        return view('komplain.DetailKomplain', [
-            "komplain" => komplain::where('komplains.id', $id)->first(),
-            "title" => "Detail Komplain"
-        ]);
+        if (Auth::guard('user')->check()) {
+            return view('komplain.DetailKomplain', [
+                "komplain" => komplain::where('komplains.id', $id)->first(),
+                "title" => "Detail Komplain"
+            ]);
+        }
+        else if (Auth::guard('pelanggan')->check()) {
+            $komplain = komplain::where('id', $id)->first();
+            if ($komplain->detail_transaksi->transaksi->antrian->pelanggan_id == Auth::guard('pelanggan')->user()->id) {
+                return view('komplain.pelanggan.DetailKomplainPelanggan', [
+                    "komplain" => komplain::where('id', $id)->first(),
+                    "title" => "Detail Komplain"
+                ]);
+            }
+            else {
+                abort(403);
+            }
+        }
     }
 
     /**
@@ -68,30 +128,52 @@ class KomplainController extends Controller
      */
     public function store(StorekomplainRequest $request)
     {
-        Request()->validate([
+        // Request()->validate([
+        //     'detail_transaksi_id' => 'required',
+        //     'isi_komplain' => 'required',
+        //     'bukti_komplain' => 'image|file',
+        // ]);
+
+        $validatedData = $request->validate([
             'detail_transaksi_id' => 'required',
             'isi_komplain' => 'required',
-            'bukti_komplain',
+            'bukti_komplain' => 'image'
         ]);
 
-        $transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->where('detail_transaksis.id', $request->detail_transaksi_id)->first();
-        $produk = detail_transaksi::join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('detail_transaksis.id', $request->detail_transaksi_id)->first();
-
-        $filename = "";
-        if (Request()->hasFile('bukti_komplain')) {
-            if (Request()->file('bukti_komplain')) {
-                $file = Request()->file('bukti_komplain');
-                $filename = date('YmdHi').'_'.$transaksi->id_transaksi.'_'.$produk->nama_produk;
-                $file->move(public_path('images/bukti_komplain/'), $filename);
-            }
+        if ($request->file('bukti_komplain')) {
+            $validatedData['bukti_komplain'] = $request->file('bukti_komplain')->store('bukti_komplain');
         }
-        DB::table('komplains')->insert([
-            'detail_transaksi_id' => Request()->detail_transaksi_id,
-            'isi_komplain' => Request()->isi_komplain,
-            'bukti_komplain' => $filename
-        ]);
-        DB::commit();
-        return redirect('/list-komplain')->with("create_success", "Komplain Berhasil Ditambah");
+
+        // $transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')->where('detail_transaksis.id', $request->detail_transaksi_id)->first();
+        // $produk = detail_transaksi::join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')->where('detail_transaksis.id', $request->detail_transaksi_id)->first();
+
+        komplain::create($validatedData);
+
+        // $filename = "";
+        // if (Request()->hasFile('bukti_komplain')) {
+        //     if (Request()->file('bukti_komplain')) {
+        //         $file = Request()->file('bukti_komplain');
+        //         $filename = date('YmdHi').'_'.$transaksi->id_transaksi.'_'.$produk->nama_produk;
+        //         $file->move(public_path('images/bukti_komplain/'), $filename);
+        //     }
+        // }
+        // DB::table('komplains')->insert([
+        //     'detail_transaksi_id' => Request()->detail_transaksi_id,
+        //     'isi_komplain' => Request()->isi_komplain,
+        //     'bukti_komplain' => $filename
+        // ]);
+        // DB::commit();
+
+        if (Auth::guard('user')->check()) {
+            $request->session()->flash('success','Penyimpanan Berhasil');
+
+            return redirect('/list-komplain');
+        }
+        else if (Auth::guard('pelanggan')->check()) {
+            $request->session()->flash('success','Penyimpanan Berhasil');
+
+            return redirect('/daftar-komplain');
+        }
     }
 
     /**
@@ -136,8 +218,19 @@ class KomplainController extends Controller
      */
     public function destroy(komplain $komplain)
     {
+        $temp = komplain::where('id', $komplain->id)->first();
+        $file = public_path("storage/{$temp->bukti_komplain}");
+        
+        File::delete($file);
+        
         komplain::destroy($komplain->id);
         
-        return redirect('/list-komplain')->with('success', 'Komplain berhasil dihapus!');
+        
+        if (Auth::guard('user')->check()) {
+            return redirect('/list-komplain')->with('success', 'Komplain berhasil dihapus!');
+        }
+        else if (Auth::guard('pelanggan')->check()) {
+            return redirect('/daftar-komplain')->with('success', 'Komplain berhasil dihapus!');
+        }
     }
 }

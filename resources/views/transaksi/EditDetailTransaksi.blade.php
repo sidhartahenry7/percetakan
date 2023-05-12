@@ -8,7 +8,7 @@
 
         td, th {
             border: 1px solid black;
-            text-align: center;
+            /* text-align: center; */
             padding: 8px;
             color: black;
             min-width: 150px;
@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -38,7 +38,7 @@
 
         <!-- Page Content  -->
         <div id="content" class="p-4 p-md-5 pt-5">
-            <form action="/transaksi/{{ $transaksi->id }}" method="post">
+            <form action="{{ url('transaksi/'.$transaksi->id) }}" method="post">
                 @csrf
                 <div class="iq-card">
                     <div class="iq-card-header d-flex justify-content-between">
@@ -178,7 +178,7 @@
                         </div>
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="text">Nama Produk</label>
                                         <select class="form-control" id="produk-dropdown" name="nama_produk" autofocus>
@@ -196,7 +196,17 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="text">Jenis Bahan</label>
+                                        <select class="form-control" id="jenis_bahan-dropdown" name="jenis_bahan" autofocus>
+                                            <option selected="" disabled="">
+                                                -- Pilih Jenis Bahan --
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="text">Ukuran</label>
                                         <select class="form-control" id="ukuran-dropdown" name="ukuran" autofocus>
@@ -206,42 +216,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="text">Jenis Bahan</label>
-                                        <select class="form-control" id="jenis_kertas-dropdown" name="jenis_kertas" autofocus>
-                                            <option selected="" disabled="">
-                                                -- Pilih Jenis Kertas --
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div id="custom-panjang"></div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div id="custom-lebar"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="text">Jenis Tinta</label>
-                                        <select class="form-control" id="jenis-tinta-dropdown" name="tinta_id" autofocus>
-                                            <option selected="" disabled="">
-                                                -- Pilih Tinta --
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="text">Finishing</label>
                                         <select class="form-control" id="finishing-dropdown" name="finishing_id" autofocus>
@@ -251,10 +226,107 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="color: black; font-weight: bold;" for="text">Input Data Produk User</label>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="jenis_bahan_input">Jenis Bahan</label>
+                                    <input type="text" class="form-control @error('jenis_bahan_input') is-invalid @enderror" id="jenis_bahan_input" name="jenis_bahan_input" value="{{ old('jenis_bahan_input') }}" required placeholder="ex: HVS 70 gsm"/>
+                                    @error('jenis_bahan_input')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="ukuran_input">Ukuran</label>
+                                    <input type="text" class="form-control @error('ukuran_input') is-invalid @enderror" id="ukuran_input" name="ukuran_input" value="{{ old('ukuran_input') }}" required placeholder="ex: A4"/>
+                                    @error('ukuran_input')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="finishing_input">Finishing</label>
+                                    <input type="text" class="form-control" id="finishing_input" name="finishing_input" value="{{ old('finishing_input') }}" placeholder="ex: Jilid Spiral"/>
+                                    <p>* jika tidak perlu finishing maka biarkan kosong</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="finishing_input">Status Warna</label>
+                                    <select class="form-control" id="warna_input" name="warna_input" autofocus required>
+                                        <option selected="" disabled="" value="">-- Pilih Warna --</option>
+                                        <option value="Berwarna">Berwarna</option>
+                                        <option value="Black & White">Black & White</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="text">Custom Notes</label>
+                            <input id="custom" name="custom" type="hidden" value="{{ old('custom') }}">
+                            <trix-editor input="custom"></trix-editor>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="warna_cyan">Warna Cyan (%)</label>
+                                        <input type="number" class="form-control @error('warna_cyan') is-invalid @enderror" id="warna_cyan" name="warna_cyan" value="{{ old('warna_cyan', 0) }}" required/>
+                                        @error('warna_cyan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="warna_magenta">Warna Magenta (%)</label>
+                                        <input type="number" class="form-control @error('warna_magenta') is-invalid @enderror" id="warna_magenta" name="warna_magenta" value="{{ old('warna_magenta', 0) }}" required/>
+                                        @error('warna_magenta')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="warna_yellow">Warna Yellow (%)</label>
+                                        <input type="number" class="form-control @error('warna_yellow') is-invalid @enderror" id="warna_yellow" name="warna_yellow" value="{{ old('warna_yellow', 0) }}" required/>
+                                        @error('warna_yellow')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="warna_black">Warna Black (%)</label>
+                                        <input type="number" class="form-control @error('warna_black') is-invalid @enderror" id="warna_black" name="warna_black" value="{{ old('warna_black', 0) }}" required/>
+                                        @error('warna_black')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="jumlah">Jumlah Produk</label>
-                                        <input type="number" class="form-control @error('jumlah_produk') is-invalid @enderror" id="jumlah_produk" name="jumlah_produk" value="{{ old('jumlah_produk') }}"/>
+                                        <input type="number" class="form-control @error('jumlah_produk') is-invalid @enderror" id="jumlah_produk" name="jumlah_produk" value="{{ old('jumlah_produk', 0) }}"/>
                                         {{-- @error('jumlah_produk')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -262,19 +334,7 @@
                                         @enderror --}}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label for="text">Custom Notes</label>
-                                <input id="custom" name="custom" type="hidden" value="{{ old('custom') }}">
-                                <trix-editor input="custom"></trix-editor>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="jumlah">Harga Custom</label>
                                         <input type="number" class="form-control @error('harga_custom') is-invalid @enderror" id="harga_custom" name="harga_custom" value="{{ old('harga_custom', 0) }}" required/>
@@ -294,12 +354,12 @@
                             $(document).ready(function () {
                                 $('#produk-dropdown').change(function () {
                                     var nama_produk = $('#produk-dropdown').val();
+                                    $("#jenis_bahan-dropdown").html('');
                                     $("#ukuran-dropdown").html('');
-                                    $("#jenis_kertas-dropdown").html('');
-                                    $("#jenis-tinta-dropdown").html('');
+                                    // $("#jenis-tinta-dropdown").html('');
                                     $("#finishing-dropdown").html('');
                                     $.ajax({
-                                        url: "{{url('/api/fetch-ukuran')}}",
+                                        url: "{{url('/api/fetch-kertas')}}",
                                         type: 'POST',
                                         data: {
                                                 nama_produk:nama_produk,
@@ -307,12 +367,38 @@
                                         },
                                         dataType: 'json',
                                         success: function (result) {
+                                            $('#jenis_bahan-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Bahan --</option>');
+                                            $.each(result.list_kertas, function (key, value) {
+                                                $("#jenis_bahan-dropdown").append('<option value="' + value.jenis_bahan + '">' + value.jenis_bahan + '</option>');
+                                            });
+                                            $('#ukuran-dropdown').html('<option selected="" disabled="" value="">-- Pilih Ukuran --</option>');
+                                            // $('#jenis-tinta-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Tinta --</option>');
+                                            $('#finishing-dropdown').html('<option selected="" disabled="" value="">-- Pilih Finishing --</option>');
+                                        }
+                                    });
+                                });
+
+                                $('#jenis_bahan-dropdown').change(function () {
+                                    var nama_produk = $('#produk-dropdown').val();
+                                    var jenis_bahan = $('#jenis_bahan-dropdown').val();
+                                    $("#ukuran-dropdown").html('');
+                                    // $("#jenis-tinta-dropdown").html('');
+                                    $("#finishing-dropdown").html('');
+                                    $.ajax({
+                                        url: "{{url('/api/fetch-ukuran')}}",
+                                        type: 'POST',
+                                        data: {
+                                                nama_produk:nama_produk,
+                                                jenis_bahan:jenis_bahan,
+                                                _token:'{{ csrf_token() }}'
+                                        },
+                                        dataType: 'json',
+                                        success: function (result) {
                                             $('#ukuran-dropdown').html('<option selected="" disabled="" value="">-- Pilih Ukuran --</option>');
                                             $.each(result.list_ukuran, function (key, value) {
-                                                $("#ukuran-dropdown").append('<option value="' + value.ukuran + '">' + value.ukuran +'</option>');
+                                                $("#ukuran-dropdown").append('<option value="' + value.ukuran + '">' + value.ukuran + '</option>');
                                             });
-                                            $('#jenis_kertas-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Kertas --</option>');
-                                            $('#jenis-tinta-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Tinta --</option>');
+                                            // $('#jenis-tinta-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Tinta --</option>');
                                             $('#finishing-dropdown').html('<option selected="" disabled="" value="">-- Pilih Finishing --</option>');
                                         }
                                     });
@@ -320,78 +406,17 @@
 
                                 $('#ukuran-dropdown').change(function () {
                                     var nama_produk = $('#produk-dropdown').val();
+                                    var jenis_bahan = $('#jenis_bahan-dropdown').val();
                                     var ukuran = $('#ukuran-dropdown').val();
-                                    $("#custom-panjang").html('');
-                                    $("#custom-lebar").html('');
-                                    $("#jenis_kertas-dropdown").html('');
-                                    $("#jenis-tinta-dropdown").html('');
                                     $("#finishing-dropdown").html('');
                                     $.ajax({
-                                        url: "{{url('/api/fetch-kertas')}}",
-                                        type: 'POST',
-                                        data: {
-                                                nama_produk:nama_produk,
-                                                ukuran:ukuran,
-                                                _token:'{{ csrf_token() }}'
-                                        },
-                                        dataType: 'json',
-                                        success: function (result) {
-                                            if(ukuran == "Custom") {
-                                                $('#custom-panjang').append('<label for="custom-panjang">Ukuran Panjang Custom</label>\
-                                                                           <input type="text" class="form-control" id="custom_panjang" name="custom_panjang" required/>');
-                                                $('#custom-lebar').append('<label for="custom-lebar">Ukuran Lebar Custom</label>\
-                                                                         <input type="text" class="form-control" id="custom_lebar" name="custom_lebar" required/>');
-                                            }
-                                            $('#jenis_kertas-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Kertas --</option>');
-                                            $.each(result.list_kertas, function (key, value) {
-                                                $("#jenis_kertas-dropdown").append('<option value="' + value.jenis_kertas + '">' + value.jenis_kertas +'</option>');
-                                            });
-                                            $('#jenis-tinta-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Tinta --</option>');
-                                            $('#finishing-dropdown').html('<option selected="" disabled="" value="">-- Pilih Finishing --</option>');
-                                        }
-                                    });
-                                });
-
-                                $('#jenis_kertas-dropdown').change(function () {
-                                    var nama_produk = $('#produk-dropdown').val();
-                                    var ukuran = $('#ukuran-dropdown').val();
-                                    var jenis_kertas = $('#jenis_kertas-dropdown').val();
-                                    $("#jenis-tinta-dropdown").html('');
-                                    $("#finishing-dropdown").html('');
-                                    $.ajax({
-                                        url: "{{url('/api/fetch-tinta')}}",
-                                        type: 'POST',
-                                        data: {
-                                                nama_produk:nama_produk,
-                                                ukuran:ukuran,
-                                                jenis_kertas:jenis_kertas,
-                                                _token:'{{ csrf_token() }}'
-                                        },
-                                        dataType: 'json',
-                                        success: function (result) {
-                                            $('#jenis-tinta-dropdown').html('<option selected="" disabled="" value="">-- Pilih Jenis Tinta --</option>');
-                                            $.each(result.list_tinta, function (key, value) {
-                                                $("#jenis-tinta-dropdown").append('<option value="' + value.tinta_id + '">' + value.jenis_tinta +'</option>');
-                                            });
-                                            $('#finishing-dropdown').html('<option selected="" disabled="" value="">-- Pilih Finishing --</option>');
-                                        }
-                                    });
-                                });
-
-                                $('#jenis-tinta-dropdown').change(function () {
-                                    var nama_produk = $('#produk-dropdown').val();
-                                    var ukuran = $('#ukuran-dropdown').val();
-                                    var jenis_kertas = $('#jenis_kertas-dropdown').val();
-                                    var jenis_tinta = $('#jenis-tinta-dropdown').val();
-                                    $("#finishing-dropdown").html('');
-                                    $.ajax({
+                                        // url: "{{url('/api/fetch-tinta')}}",
                                         url: "{{url('/api/fetch-finishing')}}",
                                         type: 'POST',
                                         data: {
                                                 nama_produk:nama_produk,
+                                                jenis_bahan:jenis_bahan,
                                                 ukuran:ukuran,
-                                                jenis_kertas:jenis_kertas,
-                                                jenis_tinta:jenis_tinta,
                                                 _token:'{{ csrf_token() }}'
                                         },
                                         dataType: 'json',
@@ -417,11 +442,12 @@
                             <tr>
                                 <th>ID Produk</th>
                                 <th>Nama Poduk</th>
-                                <th>Ukuran</th>
                                 <th>Jenis Bahan</th>
-                                <th>Jenis Tinta</th>
+                                <th>Ukuran</th>
                                 <th>Finishing</th>
-                                <th>Harga Produk</th>
+                                <th>Warna</th>
+                                <th>CMYK (%)</th>
+                                <th>Harga</th>
                                 <th>Jumlah Produk</th>
                                 <th>Harga Finishing</th>
                                 <th>Diskon (%)</th>
@@ -437,14 +463,24 @@
                             <tr>
                                 <td>{{ $beli->detail_produk->id_detail_produk }}</td>
                                 <td>{{ $beli->detail_produk->nama_produk }}</td>
-                                @isset($beli->custom_panjang, $beli->custom_lebar)
-                                <td>{{ $beli->detail_produk->produk->ukuran }} ({{ $beli->custom_panjang }} x {{ $beli->custom_lebar }})</td>
-                                @else
-                                <td>{{ $beli->detail_produk->produk->ukuran }}</td>
-                                @endisset
-                                <td>{{ $beli->detail_produk->produk->jenis_kertas }}</td>
-                                <td>{{ $beli->detail_produk->tinta->jenis_tinta }}</td>
-                                <td>{{ $beli->detail_produk->finishing->jenis_finishing }}</td>
+                                <td>{{ $beli->jenis_bahan_input }}</td>
+                                <td>{{ $beli->ukuran_input }}</td>
+                                <td>{{ $beli->finishing_input }}</td>
+                                <td>{{ $beli->warna_input }}</td>
+                                <td>
+                                    <div class="row">
+                                        Cyan: {{ $beli->persen_cyan }}%
+                                    </div>
+                                    <div class="row">
+                                        Magenta: {{ $beli->persen_magenta }}%
+                                    </div>
+                                    <div class="row">
+                                        Yellow: {{ $beli->persen_yellow }}%
+                                    </div>
+                                    <div class="row">
+                                        Black: {{ $beli->persen_black }}%
+                                    </div>
+                                </td>
                                 <td>Rp {{ number_format($beli->harga, 2) }}</td>
                                 <td>{{ $beli->jumlah_produk }}</td>
                                 <td>Rp {{ number_format($beli->harga_finishing, 2) }}</td>
@@ -452,18 +488,30 @@
                                 <td>Rp {{ number_format((($beli->harga*$beli->jumlah_produk+$beli->harga_finishing)*(1-$beli->diskon/100)), 2) }}</td>
                                 <td>Rp {{ number_format($beli->harga_custom, 2) }}</td>
                                 <td>Rp {{ number_format($beli->sub_total, 2) }}</td>
-                                <td>{!! $beli->custom !!}</td>
+                                <td>
+                                    @isset($beli->custom)
+                                    {!! $beli->custom !!}
+                                    @else
+                                    None
+                                    @endisset
+                                </td>
                                 <td ><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="{{ $beli->detail_produk->id_detail_produk }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="{{ $beli->harga }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="{{ $beli->jumlah_produk }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="{{ $beli->diskon }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="{{ $beli->harga_finishing }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="{{ $beli->harga_custom }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="{{ $beli->custom }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_panjang[]" value="{{ $beli->custom_panjang }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_lebar[]" value="{{ $beli->custom_lebar }}" readonly/></td>
-                                <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="{{ $beli->sub_total }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="{{ $beli->detail_produk->id_detail_produk }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="text" name="jenis_bahan_input[]" value="{{ $beli->jenis_bahan_input }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="text" name="ukuran_input[]" value="{{ $beli->ukuran_input }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="text" name="finishing_input[]" value="{{ $beli->finishing_input }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="text" name="warna_input[]" value="{{ $beli->warna_input }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="{{ $beli->harga }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="{{ $beli->jumlah_produk }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="{{ $beli->diskon }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="{{ $beli->harga_finishing }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="{{ $beli->harga_custom }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="{{ $beli->custom }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="{{ $beli->sub_total }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="persen_cyan[]" value="{{ $beli->persen_cyan }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="persen_magenta[]" value="{{ $beli->persen_magenta }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="persen_yellow[]" value="{{ $beli->persen_yellow }}" readonly/></td>
+                                <td hidden><input hidden class="form-control form-control-sm" type="number" name="persen_black[]" value="{{ $beli->persen_black }}" readonly/></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -557,7 +605,7 @@
                     var table = document.getElementById("tabel");
                     var sub_total = 0;
                     for (var i = 1, row; row = table.rows[i]; i++) {
-                        sub_total += parseInt(table.rows[i].cells[24].getElementsByTagName('input')[0].value);
+                        sub_total += parseInt(table.rows[i].cells[27].getElementsByTagName('input')[0].value);
                         // sub_total += parseInt(table.rows[i].cells[11].innerHTML);
                     }
                     $.ajax({
@@ -584,105 +632,96 @@
                     $("#total-form").html('');
                     $("#subTotal").html('');
                     var nama_produk = $('#produk-dropdown').val();
+                    var jenis_bahan_input = $('#jenis_bahan_input').val();
+                    var ukuran_input = $('#ukuran_input').val();
+                    var finishing_input = $('#finishing_input').val();
+                    var warna_input = $('#warna_input').val();
+                    var jenis_bahan = $('#jenis_bahan-dropdown').val();
                     var ukuran = $('#ukuran-dropdown').val();
-                    var jenis_kertas = $('#jenis_kertas-dropdown').val();
-                    var jenis_tinta = $('#jenis-tinta-dropdown').val();
+                    // var jenis_tinta = $('#jenis-tinta-dropdown').val();
                     var jenis_finishing = $('#finishing-dropdown').val();
                     var jumlah_produk = $('#jumlah_produk').val();
                     var harga_custom = $('#harga_custom').val();
                     var custom = $('#custom').val();
-                    var custom_panjang = $('#custom_panjang').val();
-                    var custom_lebar = $('#custom_lebar').val();
                     var promo_id = $('#promo_id').val();
                     var promo = 0;
                     var table = document.getElementById("tabel");
                     var sub_total = 0;
                     var hf = 0;
+                    var ukuran_temp = "";
+                    var persen_cyan = $('#warna_cyan').val();
+                    var persen_magenta = $('#warna_magenta').val();
+                    var persen_yellow = $('#warna_yellow').val();
+                    var persen_black = $('#warna_black').val();
                     for (var i = 1, row; row = table.rows[i]; i++) {
-                        sub_total += parseInt(table.rows[i].cells[24].getElementsByTagName('input')[0].value);
+                        sub_total += parseInt(table.rows[i].cells[27].getElementsByTagName('input')[0].value);
                     }
                     $.ajax({
                         url: "{{url('/api/sub-total')}}",
                         type: 'POST',
                         data: {
                             nama_produk:nama_produk,
+                            jenis_bahan:jenis_bahan,
                             ukuran:ukuran,
-                            jenis_kertas:jenis_kertas,
-                            jenis_tinta:jenis_tinta,
+                            // jenis_tinta:jenis_tinta,
                             jenis_finishing:jenis_finishing,
                             promo_id:promo_id,
+                            jumlah_produk:jumlah_produk,
                             _token:'{{ csrf_token() }}'
                         },
                         dataType: 'json',
                         success: function (result) {
                             $.each(result.list_detail, function (key, produk) {
-                                if(produk.status_finishing == 0)
+                                if(produk.status_finishing == 0) {
                                     hf = parseInt(produk.finishing_harga)
-                                else
+                                }
+                                else {
                                     hf = parseInt(produk.finishing_harga*jumlah_produk)
+                                }
                                 
-                                if(ukuran != "Custom") {
-                                    $('#list-item').append('<tr>\
-                                                            <td>'+produk.id_detail_produk+'</td>\
-                                                            <td>'+produk.nama_produk+'</td>\
-                                                            <td>'+produk.ukuran+'</td>\
-                                                            <td>'+produk.jenis_kertas+'</td>\
-                                                            <td>'+produk.jenis_tinta+'</td>\
-                                                            <td>'+produk.jenis_finishing+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(produk.harga)+'</td>\
-                                                            <td>'+jumlah_produk+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(hf)+'</td>\
-                                                            <td>'+produk.diskon+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100))))+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(harga_custom)+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt(((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)))+'</td>\
-                                                            <td>'+custom+'</td>\
-                                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="' + produk.id_detail_produk + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="' + produk.harga + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="' + hf + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="' + jumlah_produk + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="' + produk.diskon + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="' + harga_custom + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="' + custom + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_panjang[]" value="" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_lebar[]" value="" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="' + parseInt(((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)) + '" readonly/></td>\
-                                                            </tr>');
-                                    sub_total += parseInt(((jumlah_produk*produk.harga+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom));
+                                if (jQuery.isEmptyObject(finishing_input)) {
+                                    finishing_input = 'None';
                                 }
-                                else if(ukuran == "Custom") {
-                                    var int_panjang = parseFloat(custom_panjang.match(/[\d\.]+/));
-                                    var int_lebar = parseFloat(custom_lebar.match(/[\d\.]+/));
-                                    $('#list-item').append('<tr>\
-                                                            <td>'+produk.id_detail_produk+'</td>\
-                                                            <td>'+produk.nama_produk+'</td>\
-                                                            <td>'+produk.ukuran+' ('+custom_panjang+' x '+custom_lebar+')'+'</td>\
-                                                            <td>'+produk.jenis_kertas+'</td>\
-                                                            <td>'+produk.jenis_tinta+'</td>\
-                                                            <td>'+produk.jenis_finishing+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(produk.harga*int_panjang*int_lebar)+'</td>\
-                                                            <td>'+jumlah_produk+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(hf)+'</td>\
-                                                            <td>'+produk.diskon+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100))))+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(harga_custom)+'</td>\
-                                                            <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt(((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)))+'</td>\
-                                                            <td>'+custom+'</td>\
-                                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="' + produk.id_detail_produk + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="' + parseInt(produk.harga*int_panjang*int_lebar) + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="' + hf + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="' + jumlah_produk + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="' + produk.diskon + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="' + harga_custom + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="' + custom + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_panjang[]" value="' + custom_panjang + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom_lebar[]" value="' + custom_lebar + '" readonly/></td>\
-                                                            <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="' + parseInt(((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)) + '" readonly/></td>\
-                                                            </tr>');
-                                    sub_total += parseInt(((produk.harga*int_panjang*int_lebar*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom));
-                                }
+                                $('#list-item').append('<tr>\
+                                                        <td>'+produk.id_detail_produk+'</td>\
+                                                        <td>'+produk.nama_produk+'</td>\
+                                                        <td>'+jenis_bahan_input+'</td>\
+                                                        <td>'+ukuran_input+'</td>\
+                                                        <td>'+finishing_input+'</td>\
+                                                        <td>'+warna_input+'</td>\
+                                                        <td>\
+                                                            <div class="row">Cyan: '+persen_cyan+'%</div>\
+                                                            <div class="row">Magenta: '+persen_magenta+'%</div>\
+                                                            <div class="row">Yellow: '+persen_yellow+'%</div>\
+                                                            <div class="row">Black: '+persen_black+'%</div>\
+                                                        </td>\
+                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(produk.harga)+'</td>\
+                                                        <td>'+jumlah_produk+'</td>\
+                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(hf)+'</td>\
+                                                        <td>'+produk.diskon+'</td>\
+                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100))))+'</td>\
+                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(harga_custom)+'</td>\
+                                                        <td>'+Intl.NumberFormat('en-EN', { style: 'currency', currency: 'IDR', currencyDisplay: "narrowSymbol", }).format(parseInt(((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)))+'</td>\
+                                                        <td>'+custom+'</td>\
+                                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="id_detail_produk[]" value="' + produk.id_detail_produk + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="jenis_bahan_input[]" value="' + jenis_bahan_input + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="ukuran_input[]" value="' + ukuran_input + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="finishing_input[]" value="' + finishing_input + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="warna_input[]" value="' + warna_input + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga[]" value="' + produk.harga + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_finishing[]" value="' + hf + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="quantity[]" value="' + jumlah_produk + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="diskon[]" value="' + produk.diskon + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="harga_custom[]" value="' + harga_custom + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="text" name="custom[]" value="' + custom + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="sub_total[]" value="' + parseInt(((produk.harga*jumlah_produk+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom)) + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="persen_cyan[]" value="' + persen_cyan + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="persen_magenta[]" value="' + persen_magenta + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="persen_yellow[]" value="' + persen_yellow + '" readonly/></td>\
+                                                        <td style="display:none;"><input hidden class="form-control form-control-sm" type="number" name="persen_black[]" value="' + persen_black + '" readonly/></td>\
+                                                        </tr>');
+                                sub_total += parseInt(((jumlah_produk*produk.harga+hf)*(1-(produk.diskon/100)))+parseInt(harga_custom));
                             });
                             $.each(result.promo, function (key, potongan) {
                                 promo = potongan.potongan;
@@ -704,7 +743,7 @@
                         var table = document.getElementById("tabel");
                         var sub_total = 0;
                         for (var i = 1, row; row = table.rows[i]; i++) {
-                            sub_total += parseInt(table.rows[i].cells[24].getElementsByTagName('input')[0].value);
+                            sub_total += parseInt(table.rows[i].cells[27].getElementsByTagName('input')[0].value);
                             // sub_total += parseInt(table.rows[i].cells[11].innerHTML);
                         }
                         $.ajax({
@@ -730,9 +769,9 @@
     </div>
 
     {{-- <script src="/js/jquery.min.js"></script> --}}
-    <script src="/js/popper.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
@@ -741,10 +780,11 @@
             $('#operator_printer').select2();
             $('#desainer').select2();
             $('#produk-dropdown').select2();
+            $('#jenis_bahan-dropdown').select2();
             $('#ukuran-dropdown').select2();
-            $('#jenis_kertas-dropdown').select2();
-            $('#jenis-tinta-dropdown').select2();
+            // $('#jenis-tinta-dropdown').select2();
             $('#finishing-dropdown').select2();
+            $('#warna_input').select2();
             $('#promo_id').select2();
         });
     </script>

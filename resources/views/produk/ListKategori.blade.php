@@ -8,7 +8,7 @@
 
         td, th {
             border: 1px solid black;
-            text-align: center;
+            /* text-align: center; */
             padding: 8px;
             color: black;
         }
@@ -18,7 +18,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -70,9 +70,7 @@
                                 <tr>
                                     <th>ID Kategori</th>
                                     <th>Nama Kategori</th>
-                                    @if(auth()->user()->user_role == "Admin")
                                     <th>Action</th>
-                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,17 +78,29 @@
                                 <tr>
                                     <td>{{ $kategori->id_kategori }}</td>
                                     <td>{{ $kategori->nama_kategori }}</td>
-                                    @if(auth()->user()->user_role == "Admin")
                                     <td>
-                                        <form action="{{ url('/kategori/'.$kategori->id) }}" method="POST" class="d-inline">
-                                            @method('delete')
-                                            @csrf
-                                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                                                <i class="fa fa-trash"></i>
+                                        <div class="d-inline">
+                                            <button class="btn btn-info" onclick="window.location.href='{{ url('/kategori/'.$kategori->id) }}'">
+                                                <i class="fa fa-eye"></i>
                                             </button>
-                                        </form>
+                                            @if(auth()->user()->user_role == "Admin")
+                                            <form action="{{ url('/kategori/'.$kategori->id) }}" method="POST" class="d-inline">
+                                                @method('put')
+                                                @csrf
+                                                <button class="btn btn-success">
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{{ url('/kategori/'.$kategori->id) }}" method="POST" class="d-inline">
+                                                @method('delete')
+                                                @csrf
+                                                <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            @endif
+                                        </div>
                                     </td>
-                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -101,10 +111,10 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

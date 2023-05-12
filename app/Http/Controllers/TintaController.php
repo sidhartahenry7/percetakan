@@ -24,7 +24,7 @@ class TintaController extends Controller
             ]);
         }
         else {
-            abort(403);
+            return redirect('/dashboard');
         }
     }
     

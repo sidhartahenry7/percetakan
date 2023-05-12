@@ -9,6 +9,7 @@ use App\Models\pembelian_tinta;
 use App\Models\detail_pembelian_tinta;
 use App\Models\kartu_stok_tinta;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PenerimaanTintaController extends Controller
 {
@@ -62,21 +63,26 @@ class PenerimaanTintaController extends Controller
 
         if ($request->status == "Terima") {
             foreach ($detail as $res) {
-                // dd($res->produk_id);
-                $stok = kartu_stok_tinta::where('detail_tinta_id', $res->detail_tinta_id)->max('id');
+                $stok = kartu_stok_tinta::where('detail_tinta_id', $res->detail_tinta_id)->where('cabang_id', $pembelian->cabang_id)->latest('id')->first();
+                $jumlah = kartu_stok_tinta::where('detail_tinta_id', $res->detail_tinta_id)->where('status', 'Masuk')->where('cabang_id', $pembelian->cabang_id)->sum('quantity_masuk');
                 if($stok == NULL) {
                     $quantity_sekarang = 0;
+                    $harga_average = $res->harga/($res->quantity*1000);
                 }
                 else {
                     $quantity_sekarang = $stok->quantity_sekarang;
+                    $harga_average = (($stok->harga_average*$jumlah)+$res->harga)/($jumlah+($res->quantity*1000));
                 }
+                // dd($harga_average);
                 kartu_stok_tinta::create([
-                    'tanggal' => Carbon::today(),
+                    'tanggal' => $request->tanggal_penerimaan,
                     'cabang_id' => $pembelian->cabang_id,
                     'detail_tinta_id' => $res->detail_tinta_id,
-                    'quantity_masuk' => $res->quantity,
+                    'quantity_masuk' => $res->quantity*1000,
                     'quantity_keluar' => 0,
-                    'quantity_sekarang' => $quantity_sekarang+$res->quantity,
+                    'quantity_sekarang' => $quantity_sekarang+($res->quantity*1000),
+                    'harga_beli' => $res->harga/($res->quantity*1000),
+                    'harga_average' => $harga_average,
                     'status' => "Masuk"
                 ]);
             }

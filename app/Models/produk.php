@@ -30,6 +30,11 @@ class produk extends Model
     {
         return $this->hasMany(kartu_stok_bahan::class);
     }
+    
+    public function penggunaan_bahan()
+    {
+        return $this->hasMany(penggunaan_bahan::class);
+    }
 
     public function scopeCreateID()
     {

@@ -19,7 +19,7 @@
         }
 
         #sidebar {
-            background-color: #0b2357;
+            background-color: #FFC300;
         }
 
         .form-control {
@@ -62,10 +62,10 @@
                         </div>
                     @endif
                     @if(auth()->user()->user_role == "Admin" || auth()->user()->user_role == "Kepala Toko" || auth()->user()->user_role == "Wakil Kepala Toko")
-                    <form action="/bahan-baku" method="post">
+                    <form action="{{ url('/bahan-baku') }}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label style="color: black; font-weight: bold;" for="text">ID Produk</label>
+                            <label style="color: black; font-weight: bold;" for="text">ID Bahan Baku</label>
                             <input type="text" readonly="readonly" class="form-control @error('id_produk') is-invalid @enderror" id="id_produk" name="id_produk" required autofocus value="{{ $idproduk }}"/>
                             @error('id_produk')
                                 <div class="invalid-feedback">
@@ -110,10 +110,10 @@
       
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('js/popper.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/main.js')}}"></script>
 
     <script>
         function ubahUkuran() {
@@ -131,8 +131,8 @@
                                                                     </div>\
                                                                     <div class="col-4"><label for="text">Satuan</label>\
                                                                         <select class="form-control" id="satuan" name="satuan">\
-                                                                            <option value="meter">meter</option>\
-                                                                            <option value="cm">cm</option>\
+                                                                            <option value="m2">m2</option>\
+                                                                            <option value="cm2">cm2</option>\
                                                                         </select>\
                                                                     </div>\
                                                                 </div>');
