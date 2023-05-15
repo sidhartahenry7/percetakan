@@ -110,7 +110,8 @@ class FinishingController extends Controller
         } else {
             $stok_bahan = kartu_stok_bahan::where('produk_id', $penggunaan_bahan->produk_id)->where('cabang_id', Auth::user()->cabang_id)->latest('created_at')->first();
         }
-        if ($stok_bahan->harga_average == null) {
+        // dd($stok_bahan);
+        if ($stok_bahan == null) {
             $harga_bahan = 0*$penggunaan_bahan->jumlah_pemakaian;
         }
         else {
@@ -125,7 +126,7 @@ class FinishingController extends Controller
             } else {
                 $stok_tinta = kartu_stok_tinta::where('detail_tinta_id', $tintas->detail_tinta_id)->where('cabang_id', Auth::user()->cabang_id)->latest('created_at')->first();
             }
-            if ($stok_tinta->harga_average == null) {
+            if ($stok_tinta == null) {
                 $harga_tinta = 0*$tintas->jumlah_pemakaian;
             }
             else {

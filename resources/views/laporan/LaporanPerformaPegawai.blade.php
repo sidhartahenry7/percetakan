@@ -47,24 +47,28 @@
                 <hr style="height: 10px;">
             </div>
             <!--Content-->
-            <p id="date_filter">
-                <span id="date-label-from" class="date-label">From: </span><input type="date" id="min" name="min"/>
-                <span id="date-label-to" class="date-label">To: </span><input type="date" id="max" name="max"/>
-                {{-- <span id="bahan_dropdown-label">Bahan Baku: </span>
-                    <select id="bahan_dropdown">
-                        <option selected="" value="All">All</option>
-                        @foreach ($list_bahan_baku as $bahan)
-                            @isset($bahan->ukuran)
-                            <option value="{{ $bahan->id }}">{{ $bahan->jenis_kertas. ' ' .$bahan->ukuran }}</option>
-                            @else
-                            <option value="{{ $bahan->id }}">{{ $bahan->jenis_kertas. ' ' .$bahan->lebar." x ".$bahan->panjang." ".$bahan->satuan }}</option>
-                            @endisset
-                        @endforeach
-                    </select>
-                </span> --}}
-                <button type="button" class="btn" style="background-color: #EC268F; color: white;" id="create">Create</button>
-            </p>
-            <canvas id="myChart" style="width:100%;"></canvas>
+            <div id="laporan_performa_pegawai">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label id="date-label-from" class="date-label">From: </label>
+                            <input type="date" id="min" name="min" class="form-control"/>
+                        </div>
+                        <div class="col-sm-2">
+                            <label id="date-label-to" class="date-label">To: </label>
+                            <input type="date" id="max" name="max" class="form-control"/>
+                        </div>
+                        <div class="col-sm-2 d-flex justify-content-center align-items-center">
+                            <div class="d-inline">
+                                <button type="button" class="btn" style="background-color: #EC268F; color: white;" id="create">Create</button>
+                                <button onclick="CreatePDFPerformaPegawai()" id="downloadPerformaPegawai" type="button" class="btn" style="background-color: #29a4da; color: white;"><span class="material-icons align-middle">download</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="myChart" style="width:100%;"></canvas>
+                <div id="keterangan"></div>
+            </div>
         </div>
     </div>
 
@@ -86,6 +90,8 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
     <script>
         var xValues = [];
@@ -174,6 +180,37 @@
                 });
             });
         });
+
+        //Create PDf from HTML...
+        function CreatePDFPerformaPegawai() {
+            var HTML_Width = $("#laporan_performa_pegawai").width();
+            var HTML_Height = $("#laporan_performa_pegawai").height();
+            var top_left_margin = 100;
+            var PDF_Width = HTML_Width + (top_left_margin * 2);
+            var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+            var canvas_image_width = HTML_Width;
+            var canvas_image_height = HTML_Height;
+
+            var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+            $("#create").hide();
+            $("#downloadPerformaPegawai").hide();
+
+            html2canvas($("#content")[0]).then(function (canvas) {
+                var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+                // var pdf = new jsPDF('p', 'mm', [210, 270]);
+                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+                for (var i = 1; i <= totalPDFPages; i++) { 
+                    pdf.addPage(PDF_Width, PDF_Height);
+                    pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                }
+                pdf.save("Laporan_Performa_Pegawai.pdf");
+                // $(".html-content").hide();
+                $("#create").show();
+                $("#downloadPerformaPegawai").show();
+            });
+        }
     </script>
 </body>
 </html>

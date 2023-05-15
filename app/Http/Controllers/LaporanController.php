@@ -52,10 +52,16 @@ class LaporanController extends Controller
 
     public function fetchLabaRugi(Request $request)
     {
+        $startDate = Carbon::createFromFormat('Y-m-d', $request->min);
+        $endDate = Carbon::createFromFormat('Y-m-d', $request->max);
+        $min_time = Carbon::create($startDate->year, $startDate->month, $startDate->day, 0, 0, 0);
+        $max_time = Carbon::create($endDate->year, $endDate->month, $endDate->day, 23, 59, 59);
+        
         $pendapatan_bersih = transaksi::join('antrians', 'transaksis.antrian_id', 'antrians.id')
                                       ->selectRaw("SUM(transaksis.total) as harga_bersih")
                                       ->where('antrians.cabang_id', $request->cabang_id)
-                                      ->whereBetween('antrians.tanggal_antrian', [$request->min, $request->max])
+                                      ->where('antrians.tanggal_antrian', '>=', $min_time)
+                                      ->where('antrians.tanggal_antrian', '<=', $max_time)
                                       ->where(function($query) {
                                             $query->where('transaksis.status_pengerjaan', 'Pesanan telah diambil')
                                                   ->orWhere('transaksis.status_pengerjaan', 'Selesai')
@@ -285,6 +291,7 @@ class LaporanController extends Controller
         if (Auth::user()->user_role == 'Admin') {
             return view('laporan.LaporanPembelian', [
                 "title" => "Laporan Pembelian",
+                "list_cabang" => cabang::where('deleted', 0)->get(),
                 "list_bahan_baku" => produk::where('deleted', 0)->get(),
                 "list_tinta" => detail_tinta::where('deleted', 0)->get(),
             ]);
@@ -296,63 +303,124 @@ class LaporanController extends Controller
 
     public function fetchBahanBaku(Request $request)
     {
-
         if($request->produk_id == "All") {
-            $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
-                                          ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
-                                          ->selectRaw("SUM(detail_pembelian_bahans.harga) as harga")
-                                          ->where('pembelian_bahans.status', 'Terima')
-                                          ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku, $request->max_bahan_baku])
-                                          ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
-                                          ->get();
+            if($request->cabang_id == "All") {
+                $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
+                                              ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_bahans.harga) as harga")
+                                              ->where('pembelian_bahans.status', 'Terima')
+                                              ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku, $request->max_bahan_baku])
+                                              ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
+                                              ->get();
+            }
+            else {
+                $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
+                                              ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_bahans.harga) as harga")
+                                              ->where('pembelian_bahans.status', 'Terima')
+                                              ->where('pembelian_bahans.cabang_id', $request->cabang_id)
+                                              ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku, $request->max_bahan_baku])
+                                              ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
+                                              ->get();
+            }
         }
         else {
-            $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
-                                          ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
-                                          ->selectRaw("SUM(detail_pembelian_bahans.harga) as harga")
-                                          ->where('pembelian_bahans.status', 'Terima')
-                                          ->where('detail_pembelian_bahans.produk_id', $request->produk_id)
-                                          ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku, $request->max_bahan_baku])
-                                          ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
-                                          ->get();
+            if($request->cabang_id == "All") {
+                $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
+                                              ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_bahans.harga) as harga")
+                                              ->where('pembelian_bahans.status', 'Terima')
+                                              ->where('detail_pembelian_bahans.produk_id', $request->produk_id)
+                                              ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku, $request->max_bahan_baku])
+                                              ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
+                                              ->get();
+            }
+            else {
+                $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
+                                              ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_bahans.harga) as harga")
+                                              ->where('pembelian_bahans.status', 'Terima')
+                                              ->where('detail_pembelian_bahans.produk_id', $request->produk_id)
+                                              ->where('pembelian_bahans.cabang_id', $request->cabang_id)
+                                              ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku, $request->max_bahan_baku])
+                                              ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
+                                              ->get();
+            }
         }
         return response()->json($data);
     }
 
     public function fetchBahanBakuJumlah(Request $request)
     {
-
-        $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
-                                      ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
-                                      ->selectRaw("SUM(detail_pembelian_bahans.quantity) as jumlah")
-                                      ->where('pembelian_bahans.status', 'Terima')
-                                      ->where('detail_pembelian_bahans.produk_id', $request->produk_id_jumlah)
-                                      ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku_jumlah, $request->max_bahan_baku_jumlah])
-                                      ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
-                                      ->get();
+        if($request->cabang_id == "All") {
+            $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
+                                          ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
+                                          ->selectRaw("SUM(detail_pembelian_bahans.quantity) as jumlah")
+                                          ->where('pembelian_bahans.status', 'Terima')
+                                          ->where('detail_pembelian_bahans.produk_id', $request->produk_id_jumlah)
+                                          ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku_jumlah, $request->max_bahan_baku_jumlah])
+                                          ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
+                                          ->get();
+        }
+        else {
+            $data = detail_pembelian_bahan::join('pembelian_bahans', 'detail_pembelian_bahans.pembelian_bahan_id', 'pembelian_bahans.id')
+                                          ->select('pembelian_bahans.tanggal_pembelian_bahan as tanggal')
+                                          ->selectRaw("SUM(detail_pembelian_bahans.quantity) as jumlah")
+                                          ->where('pembelian_bahans.status', 'Terima')
+                                          ->where('detail_pembelian_bahans.produk_id', $request->produk_id_jumlah)
+                                          ->where('pembelian_bahans.cabang_id', $request->cabang_id)
+                                          ->whereBetween('pembelian_bahans.tanggal_pembelian_bahan', [$request->min_bahan_baku_jumlah, $request->max_bahan_baku_jumlah])
+                                          ->groupBy('pembelian_bahans.tanggal_pembelian_bahan')
+                                          ->get();
+        }
         return response()->json($data);
     }
 
     public function fetchTinta(Request $request)
     {
         if($request->tinta_id == "All") {
-            $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
-                                          ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
-                                          ->selectRaw("SUM(detail_pembelian_tintas.harga) as harga")
-                                          ->where('pembelian_tintas.status', 'Terima')
-                                          ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta, $request->max_tinta])
-                                          ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
-                                          ->get();
+            if($request->cabang_id == "All") {
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.harga) as harga")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta, $request->max_tinta])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
+            else {
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.harga) as harga")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->where('pembelian_tintas.cabang_id', $request->cabang_id)
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta, $request->max_tinta])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
         }
         else {
-            $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
-                                          ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
-                                          ->selectRaw("SUM(detail_pembelian_tintas.harga) as harga")
-                                          ->where('pembelian_tintas.status', 'Terima')
-                                          ->where('detail_pembelian_tintas.detail_tinta_id', $request->tinta_id)
-                                          ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta, $request->max_tinta])
-                                          ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
-                                          ->get();
+            if($request->cabang_id == "All") {
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.harga) as harga")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->where('detail_pembelian_tintas.detail_tinta_id', $request->tinta_id)
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta, $request->max_tinta])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
+            else{
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.harga) as harga")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->where('detail_pembelian_tintas.detail_tinta_id', $request->tinta_id)
+                                              ->where('pembelian_tintas.cabang_id', $request->cabang_id)
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta, $request->max_tinta])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
         }
         return response()->json($data);
     }
@@ -360,23 +428,48 @@ class LaporanController extends Controller
     public function fetchTintaJumlah(Request $request)
     {
         if($request->tinta_id_jumlah == "All") {
-            $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
-                                          ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
-                                          ->selectRaw("SUM(detail_pembelian_tintas.quantity) as jumlah")
-                                          ->where('pembelian_tintas.status', 'Terima')
-                                          ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta_jumlah, $request->max_tinta_jumlah])
-                                          ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
-                                          ->get();
+            if($request->cabang_id == "All") {
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.quantity) as jumlah")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta_jumlah, $request->max_tinta_jumlah])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
+            else {
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.quantity) as jumlah")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->where('pembelian_tintas.cabang_id', $request->cabang_id)
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta_jumlah, $request->max_tinta_jumlah])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
         }
         else {
-            $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
-                                          ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
-                                          ->selectRaw("SUM(detail_pembelian_tintas.quantity) as jumlah")
-                                          ->where('pembelian_tintas.status', 'Terima')
-                                          ->where('detail_pembelian_tintas.detail_tinta_id', $request->tinta_id_jumlah)
-                                          ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta_jumlah, $request->max_tinta_jumlah])
-                                          ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
-                                          ->get();
+            if($request->cabang_id == "All") {
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.quantity) as jumlah")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->where('detail_pembelian_tintas.detail_tinta_id', $request->tinta_id_jumlah)
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta_jumlah, $request->max_tinta_jumlah])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
+            else {
+                $data = detail_pembelian_tinta::join('pembelian_tintas', 'detail_pembelian_tintas.pembelian_tinta_id', 'pembelian_tintas.id')
+                                              ->select('pembelian_tintas.tanggal_pembelian_tinta as tanggal')
+                                              ->selectRaw("SUM(detail_pembelian_tintas.quantity) as jumlah")
+                                              ->where('pembelian_tintas.status', 'Terima')
+                                              ->where('detail_pembelian_tintas.detail_tinta_id', $request->tinta_id_jumlah)
+                                              ->where('pembelian_tintas.cabang_id', $request->cabang_id)
+                                              ->whereBetween('pembelian_tintas.tanggal_pembelian_tinta', [$request->min_tinta_jumlah, $request->max_tinta_jumlah])
+                                              ->groupBy('pembelian_tintas.tanggal_pembelian_tinta')
+                                              ->get();
+            }
         }
         return response()->json($data);
     }
@@ -478,6 +571,11 @@ class LaporanController extends Controller
                               ->get();
         }
 
+        $startDate = Carbon::createFromFormat('Y-m-d', $request->min);
+        $endDate = Carbon::createFromFormat('Y-m-d', $request->max);
+        $min_time = Carbon::create($startDate->year, $startDate->month, $startDate->day, 0, 0, 0);
+        $max_time = Carbon::create($endDate->year, $endDate->month, $endDate->day, 23, 59, 59);
+
         foreach($pegawai as $res) {
             $jumlah_komplain = komplain::join('detail_transaksis', 'komplains.detail_transaksi_id', 'detail_transaksis.id')
                                        ->join('transaksis', 'detail_transaksis.transaksi_id', 'transaksis.id')
@@ -485,7 +583,8 @@ class LaporanController extends Controller
                                        ->join('transaksi_pegawais', 'transaksis.id', 'transaksi_pegawais.transaksi_id')
                                        ->selectRaw("COUNT(komplains.id) as jumlah")
                                        ->where('transaksi_pegawais.pegawai_id', $res->id)
-                                       ->whereBetween('antrians.tanggal_antrian', [$request->min, $request->max])
+                                       ->where('antrians.tanggal_antrian', '>=', $min_time)
+                                       ->where('antrians.tanggal_antrian', '<=', $max_time)
                                        ->first();
 
             $jumlah_transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', 'transaksis.id')
@@ -493,7 +592,8 @@ class LaporanController extends Controller
                                                 ->join('transaksi_pegawais', 'transaksi_pegawais.transaksi_id', 'transaksis.id')
                                                 ->selectRaw("COUNT(detail_transaksis.id) as jumlah")
                                                 ->where('transaksi_pegawais.pegawai_id', $res->id)
-                                                ->whereBetween('antrians.tanggal_antrian', [$request->min, $request->max])
+                                                ->where('antrians.tanggal_antrian', '>=', $min_time)
+                                                ->where('antrians.tanggal_antrian', '<=', $max_time)
                                                 ->where(function($query) {
                                                     $query->where('transaksis.status_pengerjaan', 'Pesanan telah diambil')
                                                           ->orWhere('transaksis.status_pengerjaan', 'Selesai');

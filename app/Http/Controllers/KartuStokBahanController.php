@@ -69,6 +69,16 @@ class KartuStokBahanController extends Controller
                                 ->latest()
                                 ->first();
 
+        if ($data == null) {
+            $data = produk::where('id', $request->produk_id)
+                          ->select('satuan')
+                          ->first();
+
+            if ($data->satuan == null) {
+                $data->satuan = "lembar";
+            }
+        }
+
         return response()->json($data);
     }
 

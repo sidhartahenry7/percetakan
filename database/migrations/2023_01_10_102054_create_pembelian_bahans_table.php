@@ -16,6 +16,7 @@ class CreatePembelianBahansTable extends Migration
         Schema::create('pembelian_bahans', function (Blueprint $table) {
             $table->id();
             $table->string('id_pembelian_bahan', 255)->unique();
+            $table->foreignId('pegawai_id');
             $table->foreignId('cabang_id');
             $table->date('tanggal_pembelian_bahan');
             $table->integer('total')->default(0);
