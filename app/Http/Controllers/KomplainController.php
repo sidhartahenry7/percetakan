@@ -23,9 +23,9 @@ class KomplainController extends Controller
     {
         if (Auth::user()->user_role == 'Admin') {
             $list_transaksi = detail_transaksi::join('transaksis', 'detail_transaksis.transaksi_id', '=', 'transaksis.id')
-                                              ->join('detail_produks', 'detail_transaksis.detail_produk_id', '=', 'detail_produks.id')
                                               ->where('transaksis.status_pengerjaan', 'Pesanan telah diambil')
                                               ->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))
+                                              ->select('detail_transaksis.*', 'transaksis.id_transaksi')
                                               ->get();
 
             return view('komplain.AddKomplain', [
@@ -40,6 +40,7 @@ class KomplainController extends Controller
                                               ->where('transaksis.status_pengerjaan', 'Pesanan telah diambil')
                                               ->whereNotIn('detail_transaksis.id', komplain::all()->pluck('detail_transaksi_id'))
                                               ->where('antrians.cabang_id', Auth::user()->cabang_id)
+                                              ->select('detail_transaksis.*', 'transaksis.id_transaksi')
                                               ->get();
 
             return view('komplain.AddKomplain', [

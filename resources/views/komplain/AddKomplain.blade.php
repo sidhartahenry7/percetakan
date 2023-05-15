@@ -69,9 +69,9 @@
                                 </option>
                                 @foreach ($list_transaksi as $detail)
                                     @if(old('detail_transaksi_id') == $detail->id)
-                                        <option value="{{ $detail->id }}" selected>{{ $detail->id }} {{ $detail->transaksi->id_transaksi }} {{ $detail->jenis_bahan_input }} {{ $detail->ukuran_input }} {{ $detail->finishing_input }} {{ $detail->warna_input }}</option>
+                                        <option value="{{ $detail->id }}" selected>{{ $detail->id }} {{ $detail->id_transaksi }} {{ $detail->jenis_bahan_input }} {{ $detail->ukuran_input }} {{ $detail->finishing_input }} {{ $detail->warna_input }}</option>
                                     @else
-                                        <option value="{{ $detail->id }}">{{ $detail->id }} {{ $detail->transaksi->id_transaksi }} {{ $detail->jenis_bahan_input }} {{ $detail->ukuran_input }} {{ $detail->finishing_input }} {{ $detail->warna_input }}</option>
+                                        <option value="{{ $detail->id }}">{{ $detail->id }} {{ $detail->id_transaksi }} {{ $detail->jenis_bahan_input }} {{ $detail->ukuran_input }} {{ $detail->finishing_input }} {{ $detail->warna_input }}</option>
                                     @endif
                                 @endforeach
                             </select>
